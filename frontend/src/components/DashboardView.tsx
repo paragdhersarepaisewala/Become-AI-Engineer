@@ -165,9 +165,9 @@ export const DashboardView: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Full 15-Chapter Roadmap */}
+      {/* Full 16-Chapter Roadmap */}
       <div className="card">
-        <h3 style={{ marginBottom: '1rem' }}>15-Chapter Master Curriculum</h3>
+        <h3 style={{ marginBottom: '1rem' }}>16-Chapter Master Curriculum</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           {phases.map(({ phase, items }) => (
             <div key={phase}>

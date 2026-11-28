@@ -1,15 +1,15 @@
-"""Phase 2 Practice Workbook (Chapters 6-9): NumPy, Pandas, FastAPI Microservices, Docker."""
+"""Phase 2 Practice Workbook (Chapters 7-10): NumPy, Pandas, FastAPI Microservices, Docker."""
 
 from __future__ import annotations
 
 from typing import Any
 
 PHASE_2_WORKBOOK: list[dict[str, Any]] = [
-    # ---------------- CHAPTER 6: NumPy ----------------
+    # ---------------- CHAPTER 7: NumPy ----------------
     {
-        "id": "wb-06-01",
-        "chapter_id": "ch06",
-        "number": "6.1",
+        "id": "wb-07-01",
+        "chapter_id": "ch07",
+        "number": "7.1",
         "title": "Vectorized Standardization (Broadcasting + `axis`)",
         "topic": "NumPy",
         "question_type": "Logic & Coding",
@@ -52,9 +52,9 @@ PHASE_2_WORKBOOK: list[dict[str, Any]] = [
         ],
     },
     {
-        "id": "wb-06-02",
-        "chapter_id": "ch06",
-        "number": "6.2",
+        "id": "wb-07-02",
+        "chapter_id": "ch07",
+        "number": "7.2",
         "title": "Numerically Stable Softmax",
         "topic": "NumPy",
         "question_type": "Logic & Coding",
@@ -95,9 +95,9 @@ PHASE_2_WORKBOOK: list[dict[str, Any]] = [
         ],
     },
     {
-        "id": "wb-06-03",
-        "chapter_id": "ch06",
-        "number": "6.3",
+        "id": "wb-07-03",
+        "chapter_id": "ch07",
+        "number": "7.3",
         "title": "Cosine Top-K Vector Retrieval",
         "topic": "NumPy",
         "question_type": "Logic & Coding",
@@ -141,11 +141,11 @@ PHASE_2_WORKBOOK: list[dict[str, Any]] = [
             {"name": "top_k", "code": "import numpy as np\ndocs = np.array([[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]])\nassert sol.cosine_top_k(docs, np.array([2.0, 0.0]), 2) == [0, 2]"},
         ],
     },
-    # ---------------- CHAPTER 7: Pandas ----------------
+    # ---------------- CHAPTER 8: Pandas ----------------
     {
-        "id": "wb-07-01",
-        "chapter_id": "ch07",
-        "number": "7.1",
+        "id": "wb-08-01",
+        "chapter_id": "ch08",
+        "number": "8.1",
         "title": "Pandas Text Cleaning & Hash Deduplication",
         "topic": "Pandas",
         "question_type": "Logic & Coding",
@@ -198,9 +198,9 @@ PHASE_2_WORKBOOK: list[dict[str, Any]] = [
         ],
     },
     {
-        "id": "wb-07-02",
-        "chapter_id": "ch07",
-        "number": "7.2",
+        "id": "wb-08-02",
+        "chapter_id": "ch08",
+        "number": "8.2",
         "title": "GroupBy Quality Metrics per Dataset Source",
         "topic": "Pandas",
         "question_type": "Logic & Coding",
@@ -251,11 +251,11 @@ PHASE_2_WORKBOOK: list[dict[str, Any]] = [
             },
         ],
     },
-    # ---------------- CHAPTER 8: FastAPI & Microservices ----------------
+    # ---------------- CHAPTER 9: FastAPI & Microservices ----------------
     {
-        "id": "wb-08-01",
-        "chapter_id": "ch08",
-        "number": "8.1",
+        "id": "wb-09-01",
+        "chapter_id": "ch09",
+        "number": "9.1",
         "title": "Pydantic Contract & FastAPI `/tokenize` Endpoint",
         "topic": "FastAPI",
         "question_type": "Systems",
@@ -316,9 +316,9 @@ PHASE_2_WORKBOOK: list[dict[str, Any]] = [
         ],
     },
     {
-        "id": "wb-08-02",
-        "chapter_id": "ch08",
-        "number": "8.2",
+        "id": "wb-09-02",
+        "chapter_id": "ch09",
+        "number": "9.2",
         "title": "Microservice Pattern: Async Job Queue & Worker",
         "topic": "FastAPI",
         "question_type": "Systems",
@@ -389,11 +389,11 @@ PHASE_2_WORKBOOK: list[dict[str, Any]] = [
             },
         ],
     },
-    # ---------------- CHAPTER 9: Docker ----------------
+    # ---------------- CHAPTER 10: Docker ----------------
     {
-        "id": "wb-09-01",
-        "chapter_id": "ch09",
-        "number": "9.1",
+        "id": "wb-10-01",
+        "chapter_id": "ch10",
+        "number": "10.1",
         "title": "Dockerfile Layer-Cache & Security Linter",
         "topic": "Docker",
         "question_type": "Logic & Coding",
@@ -447,9 +447,9 @@ PHASE_2_WORKBOOK: list[dict[str, Any]] = [
         ],
     },
     {
-        "id": "wb-09-02",
-        "chapter_id": "ch09",
-        "number": "9.2",
+        "id": "wb-10-02",
+        "chapter_id": "ch10",
+        "number": "10.2",
         "title": "Compose Startup Order via Dependency Graph",
         "topic": "Docker",
         "question_type": "DSA & DP",

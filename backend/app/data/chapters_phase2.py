@@ -6,8 +6,8 @@ from typing import Any
 
 PHASE_2_CHAPTERS: list[dict[str, Any]] = [
     {
-        "id": "ch06",
-        "number": 6,
+        "id": "ch07",
+        "number": 7,
         "phase": 2,
         "phase_title": "Phase 2: The AI Engineer's Data, API & Container Stack",
         "title": "NumPy & Vectorized Linear Algebra",
@@ -22,8 +22,8 @@ PHASE_2_CHAPTERS: list[dict[str, Any]] = [
         "visualizer": "numpy_broadcast",
         "sections": [
             {
-                "id": "ch06-s1",
-                "title": "6.1 NumPy Arrays, `.shape` & `axis` (Replacing Loops)",
+                "id": "ch07-s1",
+                "title": "7.1 NumPy Arrays, `.shape` & `axis` (Replacing Loops)",
                 "zero_assumption_note": "If `axis=0` vs `axis=1` always confused you, remember: `axis` tells NumPy **which direction to collapse**.",
                 "definition": (
                     "A **NumPy array (`ndarray`)** stores numbers in one tightly packed block of C memory so math runs on entire rows/columns "
@@ -92,7 +92,7 @@ PHASE_2_CHAPTERS: list[dict[str, Any]] = [
         ],
         "quizzes": [
             {
-                "id": "ch06-q1",
+                "id": "ch07-q1",
                 "question": "If `X` has shape `(4, 3)`, what shape does `X.sum(axis=1, keepdims=True)` return?",
                 "options": ["(3,)", "(4, 1)", "(1, 3)", "(4,)"],
                 "correct_index": 1,
@@ -101,7 +101,7 @@ PHASE_2_CHAPTERS: list[dict[str, Any]] = [
         ],
         "project": {
             "title": "Pure-NumPy Semantic Vector Search Engine",
-            "workspace_dir": "projects/ch06_numpy_semantic_search",
+            "workspace_dir": "projects/ch07_numpy_semantic_search",
             "overview": "Implement L2 normalization, stable softmax, and top-K cosine similarity retrieval in pure NumPy.",
             "architecture_steps": [
                 "Implement vectorized L2 row normalization.",
@@ -109,15 +109,15 @@ PHASE_2_CHAPTERS: list[dict[str, Any]] = [
                 "Verify speed & accuracy with `pytest`.",
             ],
             "milestones": [
-                {"id": "ch06-m1", "label": "Implement L2 normalization & stable softmax"},
-                {"id": "ch06-m2", "label": "Implement top-K cosine search"},
-                {"id": "ch06-m3", "label": "Verify with pytest"},
+                {"id": "ch07-m1", "label": "Implement L2 normalization & stable softmax"},
+                {"id": "ch07-m2", "label": "Implement top-K cosine search"},
+                {"id": "ch07-m3", "label": "Verify with pytest"},
             ],
         },
     },
     {
-        "id": "ch07",
-        "number": 7,
+        "id": "ch08",
+        "number": 8,
         "phase": 2,
         "phase_title": "Phase 2: The AI Engineer's Data, API & Container Stack",
         "title": "Pandas & Production Data Curation",
@@ -131,8 +131,8 @@ PHASE_2_CHAPTERS: list[dict[str, Any]] = [
         "visualizer": None,
         "sections": [
             {
-                "id": "ch07-s1",
-                "title": "7.1 DataFrames, `loc`/`iloc` & Cleaning Datasets Without Loops",
+                "id": "ch08-s1",
+                "title": "8.1 DataFrames, `loc`/`iloc` & Cleaning Datasets Without Loops",
                 "zero_assumption_note": "Think of a Pandas `DataFrame` as an in-memory Excel table where each column is a fast NumPy-backed `Series`.",
                 "definition": (
                     "A **DataFrame** holds rows and named columns (`df['text']`, `df['score']`). Instead of looping row-by-row, "
@@ -198,7 +198,7 @@ PHASE_2_CHAPTERS: list[dict[str, Any]] = [
         ],
         "quizzes": [
             {
-                "id": "ch07-q1",
+                "id": "ch08-q1",
                 "question": "Why call `.copy()` right after filtering a DataFrame like `sub = df[df['score'] > 0.5].copy()`?",
                 "options": [
                     "It sorts the rows",
@@ -212,7 +212,7 @@ PHASE_2_CHAPTERS: list[dict[str, Any]] = [
         ],
         "project": {
             "title": "End-to-End LLM Corpus Curation Pipeline",
-            "workspace_dir": "projects/ch07_corpus_curation_pipeline",
+            "workspace_dir": "projects/ch08_corpus_curation_pipeline",
             "overview": "Clean messy JSONL text data, deduplicate via SHA-256, and generate per-source quality metrics.",
             "architecture_steps": [
                 "Load raw records into Pandas and remove null/short noise.",
@@ -220,15 +220,15 @@ PHASE_2_CHAPTERS: list[dict[str, Any]] = [
                 "Produce `groupby` quality stats and clean splits.",
             ],
             "milestones": [
-                {"id": "ch07-m1", "label": "Ingest & normalize raw text records"},
-                {"id": "ch07-m2", "label": "Implement normalized hash deduplication"},
-                {"id": "ch07-m3", "label": "Generate quality summary & splits"},
+                {"id": "ch08-m1", "label": "Ingest & normalize raw text records"},
+                {"id": "ch08-m2", "label": "Implement normalized hash deduplication"},
+                {"id": "ch08-m3", "label": "Generate quality summary & splits"},
             ],
         },
     },
     {
-        "id": "ch08",
-        "number": 8,
+        "id": "ch09",
+        "number": 9,
         "phase": 2,
         "phase_title": "Phase 2: The AI Engineer's Data, API & Container Stack",
         "title": "FastAPI & Microservice Architecture",
@@ -243,8 +243,8 @@ PHASE_2_CHAPTERS: list[dict[str, Any]] = [
         "visualizer": None,
         "sections": [
             {
-                "id": "ch08-s1",
-                "title": "8.1 FastAPI Endpoints, Pydantic Contracts & Microservices",
+                "id": "ch09-s1",
+                "title": "9.1 FastAPI Endpoints, Pydantic Contracts & Microservices",
                 "zero_assumption_note": "An API endpoint is just a Python function attached to a URL (like `POST /tokenize`) that receives JSON and returns JSON.",
                 "definition": (
                     "- **FastAPI:** A Python web framework that turns typed functions into fast HTTP APIs.\n"
@@ -312,7 +312,7 @@ PHASE_2_CHAPTERS: list[dict[str, Any]] = [
         ],
         "quizzes": [
             {
-                "id": "ch08-q1",
+                "id": "ch09-q1",
                 "question": "What HTTP status code does FastAPI automatically return when incoming JSON violates a Pydantic `Field` rule?",
                 "options": ["200 OK", "404 Not Found", "422 Unprocessable Entity", "500 Internal Server Error"],
                 "correct_index": 2,
@@ -321,7 +321,7 @@ PHASE_2_CHAPTERS: list[dict[str, Any]] = [
         ],
         "project": {
             "title": "Async Inference Gateway & Background Worker Microservice",
-            "workspace_dir": "projects/ch08_inference_microservice",
+            "workspace_dir": "projects/ch09_inference_microservice",
             "overview": "Build a decoupled FastAPI Gateway + async background worker queue with `TestClient` tests.",
             "architecture_steps": [
                 "Define shared Pydantic schemas.",
@@ -329,15 +329,15 @@ PHASE_2_CHAPTERS: list[dict[str, Any]] = [
                 "Build async worker loop and test with `TestClient`.",
             ],
             "milestones": [
-                {"id": "ch08-m1", "label": "Create Pydantic contracts"},
-                {"id": "ch08-m2", "label": "Build FastAPI gateway + SSE endpoint"},
-                {"id": "ch08-m3", "label": "Build async worker & pass TestClient pytest"},
+                {"id": "ch09-m1", "label": "Create Pydantic contracts"},
+                {"id": "ch09-m2", "label": "Build FastAPI gateway + SSE endpoint"},
+                {"id": "ch09-m3", "label": "Build async worker & pass TestClient pytest"},
             ],
         },
     },
     {
-        "id": "ch09",
-        "number": 9,
+        "id": "ch10",
+        "number": 10,
         "phase": 2,
         "phase_title": "Phase 2: The AI Engineer's Data, API & Container Stack",
         "title": "Docker & Reproducible AI Environments",
@@ -352,8 +352,8 @@ PHASE_2_CHAPTERS: list[dict[str, Any]] = [
         "visualizer": None,
         "sections": [
             {
-                "id": "ch09-s1",
-                "title": "9.1 `Dockerfile` Syntax, Layer Caching & `docker-compose`",
+                "id": "ch10-s1",
+                "title": "10.1 `Dockerfile` Syntax, Layer Caching & `docker-compose`",
                 "zero_assumption_note": "Note: Docker isn't installed on this PC yet—install Docker Desktop for Windows (WSL 2) when ready to run containers locally.",
                 "definition": (
                     "- **Dockerfile:** A step-by-step recipe listing what OS, Python packages, and code to install.\n"
@@ -418,7 +418,7 @@ PHASE_2_CHAPTERS: list[dict[str, Any]] = [
         ],
         "quizzes": [
             {
-                "id": "ch09-q1",
+                "id": "ch10-q1",
                 "question": "Inside a `docker-compose` network, how should the `gateway` container call the `worker` container?",
                 "options": [
                     "http://localhost:8001",
@@ -432,17 +432,17 @@ PHASE_2_CHAPTERS: list[dict[str, Any]] = [
         ],
         "project": {
             "title": "Containerized Microservice Stack (API + Worker)",
-            "workspace_dir": "projects/ch09_dockerized_stack",
-            "overview": "Package the Chapter 8 Gateway and Worker with `.dockerignore`, layer-cached Dockerfiles, and `docker-compose.yml`.",
+            "workspace_dir": "projects/ch10_dockerized_stack",
+            "overview": "Package the Chapter 9 Gateway and Worker with `.dockerignore`, layer-cached Dockerfiles, and `docker-compose.yml`.",
             "architecture_steps": [
                 "Install Docker Desktop for Windows (WSL 2).",
                 "Write `.dockerignore` and layer-cached `Dockerfile` files.",
                 "Create `docker-compose.yml` with healthchecks and service networking.",
             ],
             "milestones": [
-                {"id": "ch09-m1", "label": "Create .dockerignore & layer-cached Dockerfiles"},
-                {"id": "ch09-m2", "label": "Write docker-compose.yml with healthchecks"},
-                {"id": "ch09-m3", "label": "Validate stack build in Docker Desktop"},
+                {"id": "ch10-m1", "label": "Create .dockerignore & layer-cached Dockerfiles"},
+                {"id": "ch10-m2", "label": "Write docker-compose.yml with healthchecks"},
+                {"id": "ch10-m3", "label": "Validate stack build in Docker Desktop"},
             ],
         },
     },

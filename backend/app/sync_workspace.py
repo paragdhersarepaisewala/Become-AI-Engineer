@@ -27,6 +27,8 @@ def sync_all() -> None:
 def _write_curriculum(chapters: list[dict[str, Any]]) -> None:
     cur_dir = ROOT / "curriculum"
     cur_dir.mkdir(parents=True, exist_ok=True)
+    for old_md in cur_dir.glob("ch*.md"):
+        old_md.unlink(missing_ok=True)
 
     roadmap_lines = [
         "# AI Engineer Academy — 15-Chapter Master Roadmap\n",
@@ -97,6 +99,10 @@ def _write_curriculum(chapters: list[dict[str, Any]]) -> None:
 def _write_workbook(chapters: list[dict[str, Any]], problems: list[dict[str, Any]]) -> None:
     wb_dir = ROOT / "workbook"
     wb_dir.mkdir(parents=True, exist_ok=True)
+    import shutil
+    for old_ch in wb_dir.glob("ch*"):
+        if old_ch.is_dir():
+            shutil.rmtree(old_ch, ignore_errors=True)
     (wb_dir / "README.md").write_text(
         "# Separate Practice Workbook\n\n"
         "Each chapter folder contains:\n"
@@ -172,10 +178,10 @@ def _write_projects(chapters: list[dict[str, Any]]) -> None:
             readme.append(f"- [ ] {m['label']}")
         (proj_dir / "README.md").write_text("\n".join(readme) + "\n", encoding="utf-8")
 
-    # Add legacy_monolith.py starter for Ch 2 refactoring project
-    ch2_dir = ROOT / "projects" / "ch02_log_analyzer"
-    if ch2_dir.exists():
-        (ch2_dir / "legacy_monolith.py").write_text(
+    # Add legacy_monolith.py starter for Ch 3 OOP refactoring project
+    ch3_dir = ROOT / "projects" / "ch03_log_analyzer"
+    if ch3_dir.exists():
+        (ch3_dir / "legacy_monolith.py").write_text(
             '"""Messy monolithic log analyzer — refactor this into models.py, analyzer.py, and cli.py!"""\n\n'
             "SAMPLE_LOGS = [\n"
             '    "[INFO] 2026-11-01 Server started on port 8000",\n'

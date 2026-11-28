@@ -21,11 +21,11 @@ def test_api_end_to_end(tmp_path: Path, monkeypatch) -> None:
 
     dash = client.get("/api/dashboard")
     assert dash.status_code == 200
-    assert dash.json()["chapters"]["available_total"] == 9
-    assert dash.json()["chapters"]["roadmap_total"] == 15
+    assert dash.json()["chapters"]["available_total"] == 10
+    assert dash.json()["chapters"]["roadmap_total"] == 16
 
     chapters = client.get("/api/chapters").json()
-    assert len(chapters) == 15
+    assert len(chapters) == 16
 
     ch1 = client.get("/api/chapters/ch01").json()
     assert len(ch1["sections"]) == 6
@@ -47,11 +47,14 @@ def test_api_end_to_end(tmp_path: Path, monkeypatch) -> None:
             "problem_id": "wb-01-01",
             "mode": "test",
             "code": (
-                "def add_tag(tag: str, tags: list[str] | None = None) -> list[str]:\n"
-                "    result = [] if tags is None else list(tags)\n"
-                "    if tag not in result:\n"
-                "        result.append(tag)\n"
-                "    return result\n"
+                "def grade_summary(scores: list[int]) -> dict[str, int]:\n"
+                "    counts = {'passed': 0, 'failed': 0}\n"
+                "    for s in scores:\n"
+                "        if s >= 60:\n"
+                "            counts['passed'] += 1\n"
+                "        else:\n"
+                "            counts['failed'] += 1\n"
+                "    return counts\n"
             ),
         },
     )
@@ -61,4 +64,4 @@ def test_api_end_to_end(tmp_path: Path, monkeypatch) -> None:
     assert body["progress"]["status"] == "mastered"
 
     projects = client.get("/api/projects").json()
-    assert len(projects) == 15
+    assert len(projects) == 16
