@@ -158,13 +158,13 @@ print('Balance:', acc.balance)
 
 ---
 
-## 4.3 `@dataclass`, `__len__`, `__call__`, Composition & Modules
+## 4.3 `@dataclass`, `__len__` & `__call__`
 
 > **Before You Start:** Double-underscore ('dunder') methods simply teach your custom class how to work with `print()`, `len()`, and `()`.
 
 ### 1. Definition
-- **`@dataclass`:** Auto-writes `__init__`, readable `print()` (`__repr__`), and `==` for data classes.
-- **Composition:** Putting one object inside another (`Playlist` holding `Song` objects).
+- **`@dataclass`:** Auto-writes `__init__`, readable `print()` (`__repr__`), and `==` for data-holding classes.
+- **`__len__` & `__call__`:** Teach your class how to respond to `len(obj)` and function-style calls `obj(x)`.
 
 ### 2. Exact Syntax — @dataclass, __len__ & __call__
 ```python
@@ -183,6 +183,76 @@ class TextCleaner:
 - `@dataclass` eliminates `__init__` boilerplate for data objects.
 - `__len__(self)` enables `len(playlist)`.
 - `__call__(self, x)` lets a configured object be invoked like `cleaner('  Hi  ')`.
+
+### 3. Tiny Example (Line-by-Line) — Calling a Configured Object Like a Function (`__call__`)
+```python
+class Multiplier:
+    def __init__(self, factor: int) -> None:
+        self.factor = factor
+    def __call__(self, x: int) -> int:
+        return x * self.factor
+
+times3 = Multiplier(3)
+print(times3(10))
+```
+
+1. `times3 = Multiplier(3)` stores `self.factor = 3`.
+2. `times3(10)` triggers `__call__(self, 10)` and prints `30`.
+
+### Why `__call__` Matters Later in AI
+PyTorch neural network layers (`layer(x)`) and LangChain Runnables (`chain(prompt)`) both store config/weights in `self` and run via `__call__`.
+
+
+### 4. Practical Example — Configurable `TextCleaner` With `__call__`
+
+```python
+class TextCleaner:
+    def __init__(self, lowercase: bool = True) -> None:
+        self.lowercase = lowercase
+
+    def __call__(self, text: str) -> str:
+        cleaned = ' '.join(text.split())
+        if self.lowercase:
+            return cleaned.lower()
+        return cleaned
+
+clean = TextCleaner(lowercase=True)
+print(clean('  Hello   AI  '))
+```
+
+### Common Mistakes to Avoid
+
+- Expecting `==` to compare field values on a plain class without `@dataclass`.
+
+**Key Takeaway:** Use `@dataclass` for data records, `__len__` for collections, and `__call__` when an object acts like a configured function.
+
+
+---
+
+## 4.4 Composition, Splitting Files (`import`) & Writing `pytest` Tests
+
+> **Before You Start:** Real projects split code into small cooperating classes across clean files instead of one giant 300-line script.
+
+### 1. Definition
+- **Composition ('has-a'):** Putting one object inside another (`Playlist` holding `Song` objects).
+- **Modular Files + `import`:** Putting data models in `models.py`, classes in `analyzer.py`, and automated tests in `test_analyzer.py`.
+
+### 2. Exact Syntax — Composition + Importing From Another File
+```python
+# Inside models.py:   @dataclass class Song: ...
+# Inside player.py:
+from models import Song
+
+class Playlist:
+    def __init__(self) -> None:
+        self.songs: list[Song] = []
+
+    def add(self, song: Song) -> None:
+        self.songs.append(song)
+```
+
+- `from models import Song` reuses `Song` from `models.py` cleanly.
+- Keep file/print I/O out of `models.py` and `player.py` so `pytest` can test classes directly in memory!
 
 ### 3. Tiny Example (Line-by-Line) — Playlist Composing Song Objects
 ```python
@@ -210,8 +280,8 @@ print('Total:', pl.total_seconds())
 1. `Song` holds data for one track cleanly.
 2. `Playlist` holds a list of `Song` objects and sums `s.seconds` -> `300`.
 
-### Splitting Files & Writing `pytest` Tests
-Put `@dataclass` models in `models.py`, OOP logic in `analyzer.py` (no file I/O inside!), file reading in `cli.py`, and `def test_...(): assert ...` in `test_analyzer.py`.
+### Verifying With `pytest`
+Put `def test_playlist_total():` in `test_player.py` with `assert pl.total_seconds() == 300`, then run `python -m pytest`.
 
 
 ### 4. Practical Example — Unit Testing an OOP Class
@@ -225,9 +295,9 @@ def test_playlist_total() -> None:
 
 ### Common Mistakes to Avoid
 
-- Putting file reading inside OOP logic classes, making unit tests hard.
+- Putting `open(...)` inside OOP logic classes, making unit tests hard.
 
-**Key Takeaway:** Use `@dataclass` for data, composition for cooperating objects, and keep I/O out of core classes so `pytest` is effortless.
+**Key Takeaway:** Compose small single-job classes, split them across clean `.py` files with `import`, and test them with `pytest`.
 
 
 ---

@@ -81,12 +81,88 @@ def shortest_hops(graph: dict[str, list[str]], start: str, goal: str) -> int:
 - Forgetting `seen` in BFS -> infinite loop on cyclic graphs.
 - Using `list.pop(0)` instead of `deque.popleft()`.
 
-**Key Takeaway:** Use `deque` for queues/BFS, `heapq` for Top-K, and Kahn's algorithm for dependent tasks.
+**Key Takeaway:** Use `deque` for queues/BFS, `heapq` for Top-K, and `seen` sets to avoid revisiting nodes.
 
 
 ---
 
-## 6.2 Dynamic Programming Demystified (Recursion -> Memo -> Table)
+## 6.2 DAG Topological Sort (Ordering Dependent Tasks)
+
+> **Before You Start:** If Task B needs Task A to finish first, you cannot just sort alphabetically—you need a **dependency order**.
+
+### 1. Definition
+**Topological Sort (Kahn's Algorithm)** orders tasks in a Directed Acyclic Graph (DAG) so every prerequisite finishes before tasks that depend on it—and detects circular deadlocks (`A -> B -> A`).
+
+### 2. Exact Syntax — Kahn's Algorithm (3 Steps)
+```python
+# 1. Count prerequisites (in-degree) and build outgoing `adj` list:
+adj = {t: [] for t in tasks}
+indeg = {t: 0 for t in tasks}
+for src, dst in deps:
+    adj[src].append(dst)
+    indeg[dst] += 1
+
+# 2. Start with tasks having 0 prerequisites (min-heap for alphabetical tie-break):
+heap = [t for t in tasks if indeg[t] == 0]
+heapq.heapify(heap)
+```
+
+- `indeg[t]` = how many unfinished prerequisites task `t` is waiting on.
+- Pop a ready task from `heap`, append to `order`, and subtract `1` from each dependent task's `indeg`. When any dependent hits `0`, push it onto `heap`!
+- At the end, if `len(order) != len(tasks)`, there was a **cycle** (deadlock)!
+
+### 3. Tiny Example (Line-by-Line) — Scheduling `clean -> train -> eval`
+```python
+import heapq
+
+def schedule(tasks, deps):
+    adj = {t: [] for t in tasks}
+    indeg = {t: 0 for t in tasks}
+    for a, b in deps:
+        adj[a].append(b)
+        indeg[b] += 1
+    heap = [t for t in tasks if indeg[t] == 0]
+    heapq.heapify(heap)
+    order = []
+    while heap:
+        cur = heapq.heappop(heap)
+        order.append(cur)
+        for nxt in adj[cur]:
+            indeg[nxt] -= 1
+            if indeg[nxt] == 0:
+                heapq.heappush(heap, nxt)
+    return order
+
+print(schedule(['eval', 'clean', 'train'], [('clean', 'train'), ('train', 'eval')]))
+```
+
+1. `clean` has `indeg=0`, so it pops first.
+2. Finishing `clean` drops `train`'s `indeg` from `1` to `0` -> pushes `train`.
+3. Finishing `train` unlocks `eval` -> returns `['clean', 'train', 'eval']`!
+
+### Detecting Circular Dependencies
+If `A` waits for `B` and `B` waits for `A`, neither ever reaches `indeg == 0`—so `len(order) < len(tasks)` catches the cycle immediately (`raise ValueError('Cycle detected')`).
+
+
+### 4. Practical Example — Cycle Detection Guard
+
+```python
+# After the while heap loop finishes:
+# if len(order) != len(tasks):
+#     raise ValueError('Cycle detected')
+print('If len(order) == len(tasks), the DAG is valid!')
+```
+
+### Common Mistakes to Avoid
+
+- Forgetting `heapq.heapify(heap)` before `heappop(heap)` (leaves list unsorted!).
+
+**Key Takeaway:** Kahn's algorithm tracks `in_degree`, runs `0`-prerequisite tasks via `heapq`, and catches cycles via `len(order) != len(tasks)`.
+
+
+---
+
+## 6.3 Dynamic Programming Demystified (1D Lists & 2D Grids)
 
 > **Before You Start:** Dynamic Programming is NOT a scary trick. It literally means: **save sub-answers so you never calculate the exact same thing twice**.
 
@@ -124,6 +200,11 @@ print('Full table:', dp)
 1. Base cases: 1 way at step 0 (`dp[0]=1`), 1 way to reach step 1 (`dp[1]=1`).
 2. To reach step 2, you came from step 1 or step 0: `1 + 1 = 2`.
 3. Step 3: `2 + 1 = 3`. Step 4: `3 + 2 = 5`.
+
+### Building a 2D DP Grid (Edit Distance)
+To compare two strings `a` (length `m`) and `b` (length `n`), create a 2D table of size `(m + 1) x (n + 1)` with:
+`dp = [[0] * (n + 1) for _ in range(m + 1)]`
+*(Never write `[[0] * (n + 1)] * (m + 1)`—that copies the SAME row reference `m + 1` times!)*
 
 **Step through the interactive 2D DP Table below** to watch Edit Distance (`cat` -> `cut`) fill one cell at a time!
 

@@ -28,7 +28,7 @@ def test_api_end_to_end(tmp_path: Path, monkeypatch) -> None:
     assert len(chapters) == 20
 
     ch1 = client.get("/api/chapters/ch01").json()
-    assert len(ch1["sections"]) == 6
+    assert len(ch1["sections"]) == 7
 
     upd = client.post(
         "/api/chapters/ch01/progress",

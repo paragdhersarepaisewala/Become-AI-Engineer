@@ -269,6 +269,11 @@ print(sum_list([3, 5, 2]))
 3. `sum_list([2])` asks for `2 + sum_list([])`.
 4. `sum_list([])` hits the Base Case and returns `0`, then everything unwinds: `2+0=2`, `5+2=7`, `3+7=10`!
 
+### Two Quick Helpers You'll Use Often: Slicing & `''.join()`
+- **Slicing:** `nums[1:]` means *'everything from index 1 to the end'* (skips `nums[0]`); `nums[:k]` means *'the first `k` items'*.
+- **`''.join(parts)`:** Glues a list of strings like `['a3', 'b2']` into `'a3b2'` cleanly.
+- **Variable Sliding Window:** For `'longest substring without repeats'`, jump `left = last_seen[ch] + 1` whenever `ch` was already seen inside `[left..right]` (`last_seen[ch] >= left`)!
+
 **Step through the interactive Call Stack Visualizer below** to watch recursive frames stack up and return one by one!
 
 

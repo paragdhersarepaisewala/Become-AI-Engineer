@@ -152,13 +152,14 @@ print(out.read_text(encoding='utf-8').strip())
 - **JSONL (`.jsonl`):** 'JSON Lines'—one JSON object per line (standard for LLM datasets).
 - **CSV (`.csv`):** Comma-separated spreadsheet table.
 
-### 2. Exact Syntax — `json` and `csv.DictReader` Basics
+### 2. Exact Syntax — `json`, `isinstance()` & `csv.DictReader` Basics
 ```python
 import csv, json
 from pathlib import Path
 
 data = json.loads('{"name": "AI"}')   # string -> dict
-text = json.dumps({'name': 'AI'})       # dict -> string
+if isinstance(data, dict):              # safely verify it is a dict!
+    print(data.get('name'))
 
 with Path('data.csv').open('r', encoding='utf-8', newline='') as f:
     rows = list(csv.DictReader(f))
@@ -166,6 +167,7 @@ with Path('data.csv').open('r', encoding='utf-8', newline='') as f:
 
 - `json.load(f)` / `json.dump(obj, f)` work on open files.
 - `json.loads(s)` / `json.dumps(obj)` ('s' = string) work on strings—ideal for `.jsonl` lines!
+- `isinstance(value, dict)` / `isinstance(value, str)` checks a value's type safely before calling `.get()` or `.strip()`.
 - `csv.DictReader(f)` reads each spreadsheet row as a `dict` keyed by header names.
 
 ### 3. Tiny Example (Line-by-Line) — Converting Python Dict -> JSON String -> Python Dict

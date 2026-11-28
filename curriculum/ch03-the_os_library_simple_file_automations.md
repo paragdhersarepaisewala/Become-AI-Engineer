@@ -48,7 +48,12 @@ for name in os.listdir(folder):
 4. Line 6: Prints only real `.txt` files (ignoring directories).
 
 ### Walking Subfolders Automatically (`os.walk`)
-`os.listdir()` looks **one level deep**. When you want every file inside nested subfolders too, `for root, dirs, files in os.walk(folder):` visits every subfolder automatically!
+`os.listdir()` looks **one level deep**. When you want every file inside nested subfolders too:
+```python
+for root, dirs, files in os.walk(folder):
+    for name in files:
+        print(os.path.join(root, name))
+```
 
 
 ### 4. Practical Example — Counting Files by Extension in a Folder

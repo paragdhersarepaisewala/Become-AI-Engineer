@@ -401,6 +401,76 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                 ],
                 "key_takeaway": "Functions should `return` values (not just `print`), and optional lists should default to `None` followed by `if existing is None:`.",
             },
+            {
+                "id": "ch01-s7",
+                "title": "1.7 Error Handling (`try / except` & `raise ValueError`)",
+                "zero_assumption_note": "If you ever tried `int('abc')` or `10 / 0`, Python stopped with red text (an Exception). Here is how to catch errors politely AND trigger clear errors on bad inputs.",
+                "definition": (
+                    "- **`try / except`:** Runs risky code inside `try:`; if an expected error happens, jumps to `except` instead of crashing the whole program.\n"
+                    "- **`raise ValueError('...')`:** Intentionally stops your own function with a clear message when a caller passes impossible input (like a negative price)."
+                ),
+                "syntax_box": {
+                    "title": "Catching Errors (`try / except`) & Raising Errors (`raise`)",
+                    "syntax": (
+                        "# 1. Catching an error cleanly:\n"
+                        "try:\n"
+                        "    num = int(user_text)\n"
+                        "except ValueError:\n"
+                        "    num = 0                    # fallback value instead of crashing!\n\n"
+                        "# 2. Guarding your own function with `raise`:\n"
+                        "def set_age(age: int) -> int:\n"
+                        "    if age < 0:\n"
+                        "        raise ValueError('Age cannot be negative')\n"
+                        "    return age"
+                    ),
+                    "breakdown": [
+                        "Common built-in errors: `ValueError` (right type, bad value like `int('abc')`), `ZeroDivisionError` (`10 / 0`), `KeyError` (missing dict key), `TypeError` (`'5' + 5`).",
+                        "Always name the **specific** error (`except ValueError:`), never bare `except:` (bare `except:` hides your own typos!).",
+                        "When testing functions that `raise ValueError`, callers wrap them in `try / except ValueError:` to confirm bad inputs are caught!",
+                    ],
+                },
+                "tiny_example": {
+                    "title": "Converting Messy Strings Safely",
+                    "code": (
+                        "def to_int_safe(text: str, default: int = 0) -> int:\n"
+                        "    try:\n"
+                        "        return int(text)\n"
+                        "    except ValueError:\n"
+                        "        return default\n\n"
+                        "print(to_int_safe('42'))     # 42\n"
+                        "print(to_int_safe('hello'))  # 0 (no crash!)"
+                    ),
+                    "line_by_line": [
+                        "`to_int_safe('42')`: `int('42')` succeeds -> returns `42`.",
+                        "`to_int_safe('hello')`: `int('hello')` fails with `ValueError`, jumps to `except ValueError:`, and returns `0`!",
+                    ],
+                },
+                "body_markdown": (
+                    "### Why Validation (`raise ValueError`) Helps Beginners\n"
+                    "Suppose you write `apply_discount(price, discount_percent)`. If someone passes `price = -50`, silently returning `-45` hides a bug! "
+                    "Checking `if price < 0: raise ValueError('Invalid input')` catches bad data immediately at the door."
+                ),
+                "code_example": {
+                    "title": "Validating Inputs With `raise` + Catching Errors Safely",
+                    "code": (
+                        "def apply_discount(price: float, discount_percent: float = 10.0) -> float:\n"
+                        "    if price < 0 or discount_percent < 0 or discount_percent > 100:\n"
+                        "        raise ValueError('Invalid input')\n"
+                        "    return round(price - price * (discount_percent / 100), 2)\n\n"
+                        "# Block 2: Caller handles bad input politely with try/except\n"
+                        "for p in [100, -20]:\n"
+                        "    try:\n"
+                        "        print('Final price:', apply_discount(p))\n"
+                        "    except ValueError as err:\n"
+                        "        print('Skipped bad price:', err)\n"
+                    ),
+                },
+                "common_mistakes": [
+                    "Writing bare `except:` with no error name (silently hides real bugs like misspelled variables!).",
+                    "Returning `None` or printing `'Error'` instead of `raise ValueError(...)` when a function's contract requires valid numbers.",
+                ],
+                "key_takeaway": "Use `try / except SpecificError:` to handle expected failures politely, and `raise ValueError(...)` to reject invalid inputs early.",
+            },
         ],
         "quizzes": [
             {
@@ -416,6 +486,18 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                 "options": ["5", "4", "None", "Error"],
                 "correct_index": 2,
                 "explanation": "Without a `return` statement, a Python function always returns `None`.",
+            },
+            {
+                "id": "ch01-q3",
+                "question": "Why should you write `except ValueError:` instead of bare `except:`?",
+                "options": [
+                    "Python forbids bare `except:`",
+                    "Naming the exact error handles expected bad values without accidentally hiding typos or unrelated bugs",
+                    "`except ValueError:` runs faster",
+                    "It prints stack traces in green",
+                ],
+                "correct_index": 1,
+                "explanation": "Bare `except:` catches everything—even misspelled variable names (`NameError`)—making bugs invisible.",
             },
         ],
         "project": {
@@ -590,18 +672,20 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                     "- **CSV (`.csv`):** Comma-separated spreadsheet table."
                 ),
                 "syntax_box": {
-                    "title": "`json` and `csv.DictReader` Basics",
+                    "title": "`json`, `isinstance()` & `csv.DictReader` Basics",
                     "syntax": (
                         "import csv, json\n"
                         "from pathlib import Path\n\n"
                         "data = json.loads('{\"name\": \"AI\"}')   # string -> dict\n"
-                        "text = json.dumps({'name': 'AI'})       # dict -> string\n\n"
+                        "if isinstance(data, dict):              # safely verify it is a dict!\n"
+                        "    print(data.get('name'))\n\n"
                         "with Path('data.csv').open('r', encoding='utf-8', newline='') as f:\n"
                         "    rows = list(csv.DictReader(f))"
                     ),
                     "breakdown": [
                         "`json.load(f)` / `json.dump(obj, f)` work on open files.",
                         "`json.loads(s)` / `json.dumps(obj)` ('s' = string) work on strings—ideal for `.jsonl` lines!",
+                        "`isinstance(value, dict)` / `isinstance(value, str)` checks a value's type safely before calling `.get()` or `.strip()`.",
                         "`csv.DictReader(f)` reads each spreadsheet row as a `dict` keyed by header names.",
                     ],
                 },
@@ -749,7 +833,12 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                 },
                 "body_markdown": (
                     "### Walking Subfolders Automatically (`os.walk`)\n"
-                    "`os.listdir()` looks **one level deep**. When you want every file inside nested subfolders too, `for root, dirs, files in os.walk(folder):` visits every subfolder automatically!"
+                    "`os.listdir()` looks **one level deep**. When you want every file inside nested subfolders too:\n"
+                    "```python\n"
+                    "for root, dirs, files in os.walk(folder):\n"
+                    "    for name in files:\n"
+                    "        print(os.path.join(root, name))\n"
+                    "```"
                 ),
                 "code_example": {
                     "title": "Counting Files by Extension in a Folder",
@@ -1038,11 +1127,11 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
             },
             {
                 "id": "ch04-s3",
-                "title": "4.3 `@dataclass`, `__len__`, `__call__`, Composition & Modules",
+                "title": "4.3 `@dataclass`, `__len__` & `__call__`",
                 "zero_assumption_note": "Double-underscore ('dunder') methods simply teach your custom class how to work with `print()`, `len()`, and `()`.",
                 "definition": (
-                    "- **`@dataclass`:** Auto-writes `__init__`, readable `print()` (`__repr__`), and `==` for data classes.\n"
-                    "- **Composition:** Putting one object inside another (`Playlist` holding `Song` objects)."
+                    "- **`@dataclass`:** Auto-writes `__init__`, readable `print()` (`__repr__`), and `==` for data-holding classes.\n"
+                    "- **`__len__` & `__call__`:** Teach your class how to respond to `len(obj)` and function-style calls `obj(x)`."
                 ),
                 "syntax_box": {
                     "title": "@dataclass, __len__ & __call__",
@@ -1060,6 +1149,71 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                         "`@dataclass` eliminates `__init__` boilerplate for data objects.",
                         "`__len__(self)` enables `len(playlist)`.",
                         "`__call__(self, x)` lets a configured object be invoked like `cleaner('  Hi  ')`.",
+                    ],
+                },
+                "tiny_example": {
+                    "title": "Calling a Configured Object Like a Function (`__call__`)",
+                    "code": (
+                        "class Multiplier:\n"
+                        "    def __init__(self, factor: int) -> None:\n"
+                        "        self.factor = factor\n"
+                        "    def __call__(self, x: int) -> int:\n"
+                        "        return x * self.factor\n\n"
+                        "times3 = Multiplier(3)\n"
+                        "print(times3(10))"
+                    ),
+                    "line_by_line": [
+                        "`times3 = Multiplier(3)` stores `self.factor = 3`.",
+                        "`times3(10)` triggers `__call__(self, 10)` and prints `30`.",
+                    ],
+                },
+                "body_markdown": (
+                    "### Why `__call__` Matters Later in AI\n"
+                    "PyTorch neural network layers (`layer(x)`) and LangChain Runnables (`chain(prompt)`) both store config/weights in `self` and run via `__call__`."
+                ),
+                "code_example": {
+                    "title": "Configurable `TextCleaner` With `__call__`",
+                    "code": (
+                        "class TextCleaner:\n"
+                        "    def __init__(self, lowercase: bool = True) -> None:\n"
+                        "        self.lowercase = lowercase\n\n"
+                        "    def __call__(self, text: str) -> str:\n"
+                        "        cleaned = ' '.join(text.split())\n"
+                        "        if self.lowercase:\n"
+                        "            return cleaned.lower()\n"
+                        "        return cleaned\n\n"
+                        "clean = TextCleaner(lowercase=True)\n"
+                        "print(clean('  Hello   AI  '))\n"
+                    ),
+                },
+                "common_mistakes": [
+                    "Expecting `==` to compare field values on a plain class without `@dataclass`.",
+                ],
+                "key_takeaway": "Use `@dataclass` for data records, `__len__` for collections, and `__call__` when an object acts like a configured function.",
+            },
+            {
+                "id": "ch04-s4",
+                "title": "4.4 Composition, Splitting Files (`import`) & Writing `pytest` Tests",
+                "zero_assumption_note": "Real projects split code into small cooperating classes across clean files instead of one giant 300-line script.",
+                "definition": (
+                    "- **Composition ('has-a'):** Putting one object inside another (`Playlist` holding `Song` objects).\n"
+                    "- **Modular Files + `import`:** Putting data models in `models.py`, classes in `analyzer.py`, and automated tests in `test_analyzer.py`."
+                ),
+                "syntax_box": {
+                    "title": "Composition + Importing From Another File",
+                    "syntax": (
+                        "# Inside models.py:   @dataclass class Song: ...\n"
+                        "# Inside player.py:\n"
+                        "from models import Song\n\n"
+                        "class Playlist:\n"
+                        "    def __init__(self) -> None:\n"
+                        "        self.songs: list[Song] = []\n\n"
+                        "    def add(self, song: Song) -> None:\n"
+                        "        self.songs.append(song)"
+                    ),
+                    "breakdown": [
+                        "`from models import Song` reuses `Song` from `models.py` cleanly.",
+                        "Keep file/print I/O out of `models.py` and `player.py` so `pytest` can test classes directly in memory!",
                     ],
                 },
                 "tiny_example": {
@@ -1088,8 +1242,8 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                     ],
                 },
                 "body_markdown": (
-                    "### Splitting Files & Writing `pytest` Tests\n"
-                    "Put `@dataclass` models in `models.py`, OOP logic in `analyzer.py` (no file I/O inside!), file reading in `cli.py`, and `def test_...(): assert ...` in `test_analyzer.py`."
+                    "### Verifying With `pytest`\n"
+                    "Put `def test_playlist_total():` in `test_player.py` with `assert pl.total_seconds() == 300`, then run `python -m pytest`."
                 ),
                 "code_example": {
                     "title": "Unit Testing an OOP Class",
@@ -1101,9 +1255,9 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                     ),
                 },
                 "common_mistakes": [
-                    "Putting file reading inside OOP logic classes, making unit tests hard.",
+                    "Putting `open(...)` inside OOP logic classes, making unit tests hard.",
                 ],
-                "key_takeaway": "Use `@dataclass` for data, composition for cooperating objects, and keep I/O out of core classes so `pytest` is effortless.",
+                "key_takeaway": "Compose small single-job classes, split them across clean `.py` files with `import`, and test them with `pytest`.",
             },
         ],
         "quizzes": [

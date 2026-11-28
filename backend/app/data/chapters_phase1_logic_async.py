@@ -284,6 +284,10 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
                     ],
                 },
                 "body_markdown": (
+                    "### Two Quick Helpers You'll Use Often: Slicing & `''.join()`\n"
+                    "- **Slicing:** `nums[1:]` means *'everything from index 1 to the end'* (skips `nums[0]`); `nums[:k]` means *'the first `k` items'*.\n"
+                    "- **`''.join(parts)`:** Glues a list of strings like `['a3', 'b2']` into `'a3b2'` cleanly.\n"
+                    "- **Variable Sliding Window:** For `'longest substring without repeats'`, jump `left = last_seen[ch] + 1` whenever `ch` was already seen inside `[left..right]` (`last_seen[ch] >= left`)!\n\n"
                     "**Step through the interactive Call Stack Visualizer below** to watch recursive frames stack up and return one by one!"
                 ),
                 "code_example": {
@@ -452,11 +456,84 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
                     "Forgetting `seen` in BFS -> infinite loop on cyclic graphs.",
                     "Using `list.pop(0)` instead of `deque.popleft()`.",
                 ],
-                "key_takeaway": "Use `deque` for queues/BFS, `heapq` for Top-K, and Kahn's algorithm for dependent tasks.",
+                "key_takeaway": "Use `deque` for queues/BFS, `heapq` for Top-K, and `seen` sets to avoid revisiting nodes.",
             },
             {
                 "id": "ch06-s2",
-                "title": "6.2 Dynamic Programming Demystified (Recursion -> Memo -> Table)",
+                "title": "6.2 DAG Topological Sort (Ordering Dependent Tasks)",
+                "zero_assumption_note": "If Task B needs Task A to finish first, you cannot just sort alphabetically—you need a **dependency order**.",
+                "definition": (
+                    "**Topological Sort (Kahn's Algorithm)** orders tasks in a Directed Acyclic Graph (DAG) so every prerequisite finishes before tasks that depend on it—and detects circular deadlocks (`A -> B -> A`)."
+                ),
+                "syntax_box": {
+                    "title": "Kahn's Algorithm (3 Steps)",
+                    "syntax": (
+                        "# 1. Count prerequisites (in-degree) and build outgoing `adj` list:\n"
+                        "adj = {t: [] for t in tasks}\n"
+                        "indeg = {t: 0 for t in tasks}\n"
+                        "for src, dst in deps:\n"
+                        "    adj[src].append(dst)\n"
+                        "    indeg[dst] += 1\n\n"
+                        "# 2. Start with tasks having 0 prerequisites (min-heap for alphabetical tie-break):\n"
+                        "heap = [t for t in tasks if indeg[t] == 0]\n"
+                        "heapq.heapify(heap)"
+                    ),
+                    "breakdown": [
+                        "`indeg[t]` = how many unfinished prerequisites task `t` is waiting on.",
+                        "Pop a ready task from `heap`, append to `order`, and subtract `1` from each dependent task's `indeg`. When any dependent hits `0`, push it onto `heap`!",
+                        "At the end, if `len(order) != len(tasks)`, there was a **cycle** (deadlock)!",
+                    ],
+                },
+                "tiny_example": {
+                    "title": "Scheduling `clean -> train -> eval`",
+                    "code": (
+                        "import heapq\n\n"
+                        "def schedule(tasks, deps):\n"
+                        "    adj = {t: [] for t in tasks}\n"
+                        "    indeg = {t: 0 for t in tasks}\n"
+                        "    for a, b in deps:\n"
+                        "        adj[a].append(b)\n"
+                        "        indeg[b] += 1\n"
+                        "    heap = [t for t in tasks if indeg[t] == 0]\n"
+                        "    heapq.heapify(heap)\n"
+                        "    order = []\n"
+                        "    while heap:\n"
+                        "        cur = heapq.heappop(heap)\n"
+                        "        order.append(cur)\n"
+                        "        for nxt in adj[cur]:\n"
+                        "            indeg[nxt] -= 1\n"
+                        "            if indeg[nxt] == 0:\n"
+                        "                heapq.heappush(heap, nxt)\n"
+                        "    return order\n\n"
+                        "print(schedule(['eval', 'clean', 'train'], [('clean', 'train'), ('train', 'eval')]))"
+                    ),
+                    "line_by_line": [
+                        "`clean` has `indeg=0`, so it pops first.",
+                        "Finishing `clean` drops `train`'s `indeg` from `1` to `0` -> pushes `train`.",
+                        "Finishing `train` unlocks `eval` -> returns `['clean', 'train', 'eval']`!",
+                    ],
+                },
+                "body_markdown": (
+                    "### Detecting Circular Dependencies\n"
+                    "If `A` waits for `B` and `B` waits for `A`, neither ever reaches `indeg == 0`—so `len(order) < len(tasks)` catches the cycle immediately (`raise ValueError('Cycle detected')`)."
+                ),
+                "code_example": {
+                    "title": "Cycle Detection Guard",
+                    "code": (
+                        "# After the while heap loop finishes:\n"
+                        "# if len(order) != len(tasks):\n"
+                        "#     raise ValueError('Cycle detected')\n"
+                        "print('If len(order) == len(tasks), the DAG is valid!')\n"
+                    ),
+                },
+                "common_mistakes": [
+                    "Forgetting `heapq.heapify(heap)` before `heappop(heap)` (leaves list unsorted!).",
+                ],
+                "key_takeaway": "Kahn's algorithm tracks `in_degree`, runs `0`-prerequisite tasks via `heapq`, and catches cycles via `len(order) != len(tasks)`.",
+            },
+            {
+                "id": "ch06-s3",
+                "title": "6.3 Dynamic Programming Demystified (1D Lists & 2D Grids)",
                 "zero_assumption_note": "Dynamic Programming is NOT a scary trick. It literally means: **save sub-answers so you never calculate the exact same thing twice**.",
                 "definition": (
                     "**Dynamic Programming (DP)** takes a recursive problem where the same smaller calls repeat over and over, and caches each answer once in a `memo` dict or `dp` list."
@@ -497,6 +574,10 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
                     ],
                 },
                 "body_markdown": (
+                    "### Building a 2D DP Grid (Edit Distance)\n"
+                    "To compare two strings `a` (length `m`) and `b` (length `n`), create a 2D table of size `(m + 1) x (n + 1)` with:\n"
+                    "`dp = [[0] * (n + 1) for _ in range(m + 1)]`\n"
+                    "*(Never write `[[0] * (n + 1)] * (m + 1)`—that copies the SAME row reference `m + 1` times!)*\n\n"
                     "**Step through the interactive 2D DP Table below** to watch Edit Distance (`cat` -> `cut`) fill one cell at a time!"
                 ),
                 "code_example": {
@@ -619,7 +700,86 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
                     ],
                 },
                 "body_markdown": (
-                    "**Try the interactive Asyncio Event Loop Simulator below** to compare Sequential `for await` vs `gather` vs `Semaphore(2)`!"
+                    "Next, in **Section 7.2**, we limit concurrency with `Semaphore` and add safe exponential-backoff retries."
+                ),
+                "code_example": {
+                    "title": "Unpacking Tasks Into `asyncio.gather(*tasks)`",
+                    "code": (
+                        "import asyncio\n\n"
+                        "async def double_async(n: int) -> int:\n"
+                        "    await asyncio.sleep(0.02)\n"
+                        "    return n * 2\n\n"
+                        "async def main() -> None:\n"
+                        "    # `*tasks` unpacks a list [t1, t2, t3] into separate arguments gather(t1, t2, t3)\n"
+                        "    tasks = [double_async(i) for i in [1, 2, 3, 4]]\n"
+                        "    results = await asyncio.gather(*tasks)\n"
+                        "    print(results)\n\n"
+                        "asyncio.run(main())\n"
+                    ),
+                },
+                "common_mistakes": [
+                    "Calling `time.sleep(1)` or `requests.get()` inside `async def` (freezes the whole event loop!). Use `await asyncio.sleep()` / `httpx.AsyncClient`.",
+                    "Writing `for x in items: await task(x)` (runs sequentially instead of using `asyncio.gather`).",
+                ],
+                "key_takeaway": "Use `async def` + `await` for waiting I/O, and `asyncio.gather(*tasks)` to run a list of coroutines concurrently.",
+            },
+            {
+                "id": "ch07-s2",
+                "title": "7.2 Limiting Concurrency (`Semaphore`) & Exponential Backoff Retries",
+                "zero_assumption_note": "Sending 1,000 API requests at the exact same millisecond crashes servers (`429 Too Many Requests`). You need two guardrails: a concurrency cap and smart retries.",
+                "definition": (
+                    "- **`asyncio.Semaphore(N)`:** A gatekeeper allowing at most `N` coroutines inside `async with sem:` at the same time.\n"
+                    "- **Exponential Backoff:** Waiting slightly longer after each failed try (`0.1s -> 0.2s -> 0.4s`) so overloaded APIs recover."
+                ),
+                "syntax_box": {
+                    "title": "Semaphore + Retry Loop Syntax",
+                    "syntax": (
+                        "sem = asyncio.Semaphore(3)        # max 3 running at once\n"
+                        "async with sem:\n"
+                        "    await do_work()\n\n"
+                        "# Exponential backoff retry:\n"
+                        "for attempt in range(max_retries + 1):\n"
+                        "    try:\n"
+                        "        return await fn()\n"
+                        "    except Exception:\n"
+                        "        if attempt == max_retries:\n"
+                        "            raise                 # out of retries -> re-raise error!\n"
+                        "        await asyncio.sleep(base_delay * (2 ** attempt))"
+                    ),
+                    "breakdown": [
+                        "`async with sem:` acquires a slot on entry and **always** releases it on exit (even if an error happens).",
+                        "`2 ** attempt` doubles the delay on each retry (`1x, 2x, 4x`).",
+                        "Plain `raise` inside `except` re-throws the original exception once all retries are used up.",
+                    ],
+                },
+                "tiny_example": {
+                    "title": "Retrying a Flaky Coroutine Twice Before Succeeding",
+                    "code": (
+                        "import asyncio\n\n"
+                        "state = {'tries': 0}\n"
+                        "async def flaky_api():\n"
+                        "    state['tries'] += 1\n"
+                        "    if state['tries'] < 3:\n"
+                        "        raise RuntimeError('Temporary 429')\n"
+                        "    return 'Success on try 3!'\n\n"
+                        "async def retry(fn, max_retries=3, base_delay=0.01):\n"
+                        "    for attempt in range(max_retries + 1):\n"
+                        "        try:\n"
+                        "            return await fn()\n"
+                        "        except Exception:\n"
+                        "            if attempt == max_retries:\n"
+                        "                raise\n"
+                        "            await asyncio.sleep(base_delay * (2 ** attempt))\n\n"
+                        "print(asyncio.run(retry(flaky_api)))"
+                    ),
+                    "line_by_line": [
+                        "Try 1 (`attempt=0`): fails -> sleeps `0.01s`.",
+                        "Try 2 (`attempt=1`): fails -> sleeps `0.02s`.",
+                        "Try 3 (`attempt=2`): succeeds and returns `'Success on try 3!'`.",
+                    ],
+                },
+                "body_markdown": (
+                    "**Try the interactive Asyncio Event Loop Simulator below** to compare Sequential vs `gather` vs `Semaphore(2)`!"
                 ),
                 "code_example": {
                     "title": "Capping Concurrency With `asyncio.Semaphore`",
@@ -631,15 +791,15 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
                         "        return f'done-{item_id}'\n\n"
                         "async def run_batch() -> list[str]:\n"
                         "    sem = asyncio.Semaphore(3)\n"
-                        "    return list(await asyncio.gather(*(bounded_worker(sem, i) for i in range(6))))\n\n"
+                        "    tasks = [bounded_worker(sem, i) for i in range(6)]\n"
+                        "    return list(await asyncio.gather(*tasks))\n\n"
                         "print(asyncio.run(run_batch()))\n"
                     ),
                 },
                 "common_mistakes": [
-                    "Calling `time.sleep(1)` or `requests.get()` inside `async def` (freezes the whole event loop!). Use `await asyncio.sleep()` / `httpx.AsyncClient`.",
-                    "Writing `for x in items: await task(x)` (runs sequentially instead of using `asyncio.gather`).",
+                    "Creating a brand-new `asyncio.Semaphore(3)` *inside* the worker function (each task gets its own semaphore, so zero limiting happens!). Create `sem` **once** outside and pass it in.",
                 ],
-                "key_takeaway": "Use `async def` + `await` for waiting I/O, `asyncio.gather` to overlap tasks, and `Semaphore` to limit concurrent requests.",
+                "key_takeaway": "Create one `Semaphore` outside workers to cap concurrency, and use `await asyncio.sleep(base_delay * 2**attempt)` for non-blocking retries.",
             },
         ],
         "quizzes": [

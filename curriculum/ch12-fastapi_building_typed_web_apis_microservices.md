@@ -80,7 +80,79 @@ async def stream_words() -> StreamingResponse:
 
 - Running slow blocking CPU/PyTorch calls directly inside `async def` without `await` (freezes the server!).
 
-**Key Takeaway:** Validate payloads with Pydantic, test with `TestClient`, stream tokens via SSE, and offload heavy work to workers.
+**Key Takeaway:** Validate payloads with Pydantic and test endpoints instantly with `TestClient`.
+
+
+---
+
+## 12.2 Streaming (`SSE`) & Async Worker Queues (`asyncio.Queue`)
+
+> **Before You Start:** If a model takes 10 seconds to run, don't freeze the HTTP server—either stream words live OR put jobs onto a queue for a worker!
+
+### 1. Definition
+- **`StreamingResponse` (SSE):** Sends tokens word-by-word as they generate instead of waiting until the end.
+- **`asyncio.Queue`:** A thread-safe async waiting line where the API Gateway submits jobs (`put_nowait`) and a background worker pulls them (`await queue.get()`).
+
+### 2. Exact Syntax — `asyncio.Queue` & `StreamingResponse` Syntax
+```python
+import asyncio
+queue = asyncio.Queue()
+
+queue.put_nowait(('job-1', 'payload'))  # Gateway adds job without blocking
+if not queue.empty():
+    job_id, data = await queue.get()    # Worker pops next job
+    queue.task_done()                   # Mark job finished
+```
+
+- `put_nowait(item)`: pushes onto the queue immediately without needing `await`.
+- `queue.empty()`: returns `True` if nothing is waiting.
+- `await queue.get()` + `queue.task_done()`: worker pulls one job, processes it, and marks it done.
+
+### 3. Tiny Example (Line-by-Line) — Mini Async Job Queue Lifecycle
+```python
+import asyncio
+
+q = asyncio.Queue()
+q.put_nowait(('job-1', 'hello'))
+
+async def worker():
+    jid, text = await q.get()
+    q.task_done()
+    return jid, text.upper()
+
+print(asyncio.run(worker()))
+```
+
+1. Enqueues `('job-1', 'hello')`.
+2. Worker pops it, transforms `'hello'` -> `'HELLO'`, calls `task_done()`, and prints `('job-1', 'HELLO')`.
+
+### Why This Pattern Powers Production Microservices
+Start with `asyncio.Queue` in memory; later you can swap the exact same `submit()` / `process_one()` interface to Redis without changing your FastAPI routes!
+
+
+### 4. Practical Example — Streaming Words via Server-Sent Events (SSE)
+
+```python
+import asyncio
+from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
+
+app = FastAPI()
+
+@app.get('/stream')
+async def stream_words() -> StreamingResponse:
+    async def token_generator():
+        for word in ['AI', 'engineers', 'ship', 'systems.']:
+            yield f'data: {word}\n\n'
+            await asyncio.sleep(0.02)
+    return StreamingResponse(token_generator(), media_type='text/event-stream')
+```
+
+### Common Mistakes to Avoid
+
+- Calling `await queue.get()` on an empty queue without checking `if self.queue.empty():` when you want `process_one()` to return `False` instead of hanging forever.
+
+**Key Takeaway:** Stream long responses with SSE, and decouple heavy tasks from HTTP intake using `asyncio.Queue` (`put_nowait`, `get`, `task_done`).
 
 
 ---

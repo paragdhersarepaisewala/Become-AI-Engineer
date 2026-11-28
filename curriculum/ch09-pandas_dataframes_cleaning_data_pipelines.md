@@ -73,7 +73,81 @@ print(df.drop_duplicates(subset=['hash']).reset_index(drop=True))
 - Using `.iterrows()` to edit rows instead of vectorized `.str` / `.map()`.
 - Forgetting `.copy()` after filtering before adding new columns.
 
-**Key Takeaway:** Drop nulls, `.copy()`, clean columns with `.str`, deduplicate with hashes, and summarize with `.groupby().agg()`.
+**Key Takeaway:** Drop nulls, `.copy()`, and clean columns with `.str` before running aggregations.
+
+
+---
+
+## 9.2 `groupby().agg(...)` Named Aggregations, Sorting & Deduplication
+
+> **Before You Start:** Plain `.groupby('src')['tokens'].mean()` only computes one metric. Real pipelines need counts, sums, and averages together with clean column names.
+
+### 1. Definition
+- **Named Aggregation (`.agg(new_col=('old_col', 'func'))`):** Computes multiple summary stats per group in one call with flat column names.
+- **`.sort_values(..., ascending=False)` + `.drop_duplicates(..., keep='first')`:** Keeps the highest-scoring row when duplicates exist.
+
+### 2. Exact Syntax — Named GroupBy Aggregation & Score-First Deduplication
+```python
+summary = (
+    df.groupby('source', as_index=False)
+    .agg(
+        total_rows=('tokens', 'count'),
+        valid_rows=('is_valid', 'sum'),
+        avg_tokens=('tokens', 'mean'),
+    )
+    .sort_values('source')
+    .reset_index(drop=True)
+)
+summary['valid_rows'] = summary['valid_rows'].astype(int)
+```
+
+- `new_name=('source_col', 'agg_func')`: supports `'count'`, `'sum'`, `'mean'`, `'min'`, `'max'`.
+- `.astype(int)` converts True/False sum floats cleanly to integers.
+- `.reset_index(drop=True)` resets messy row numbers `0, 2, 5` back to `0, 1, 2` after filtering or sorting.
+
+### 3. Tiny Example (Line-by-Line) — Summarizing Dataset Sources
+```python
+import pandas as pd
+df = pd.DataFrame([
+    {'source': 'wiki', 'tokens': 100, 'is_valid': True},
+    {'source': 'wiki', 'tokens': 200, 'is_valid': False},
+    {'source': 'arxiv', 'tokens': 300, 'is_valid': True},
+])
+res = df.groupby('source', as_index=False).agg(
+    total_rows=('tokens', 'count'),
+    valid_rows=('is_valid', 'sum'),
+    avg_tokens=('tokens', 'mean'),
+)
+print(res)
+```
+
+1. Groups rows by `'source'` (`arxiv` and `wiki`).
+2. Computes all 3 summary columns cleanly in one table.
+
+### Collapsing Whitespace in Pandas Columns
+`df['text'].astype(str).str.split().str.join(' ')` collapses `'  Hello   AI  '` into `'Hello AI'` across every row without a Python loop!
+
+
+### 4. Practical Example — Cleaning, Deduplicating & Keeping Max Score
+
+```python
+import pandas as pd
+
+df = pd.DataFrame([
+    {'id': 1, 'text': '  Hello   AI ', 'score': 0.5},
+    {'id': 2, 'text': 'hello ai', 'score': 0.95},
+])
+out = df.copy()
+out['clean'] = out['text'].str.split().str.join(' ').str.lower()
+out = out.sort_values('score', ascending=False).drop_duplicates('clean', keep='first')
+print(out.reset_index(drop=True))
+```
+
+### Common Mistakes to Avoid
+
+- Forgetting `.reset_index(drop=True)` after sorting/deduplicating (leaves old index labels like `1` instead of `0`).
+
+**Key Takeaway:** Use `.groupby(..., as_index=False).agg(...)` for flat multi-metric tables and sort before `.drop_duplicates(keep='first')`.
 
 
 ---

@@ -32,3 +32,17 @@ def apply_discount(price: float, discount_percent: float = 10.0) -> float:
 
 if __name__ == '__main__':
     print(apply_discount(100))
+
+
+# --- 1.4: Error Handling: Safe Integer List Parser ---
+def parse_ints(items: list[str]) -> list[int]:
+    out: list[int] = []
+    for raw in items:
+        try:
+            out.append(int(raw.strip()))
+        except ValueError:
+            continue
+    return out
+
+if __name__ == '__main__':
+    print(parse_ints([' 10 ', 'abc', '-5', '']))

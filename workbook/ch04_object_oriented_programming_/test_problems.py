@@ -16,3 +16,8 @@ def test_wb_04_02_playlist() -> None:
     pl.add(sol.Song('Intro', 90))
     pl.add(sol.Song('Main', 210))
     assert len(pl) == 2 and pl.total_seconds() == 300
+
+
+def test_wb_04_03_pipeline() -> None:
+    p = sol.Pipeline([sol.StripWhitespace(), sol.ReplaceWord('ml', 'AI')])
+    assert p('  learn   ml   fast ') == 'learn AI fast'

@@ -26,3 +26,12 @@ def apply_discount(price: float, discount_percent: float = 10.0) -> float:
 
 if __name__ == '__main__':
     print(apply_discount(100))
+
+
+# --- 1.4: Error Handling: Safe Integer List Parser ---
+def parse_ints(items: list[str]) -> list[int]:
+    # TODO: convert valid strings to int and skip invalid ones using try/except ValueError
+    pass
+
+if __name__ == '__main__':
+    print(parse_ints([' 10 ', 'abc', '-5', '']))

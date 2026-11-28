@@ -62,27 +62,79 @@ PHASE_2_CHAPTERS: list[dict[str, Any]] = [
                     ],
                 },
                 "body_markdown": (
-                    "### Broadcasting & Dot Product (`@`)\n"
-                    "- **Broadcasting:** Compares two shapes **right-to-left**. Dimensions match if they are **equal** OR **one of them is `1`**.\n"
-                    "- **Matrix Multiply (`A @ B`):** Multiplies matching dimensions and sums them—used everywhere in embeddings and neural layers.\n\n"
-                    "**Test shapes live** in the NumPy Broadcasting Explorer below!"
+                    "### Helpful Column Stats & Conditional Replacement (`mean`, `std`, `np.where`)\n"
+                    "- `x.mean(axis=0, keepdims=True)` and `x.std(axis=0, keepdims=True)` compute column averages & spreads.\n"
+                    "- `np.where(std == 0, 1.0, std)` works like an element-by-element `if / else`: wherever `std == 0`, pick `1.0`, otherwise keep `std` (prevents dividing by zero!).\n"
+                    "- `np.asarray(x, dtype=float)` cleanly turns a Python list or int array into a float array."
                 ),
                 "code_example": {
-                    "title": "Stable Softmax & Cosine Top-K Search",
+                    "title": "Column Standardization With `np.where`",
                     "code": (
                         "import numpy as np\n\n"
-                        "def softmax(logits: np.ndarray) -> np.ndarray:\n"
-                        "    shifted = logits - np.max(logits, axis=-1, keepdims=True)\n"
-                        "    exps = np.exp(shifted)\n"
-                        "    return exps / np.sum(exps, axis=-1, keepdims=True)\n\n"
-                        "print(softmax(np.array([2.0, 1.0, 0.1])))\n"
+                        "x = np.array([[1.0, 5.0], [3.0, 5.0]])\n"
+                        "mean = x.mean(axis=0, keepdims=True)\n"
+                        "std = x.std(axis=0, keepdims=True)\n"
+                        "safe_std = np.where(std == 0, 1.0, std)  # avoid 0/0 = NaN!\n"
+                        "print((x - mean) / safe_std)\n"
                     ),
                 },
                 "common_mistakes": [
                     "Forgetting `keepdims=True` before dividing `(N, D)` by `(N,)`.",
+                    "Dividing by `std` without `np.where(std == 0, 1.0, std)` on constant columns -> produces `NaN`!",
+                ],
+                "key_takeaway": "Print `.shape`, use `keepdims=True`, and guard zero division with `np.where`.",
+            },
+            {
+                "id": "ch08-s2",
+                "title": "8.2 Broadcasting, Dot Product (`@`) & Stable Softmax",
+                "zero_assumption_note": "Broadcasting lets NumPy combine arrays of different shapes without copying data.",
+                "definition": (
+                    "- **Broadcasting:** Compares two shapes **right-to-left**. Two axes match if they are **equal** OR **one of them is `1`**.\n"
+                    "- **Matrix Multiply (`A @ B`):** Multiplies matching dimensions and sums them—used everywhere in embeddings and neural layers."
+                ),
+                "syntax_box": {
+                    "title": "Dot Product & Numerically Stable Softmax",
+                    "syntax": (
+                        "scores = docs @ query   # dot product along last axis\n"
+                        "shifted = logits - np.max(logits, axis=-1, keepdims=True)\n"
+                        "probs = np.exp(shifted) / np.sum(np.exp(shifted), axis=-1, keepdims=True)"
+                    ),
+                    "breakdown": [
+                        "`axis=-1` always targets the last axis regardless of whether the array is 1D or 2D.",
+                        "Subtracting `max(logits)` keeps exponents `<= 0` so `np.exp(1000)` never overflows to `inf`!",
+                    ],
+                },
+                "tiny_example": {
+                    "title": "Row-Wise Softmax",
+                    "code": (
+                        "import numpy as np\n"
+                        "logits = np.array([2.0, 1.0, 0.1])\n"
+                        "shifted = logits - np.max(logits)\n"
+                        "probs = np.exp(shifted) / np.sum(np.exp(shifted))\n"
+                        "print(probs, '| Sum:', probs.sum())"
+                    ),
+                    "line_by_line": [
+                        "Shifts logits so largest becomes `0.0`.",
+                        "Exponentiates and divides by sum -> probabilities summing to `1.0`.",
+                    ],
+                },
+                "body_markdown": "**Test shapes live** in the NumPy Broadcasting Explorer below!",
+                "code_example": {
+                    "title": "Pure-NumPy Cosine Similarity Top-K",
+                    "code": (
+                        "import numpy as np\n\n"
+                        "docs = np.array([[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]])\n"
+                        "q = np.array([2.0, 0.0])\n"
+                        "docs_unit = docs / np.linalg.norm(docs, axis=1, keepdims=True)\n"
+                        "q_unit = q / np.linalg.norm(q)\n"
+                        "sims = docs_unit @ q_unit\n"
+                        "print('Top-2 indices:', np.argsort(sims)[::-1][:2].tolist())\n"
+                    ),
+                },
+                "common_mistakes": [
                     "Using `*` instead of `@` when you want matrix multiplication.",
                 ],
-                "key_takeaway": "Print `.shape` whenever confused, pass `keepdims=True` when normalizing rows/columns, and read broadcasting right-to-left.",
+                "key_takeaway": "Read broadcasting right-to-left and always subtract max logits before `np.exp()`.",
             },
         ],
         "quizzes": [
@@ -193,7 +245,80 @@ PHASE_2_CHAPTERS: list[dict[str, Any]] = [
                     "Using `.iterrows()` to edit rows instead of vectorized `.str` / `.map()`.",
                     "Forgetting `.copy()` after filtering before adding new columns.",
                 ],
-                "key_takeaway": "Drop nulls, `.copy()`, clean columns with `.str`, deduplicate with hashes, and summarize with `.groupby().agg()`.",
+                "key_takeaway": "Drop nulls, `.copy()`, and clean columns with `.str` before running aggregations.",
+            },
+            {
+                "id": "ch09-s2",
+                "title": "9.2 `groupby().agg(...)` Named Aggregations, Sorting & Deduplication",
+                "zero_assumption_note": "Plain `.groupby('src')['tokens'].mean()` only computes one metric. Real pipelines need counts, sums, and averages together with clean column names.",
+                "definition": (
+                    "- **Named Aggregation (`.agg(new_col=('old_col', 'func'))`):** Computes multiple summary stats per group in one call with flat column names.\n"
+                    "- **`.sort_values(..., ascending=False)` + `.drop_duplicates(..., keep='first')`:** Keeps the highest-scoring row when duplicates exist."
+                ),
+                "syntax_box": {
+                    "title": "Named GroupBy Aggregation & Score-First Deduplication",
+                    "syntax": (
+                        "summary = (\n"
+                        "    df.groupby('source', as_index=False)\n"
+                        "    .agg(\n"
+                        "        total_rows=('tokens', 'count'),\n"
+                        "        valid_rows=('is_valid', 'sum'),\n"
+                        "        avg_tokens=('tokens', 'mean'),\n"
+                        "    )\n"
+                        "    .sort_values('source')\n"
+                        "    .reset_index(drop=True)\n"
+                        ")\n"
+                        "summary['valid_rows'] = summary['valid_rows'].astype(int)"
+                    ),
+                    "breakdown": [
+                        "`new_name=('source_col', 'agg_func')`: supports `'count'`, `'sum'`, `'mean'`, `'min'`, `'max'`.",
+                        "`.astype(int)` converts True/False sum floats cleanly to integers.",
+                        "`.reset_index(drop=True)` resets messy row numbers `0, 2, 5` back to `0, 1, 2` after filtering or sorting.",
+                    ],
+                },
+                "tiny_example": {
+                    "title": "Summarizing Dataset Sources",
+                    "code": (
+                        "import pandas as pd\n"
+                        "df = pd.DataFrame([\n"
+                        "    {'source': 'wiki', 'tokens': 100, 'is_valid': True},\n"
+                        "    {'source': 'wiki', 'tokens': 200, 'is_valid': False},\n"
+                        "    {'source': 'arxiv', 'tokens': 300, 'is_valid': True},\n"
+                        "])\n"
+                        "res = df.groupby('source', as_index=False).agg(\n"
+                        "    total_rows=('tokens', 'count'),\n"
+                        "    valid_rows=('is_valid', 'sum'),\n"
+                        "    avg_tokens=('tokens', 'mean'),\n"
+                        ")\n"
+                        "print(res)"
+                    ),
+                    "line_by_line": [
+                        "Groups rows by `'source'` (`arxiv` and `wiki`).",
+                        "Computes all 3 summary columns cleanly in one table.",
+                    ],
+                },
+                "body_markdown": (
+                    "### Collapsing Whitespace in Pandas Columns\n"
+                    "`df['text'].astype(str).str.split().str.join(' ')` collapses `'  Hello   AI  '` into `'Hello AI'` across every row without a Python loop!"
+                ),
+                "code_example": {
+                    "title": "Cleaning, Deduplicating & Keeping Max Score",
+                    "code": (
+                        "import pandas as pd\n\n"
+                        "df = pd.DataFrame([\n"
+                        "    {'id': 1, 'text': '  Hello   AI ', 'score': 0.5},\n"
+                        "    {'id': 2, 'text': 'hello ai', 'score': 0.95},\n"
+                        "])\n"
+                        "out = df.copy()\n"
+                        "out['clean'] = out['text'].str.split().str.join(' ').str.lower()\n"
+                        "out = out.sort_values('score', ascending=False).drop_duplicates('clean', keep='first')\n"
+                        "print(out.reset_index(drop=True))\n"
+                    ),
+                },
+                "common_mistakes": [
+                    "Forgetting `.reset_index(drop=True)` after sorting/deduplicating (leaves old index labels like `1` instead of `0`).",
+                ],
+                "key_takeaway": "Use `.groupby(..., as_index=False).agg(...)` for flat multi-metric tables and sort before `.drop_duplicates(keep='first')`.",
             },
         ],
         "quizzes": [
@@ -261,7 +386,8 @@ PHASE_2_CHAPTERS: list[dict[str, Any]] = [
                         "class UserProfile(BaseModel):\n"
                         "    username: str = Field(min_length=3, max_length=20)\n"
                         "    age: int = Field(ge=13)       # ge = greater than or equal to 13\n"
-                        "    is_active: bool = True        # default value\n\n"
+                        "    is_active: bool = True        # default value\n"
+                        "    tags: list[str] = Field(default_factory=list)  # fresh [] per instance!\n\n"
                         "user = UserProfile(username='sara', age='22')  # converts '22' -> 22!\n"
                         "print(user.model_dump())          # converts back to plain dict"
                     ),
@@ -655,7 +781,73 @@ PHASE_2_CHAPTERS: list[dict[str, Any]] = [
                 "common_mistakes": [
                     "Running slow blocking CPU/PyTorch calls directly inside `async def` without `await` (freezes the server!).",
                 ],
-                "key_takeaway": "Validate payloads with Pydantic, test with `TestClient`, stream tokens via SSE, and offload heavy work to workers.",
+                "key_takeaway": "Validate payloads with Pydantic and test endpoints instantly with `TestClient`.",
+            },
+            {
+                "id": "ch12-s2",
+                "title": "12.2 Streaming (`SSE`) & Async Worker Queues (`asyncio.Queue`)",
+                "zero_assumption_note": "If a model takes 10 seconds to run, don't freeze the HTTP server—either stream words live OR put jobs onto a queue for a worker!",
+                "definition": (
+                    "- **`StreamingResponse` (SSE):** Sends tokens word-by-word as they generate instead of waiting until the end.\n"
+                    "- **`asyncio.Queue`:** A thread-safe async waiting line where the API Gateway submits jobs (`put_nowait`) and a background worker pulls them (`await queue.get()`)."
+                ),
+                "syntax_box": {
+                    "title": "`asyncio.Queue` & `StreamingResponse` Syntax",
+                    "syntax": (
+                        "import asyncio\n"
+                        "queue = asyncio.Queue()\n\n"
+                        "queue.put_nowait(('job-1', 'payload'))  # Gateway adds job without blocking\n"
+                        "if not queue.empty():\n"
+                        "    job_id, data = await queue.get()    # Worker pops next job\n"
+                        "    queue.task_done()                   # Mark job finished"
+                    ),
+                    "breakdown": [
+                        "`put_nowait(item)`: pushes onto the queue immediately without needing `await`.",
+                        "`queue.empty()`: returns `True` if nothing is waiting.",
+                        "`await queue.get()` + `queue.task_done()`: worker pulls one job, processes it, and marks it done.",
+                    ],
+                },
+                "tiny_example": {
+                    "title": "Mini Async Job Queue Lifecycle",
+                    "code": (
+                        "import asyncio\n\n"
+                        "q = asyncio.Queue()\n"
+                        "q.put_nowait(('job-1', 'hello'))\n\n"
+                        "async def worker():\n"
+                        "    jid, text = await q.get()\n"
+                        "    q.task_done()\n"
+                        "    return jid, text.upper()\n\n"
+                        "print(asyncio.run(worker()))"
+                    ),
+                    "line_by_line": [
+                        "Enqueues `('job-1', 'hello')`.",
+                        "Worker pops it, transforms `'hello'` -> `'HELLO'`, calls `task_done()`, and prints `('job-1', 'HELLO')`.",
+                    ],
+                },
+                "body_markdown": (
+                    "### Why This Pattern Powers Production Microservices\n"
+                    "Start with `asyncio.Queue` in memory; later you can swap the exact same `submit()` / `process_one()` interface to Redis without changing your FastAPI routes!"
+                ),
+                "code_example": {
+                    "title": "Streaming Words via Server-Sent Events (SSE)",
+                    "code": (
+                        "import asyncio\n"
+                        "from fastapi import FastAPI\n"
+                        "from fastapi.responses import StreamingResponse\n\n"
+                        "app = FastAPI()\n\n"
+                        "@app.get('/stream')\n"
+                        "async def stream_words() -> StreamingResponse:\n"
+                        "    async def token_generator():\n"
+                        "        for word in ['AI', 'engineers', 'ship', 'systems.']:\n"
+                        "            yield f'data: {word}\\n\\n'\n"
+                        "            await asyncio.sleep(0.02)\n"
+                        "    return StreamingResponse(token_generator(), media_type='text/event-stream')\n"
+                    ),
+                },
+                "common_mistakes": [
+                    "Calling `await queue.get()` on an empty queue without checking `if self.queue.empty():` when you want `process_one()` to return `False` instead of hanging forever.",
+                ],
+                "key_takeaway": "Stream long responses with SSE, and decouple heavy tasks from HTTP intake using `asyncio.Queue` (`put_nowait`, `get`, `task_done`).",
             },
         ],
         "quizzes": [

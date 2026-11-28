@@ -38,3 +38,23 @@ class Playlist:
 
     def __len__(self) -> int:
         pass
+
+
+# --- 4.3: Callable Objects (`__call__`): Composable Text Pipeline ---
+class StripWhitespace:
+    def __call__(self, text: str) -> str:
+        pass
+
+class ReplaceWord:
+    def __init__(self, old: str, new: str) -> None:
+        pass
+
+    def __call__(self, text: str) -> str:
+        pass
+
+class Pipeline:
+    def __init__(self, steps: list) -> None:
+        pass
+
+    def __call__(self, text: str) -> str:
+        pass

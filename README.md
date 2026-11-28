@@ -8,7 +8,7 @@ A project-based, zero-assumptions learning platform designed to take an intermed
    - **Phase 1–2 (Chapters 1–14, Complete — One Library Per Chapter):** Built from ground zero covering Python core, files (`open`, `pathlib`, `json`, `csv`), **`os`**, OOP, logic building, DSA & DP, `asyncio`, **`NumPy`**, **`Pandas`**, **`Pydantic`**, **`Requests`**, **`FastAPI`**, **`FastMCP`**, and **`Docker`**. Every section follows **Definition → Exact Syntax → Tiny Line-by-Line Example → Practical Example → Common Mistakes**, with interactive visualizers, quizzes, notes, and live **Run Code** buttons.
    - **Phase 3–4 (Chapters 15–20, Roadmap):** Classical ML & evaluation, Tiny Autograd & PyTorch internals, Transformers from scratch, pre-training Small LLMs, fine-tuning (SFT/LoRA/QLoRA/DPO), and LangChain (LCEL), RAG & serving.
 2. **Separate Practice Workbook (`workbook/` & Web Workbook Tab)**
-   - 35 hands-on coding & logic drills across Chapters 1–14 (`exercises.md`, `problems.py`, `solutions.py`, `test_problems.py`), each with a **Logic Thinking Blueprint**, progressive hints, **Dry-Run Trace Table**, reference answer & explanation, and automated Python test verification.
+   - 37 hands-on coding & logic drills across Chapters 1–14 (`exercises.md`, `problems.py`, `solutions.py`, `test_problems.py`), each with a **Logic Thinking Blueprint**, progressive hints, **Dry-Run Trace Table**, reference answer & explanation, and automated Python test verification.
 3. **Project-Based Learning Hub (`projects/` & Web Projects Tab)**
    - Practical per-chapter projects with architecture steps, starter code, and milestone tracking stored in SQLite.
 
@@ -87,7 +87,7 @@ Open **http://localhost:5175** in your browser. Your learning progress, quiz ans
 
 ## Running Tests & Syncing Workspace Files
 
-- **Verify backend API + all 35 workbook reference solutions:**
+- **Verify backend API + all 37 workbook reference solutions:**
   ```bash
   cd backend
   python -m pytest -v

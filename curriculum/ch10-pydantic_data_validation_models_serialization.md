@@ -24,6 +24,7 @@ class UserProfile(BaseModel):
     username: str = Field(min_length=3, max_length=20)
     age: int = Field(ge=13)       # ge = greater than or equal to 13
     is_active: bool = True        # default value
+    tags: list[str] = Field(default_factory=list)  # fresh [] per instance!
 
 user = UserProfile(username='sara', age='22')  # converts '22' -> 22!
 print(user.model_dump())          # converts back to plain dict

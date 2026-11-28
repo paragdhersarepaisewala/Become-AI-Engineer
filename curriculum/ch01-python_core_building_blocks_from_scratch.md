@@ -402,6 +402,78 @@ print(add_tag('ai'))
 
 ---
 
+## 1.7 Error Handling (`try / except` & `raise ValueError`)
+
+> **Before You Start:** If you ever tried `int('abc')` or `10 / 0`, Python stopped with red text (an Exception). Here is how to catch errors politely AND trigger clear errors on bad inputs.
+
+### 1. Definition
+- **`try / except`:** Runs risky code inside `try:`; if an expected error happens, jumps to `except` instead of crashing the whole program.
+- **`raise ValueError('...')`:** Intentionally stops your own function with a clear message when a caller passes impossible input (like a negative price).
+
+### 2. Exact Syntax — Catching Errors (`try / except`) & Raising Errors (`raise`)
+```python
+# 1. Catching an error cleanly:
+try:
+    num = int(user_text)
+except ValueError:
+    num = 0                    # fallback value instead of crashing!
+
+# 2. Guarding your own function with `raise`:
+def set_age(age: int) -> int:
+    if age < 0:
+        raise ValueError('Age cannot be negative')
+    return age
+```
+
+- Common built-in errors: `ValueError` (right type, bad value like `int('abc')`), `ZeroDivisionError` (`10 / 0`), `KeyError` (missing dict key), `TypeError` (`'5' + 5`).
+- Always name the **specific** error (`except ValueError:`), never bare `except:` (bare `except:` hides your own typos!).
+- When testing functions that `raise ValueError`, callers wrap them in `try / except ValueError:` to confirm bad inputs are caught!
+
+### 3. Tiny Example (Line-by-Line) — Converting Messy Strings Safely
+```python
+def to_int_safe(text: str, default: int = 0) -> int:
+    try:
+        return int(text)
+    except ValueError:
+        return default
+
+print(to_int_safe('42'))     # 42
+print(to_int_safe('hello'))  # 0 (no crash!)
+```
+
+1. `to_int_safe('42')`: `int('42')` succeeds -> returns `42`.
+2. `to_int_safe('hello')`: `int('hello')` fails with `ValueError`, jumps to `except ValueError:`, and returns `0`!
+
+### Why Validation (`raise ValueError`) Helps Beginners
+Suppose you write `apply_discount(price, discount_percent)`. If someone passes `price = -50`, silently returning `-45` hides a bug! Checking `if price < 0: raise ValueError('Invalid input')` catches bad data immediately at the door.
+
+
+### 4. Practical Example — Validating Inputs With `raise` + Catching Errors Safely
+
+```python
+def apply_discount(price: float, discount_percent: float = 10.0) -> float:
+    if price < 0 or discount_percent < 0 or discount_percent > 100:
+        raise ValueError('Invalid input')
+    return round(price - price * (discount_percent / 100), 2)
+
+# Block 2: Caller handles bad input politely with try/except
+for p in [100, -20]:
+    try:
+        print('Final price:', apply_discount(p))
+    except ValueError as err:
+        print('Skipped bad price:', err)
+```
+
+### Common Mistakes to Avoid
+
+- Writing bare `except:` with no error name (silently hides real bugs like misspelled variables!).
+- Returning `None` or printing `'Error'` instead of `raise ValueError(...)` when a function's contract requires valid numbers.
+
+**Key Takeaway:** Use `try / except SpecificError:` to handle expected failures politely, and `raise ValueError(...)` to reject invalid inputs early.
+
+
+---
+
 ## Hands-On Project: Student Grade & Tag Analyzer Script
 
 Use variables, loops, comprehensions, dictionaries, and clean functions to summarize student scores and tags.

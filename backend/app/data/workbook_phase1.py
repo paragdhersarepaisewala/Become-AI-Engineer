@@ -137,6 +137,54 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
             {"name": "invalid_inputs", "code": "try:\n    sol.apply_discount(-10)\n    assert False\nexcept ValueError:\n    pass"},
         ],
     },
+    {
+        "id": "wb-01-04",
+        "chapter_id": "ch01",
+        "number": "1.4",
+        "title": "Error Handling: Safe Integer List Parser",
+        "topic": "Python",
+        "question_type": "Logic & Coding",
+        "difficulty": "Foundation",
+        "summary": "Use `try / except ValueError` to convert valid strings into integers and skip bad entries safely.",
+        "prompt_markdown": (
+            "Write `parse_ints(items: list[str]) -> list[int]` that tries `int(x.strip())` on each string, "
+            "keeps valid integers, and skips entries like `'abc'` or `''` using `try / except ValueError` (do NOT crash!)."
+        ),
+        "thinking_blueprint": [
+            "Start `out: list[int] = []`.",
+            "Loop over `items`: inside `try:`, append `int(x.strip())`; inside `except ValueError:`, `continue`.",
+        ],
+        "hints": [
+            "Only catch `ValueError`, never bare `except:`.",
+        ],
+        "dry_run_trace": (
+            "`[' 10 ', 'abc', '-5', '']` -> `10` (ok), `'abc'` (ValueError -> skip), `-5` (ok), `''` (ValueError -> skip) -> `[10, -5]`."
+        ),
+        "starter_code": (
+            "def parse_ints(items: list[str]) -> list[int]:\n"
+            "    # TODO: convert valid strings to int and skip invalid ones using try/except ValueError\n"
+            "    pass\n\n"
+            "if __name__ == '__main__':\n"
+            "    print(parse_ints([' 10 ', 'abc', '-5', '']))\n"
+        ),
+        "solution_code": (
+            "def parse_ints(items: list[str]) -> list[int]:\n"
+            "    out: list[int] = []\n"
+            "    for raw in items:\n"
+            "        try:\n"
+            "            out.append(int(raw.strip()))\n"
+            "        except ValueError:\n"
+            "            continue\n"
+            "    return out\n\n"
+            "if __name__ == '__main__':\n"
+            "    print(parse_ints([' 10 ', 'abc', '-5', '']))\n"
+        ),
+        "explanation_markdown": "**High-Level Blocks:** `try / except ValueError` isolates bad strings like `'abc'` so valid numbers still get collected cleanly.",
+        "test_cases": [
+            {"name": "parses_safely", "code": "assert sol.parse_ints([' 10 ', 'abc', '-5', '']) == [10, -5]"},
+            {"name": "all_bad", "code": "assert sol.parse_ints(['x', '3.5']) == []"},
+        ],
+    },
 
     # ---------------- CHAPTER 2: Working With Files ----------------
     {
@@ -526,6 +574,64 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
         "explanation_markdown": "**High-Level Blocks:** Composition (`Playlist` holding `Song` objects) keeps each class small.",
         "test_cases": [
             {"name": "playlist", "code": "pl = sol.Playlist()\npl.add(sol.Song('Intro', 90))\npl.add(sol.Song('Main', 210))\nassert len(pl) == 2 and pl.total_seconds() == 300"},
+        ],
+    },
+    {
+        "id": "wb-04-03",
+        "chapter_id": "ch04",
+        "number": "4.3",
+        "title": "Callable Objects (`__call__`): Composable Text Pipeline",
+        "topic": "OOP",
+        "question_type": "Logic & Coding",
+        "difficulty": "Intermediate",
+        "summary": "Implement small `__call__` step classes and compose them inside `Pipeline`.",
+        "prompt_markdown": "Implement `StripWhitespace`, `ReplaceWord(old, new)`, and `Pipeline(steps)` where each has `__call__(self, text: str) -> str`.",
+        "thinking_blueprint": ["Each step holds config in `__init__` and runs in `__call__`."],
+        "hints": ["`' '.join(text.split())` collapses extra whitespace cleanly."],
+        "dry_run_trace": "`Pipeline([StripWhitespace(), ReplaceWord('ml', 'AI')])('  learn   ml ')` -> `'learn AI'`.",
+        "starter_code": (
+            "class StripWhitespace:\n"
+            "    def __call__(self, text: str) -> str:\n"
+            "        pass\n\n"
+            "class ReplaceWord:\n"
+            "    def __init__(self, old: str, new: str) -> None:\n"
+            "        pass\n\n"
+            "    def __call__(self, text: str) -> str:\n"
+            "        pass\n\n"
+            "class Pipeline:\n"
+            "    def __init__(self, steps: list) -> None:\n"
+            "        pass\n\n"
+            "    def __call__(self, text: str) -> str:\n"
+            "        pass\n"
+        ),
+        "solution_code": (
+            "class StripWhitespace:\n"
+            "    def __call__(self, text: str) -> str:\n"
+            "        return ' '.join(text.split())\n\n"
+            "class ReplaceWord:\n"
+            "    def __init__(self, old: str, new: str) -> None:\n"
+            "        self.old = old\n"
+            "        self.new = new\n\n"
+            "    def __call__(self, text: str) -> str:\n"
+            "        words = []\n"
+            "        for w in text.split():\n"
+            "            if w == self.old:\n"
+            "                words.append(self.new)\n"
+            "            else:\n"
+            "                words.append(w)\n"
+            "        return ' '.join(words)\n\n"
+            "class Pipeline:\n"
+            "    def __init__(self, steps: list) -> None:\n"
+            "        self.steps = list(steps)\n\n"
+            "    def __call__(self, text: str) -> str:\n"
+            "        out = text\n"
+            "        for step in self.steps:\n"
+            "            out = step(out)\n"
+            "        return out\n"
+        ),
+        "explanation_markdown": "**High-Level Blocks:** Uniform `__call__` interfaces plug together just like PyTorch `nn.Sequential` and LangChain LCEL.",
+        "test_cases": [
+            {"name": "pipeline", "code": "p = sol.Pipeline([sol.StripWhitespace(), sol.ReplaceWord('ml', 'AI')])\nassert p('  learn   ml   fast ') == 'learn AI fast'"},
         ],
     },
 

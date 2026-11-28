@@ -30,3 +30,11 @@ def test_wb_01_03_invalid_inputs() -> None:
         assert False
     except ValueError:
         pass
+
+
+def test_wb_01_04_parses_safely() -> None:
+    assert sol.parse_ints([' 10 ', 'abc', '-5', '']) == [10, -5]
+
+
+def test_wb_01_04_all_bad() -> None:
+    assert sol.parse_ints(['x', '3.5']) == []

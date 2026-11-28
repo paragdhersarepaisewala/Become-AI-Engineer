@@ -87,3 +87,54 @@ class Playlist:
 ```
 
 **High-Level Blocks:** Composition (`Playlist` holding `Song` objects) keeps each class small.
+
+
+---
+
+## 4.3 Callable Objects (`__call__`): Composable Text Pipeline (`Intermediate` · OOP)
+
+Implement `StripWhitespace`, `ReplaceWord(old, new)`, and `Pipeline(steps)` where each has `__call__(self, text: str) -> str`.
+
+### Thinking Blueprint
+
+- Each step holds config in `__init__` and runs in `__call__`.
+
+### Progressive Hints
+
+1. `' '.join(text.split())` collapses extra whitespace cleanly.
+
+### Dry-Run Trace
+`Pipeline([StripWhitespace(), ReplaceWord('ml', 'AI')])('  learn   ml ')` -> `'learn AI'`.
+
+### Answer & Explanation
+```python
+class StripWhitespace:
+    def __call__(self, text: str) -> str:
+        return ' '.join(text.split())
+
+class ReplaceWord:
+    def __init__(self, old: str, new: str) -> None:
+        self.old = old
+        self.new = new
+
+    def __call__(self, text: str) -> str:
+        words = []
+        for w in text.split():
+            if w == self.old:
+                words.append(self.new)
+            else:
+                words.append(w)
+        return ' '.join(words)
+
+class Pipeline:
+    def __init__(self, steps: list) -> None:
+        self.steps = list(steps)
+
+    def __call__(self, text: str) -> str:
+        out = text
+        for step in self.steps:
+            out = step(out)
+        return out
+```
+
+**High-Level Blocks:** Uniform `__call__` interfaces plug together just like PyTorch `nn.Sequential` and LangChain LCEL.

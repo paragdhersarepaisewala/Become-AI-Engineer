@@ -56,7 +56,93 @@ asyncio.run(main())
 1. `gather` starts A, B, and C immediately—all three sleep for 0.2s *at the same time*.
 2. Total time is `~0.20s` instead of `0.60s`!
 
-**Try the interactive Asyncio Event Loop Simulator below** to compare Sequential `for await` vs `gather` vs `Semaphore(2)`!
+Next, in **Section 7.2**, we limit concurrency with `Semaphore` and add safe exponential-backoff retries.
+
+
+### 4. Practical Example — Unpacking Tasks Into `asyncio.gather(*tasks)`
+
+```python
+import asyncio
+
+async def double_async(n: int) -> int:
+    await asyncio.sleep(0.02)
+    return n * 2
+
+async def main() -> None:
+    # `*tasks` unpacks a list [t1, t2, t3] into separate arguments gather(t1, t2, t3)
+    tasks = [double_async(i) for i in [1, 2, 3, 4]]
+    results = await asyncio.gather(*tasks)
+    print(results)
+
+asyncio.run(main())
+```
+
+### Common Mistakes to Avoid
+
+- Calling `time.sleep(1)` or `requests.get()` inside `async def` (freezes the whole event loop!). Use `await asyncio.sleep()` / `httpx.AsyncClient`.
+- Writing `for x in items: await task(x)` (runs sequentially instead of using `asyncio.gather`).
+
+**Key Takeaway:** Use `async def` + `await` for waiting I/O, and `asyncio.gather(*tasks)` to run a list of coroutines concurrently.
+
+
+---
+
+## 7.2 Limiting Concurrency (`Semaphore`) & Exponential Backoff Retries
+
+> **Before You Start:** Sending 1,000 API requests at the exact same millisecond crashes servers (`429 Too Many Requests`). You need two guardrails: a concurrency cap and smart retries.
+
+### 1. Definition
+- **`asyncio.Semaphore(N)`:** A gatekeeper allowing at most `N` coroutines inside `async with sem:` at the same time.
+- **Exponential Backoff:** Waiting slightly longer after each failed try (`0.1s -> 0.2s -> 0.4s`) so overloaded APIs recover.
+
+### 2. Exact Syntax — Semaphore + Retry Loop Syntax
+```python
+sem = asyncio.Semaphore(3)        # max 3 running at once
+async with sem:
+    await do_work()
+
+# Exponential backoff retry:
+for attempt in range(max_retries + 1):
+    try:
+        return await fn()
+    except Exception:
+        if attempt == max_retries:
+            raise                 # out of retries -> re-raise error!
+        await asyncio.sleep(base_delay * (2 ** attempt))
+```
+
+- `async with sem:` acquires a slot on entry and **always** releases it on exit (even if an error happens).
+- `2 ** attempt` doubles the delay on each retry (`1x, 2x, 4x`).
+- Plain `raise` inside `except` re-throws the original exception once all retries are used up.
+
+### 3. Tiny Example (Line-by-Line) — Retrying a Flaky Coroutine Twice Before Succeeding
+```python
+import asyncio
+
+state = {'tries': 0}
+async def flaky_api():
+    state['tries'] += 1
+    if state['tries'] < 3:
+        raise RuntimeError('Temporary 429')
+    return 'Success on try 3!'
+
+async def retry(fn, max_retries=3, base_delay=0.01):
+    for attempt in range(max_retries + 1):
+        try:
+            return await fn()
+        except Exception:
+            if attempt == max_retries:
+                raise
+            await asyncio.sleep(base_delay * (2 ** attempt))
+
+print(asyncio.run(retry(flaky_api)))
+```
+
+1. Try 1 (`attempt=0`): fails -> sleeps `0.01s`.
+2. Try 2 (`attempt=1`): fails -> sleeps `0.02s`.
+3. Try 3 (`attempt=2`): succeeds and returns `'Success on try 3!'`.
+
+**Try the interactive Asyncio Event Loop Simulator below** to compare Sequential vs `gather` vs `Semaphore(2)`!
 
 
 ### 4. Practical Example — Capping Concurrency With `asyncio.Semaphore`
@@ -71,17 +157,17 @@ async def bounded_worker(sem: asyncio.Semaphore, item_id: int) -> str:
 
 async def run_batch() -> list[str]:
     sem = asyncio.Semaphore(3)
-    return list(await asyncio.gather(*(bounded_worker(sem, i) for i in range(6))))
+    tasks = [bounded_worker(sem, i) for i in range(6)]
+    return list(await asyncio.gather(*tasks))
 
 print(asyncio.run(run_batch()))
 ```
 
 ### Common Mistakes to Avoid
 
-- Calling `time.sleep(1)` or `requests.get()` inside `async def` (freezes the whole event loop!). Use `await asyncio.sleep()` / `httpx.AsyncClient`.
-- Writing `for x in items: await task(x)` (runs sequentially instead of using `asyncio.gather`).
+- Creating a brand-new `asyncio.Semaphore(3)` *inside* the worker function (each task gets its own semaphore, so zero limiting happens!). Create `sem` **once** outside and pass it in.
 
-**Key Takeaway:** Use `async def` + `await` for waiting I/O, `asyncio.gather` to overlap tasks, and `Semaphore` to limit concurrent requests.
+**Key Takeaway:** Create one `Semaphore` outside workers to cap concurrency, and use `await asyncio.sleep(base_delay * 2**attempt)` for non-blocking retries.
 
 
 ---

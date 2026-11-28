@@ -104,3 +104,39 @@ if __name__ == '__main__':
 ```
 
 **High-Level Blocks:** Validate bad inputs first, compute discount amount, and `return` the rounded float.
+
+
+---
+
+## 1.4 Error Handling: Safe Integer List Parser (`Foundation` · Python)
+
+Write `parse_ints(items: list[str]) -> list[int]` that tries `int(x.strip())` on each string, keeps valid integers, and skips entries like `'abc'` or `''` using `try / except ValueError` (do NOT crash!).
+
+### Thinking Blueprint
+
+- Start `out: list[int] = []`.
+- Loop over `items`: inside `try:`, append `int(x.strip())`; inside `except ValueError:`, `continue`.
+
+### Progressive Hints
+
+1. Only catch `ValueError`, never bare `except:`.
+
+### Dry-Run Trace
+`[' 10 ', 'abc', '-5', '']` -> `10` (ok), `'abc'` (ValueError -> skip), `-5` (ok), `''` (ValueError -> skip) -> `[10, -5]`.
+
+### Answer & Explanation
+```python
+def parse_ints(items: list[str]) -> list[int]:
+    out: list[int] = []
+    for raw in items:
+        try:
+            out.append(int(raw.strip()))
+        except ValueError:
+            continue
+    return out
+
+if __name__ == '__main__':
+    print(parse_ints([' 10 ', 'abc', '-5', '']))
+```
+
+**High-Level Blocks:** `try / except ValueError` isolates bad strings like `'abc'` so valid numbers still get collected cleanly.
