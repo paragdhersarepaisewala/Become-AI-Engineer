@@ -1,4 +1,4 @@
-"""Phase 1 Part A (Chapters 1-3): Python Core & Comprehensions, Files & Stdlib, OOP From Scratch."""
+"""Phase 1 Part A (Chapters 1-4): Python Core, Files, Dedicated `os` Library + Automation, and OOP From Scratch."""
 
 from __future__ import annotations
 
@@ -12,13 +12,13 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
         "id": "ch01",
         "number": 1,
         "phase": 1,
-        "phase_title": "Phase 1: Python From Zero — Basics, Files, OOP & Logic",
+        "phase_title": "Phase 1: Python From Zero — Basics, Files, `os`, OOP & Logic",
         "title": "Python Core Building Blocks (From Scratch)",
         "subtitle": "Variables, types, if/else decisions, for & while loops, lists/dicts/sets, one-line loops (comprehensions), and functions.",
         "status_type": "available",
         "estimated_hours": 6,
         "why_it_matters": (
-            "Nothing in AI works without fluent Python basics. Every dataset loader, API server, and neural network training loop "
+            "Nothing in AI works without fluent Python basics. Every file automation, dataset cleaner, API server, and model training loop "
             "is built out of variables, decisions, loops, lists, dictionaries, and functions."
         ),
         "just_in_time_tags": ["Variables & Types", "if / elif / else", "for & while", "Lists & Dicts", "Comprehensions", "Functions"],
@@ -133,7 +133,6 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                     "code": (
                         "total_points = 450\n"
                         "num_tests = 0\n\n"
-                        "# Guard against dividing by zero before computing average\n"
                         "if num_tests == 0:\n"
                         "    print('No tests taken yet.')\n"
                         "else:\n"
@@ -191,7 +190,7 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                 },
                 "body_markdown": (
                     "### Using `continue` to Skip Junk\n"
-                    "Inside a loop over lines or numbers, `if not item: continue` skips empty entries immediately so your main logic stays clean and readable."
+                    "Inside a loop over lines or numbers, `if val < 0: continue` skips invalid entries immediately so your main logic stays clean."
                 ),
                 "code_example": {
                     "title": "Skipping Negative Numbers While Summing",
@@ -200,7 +199,7 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                         "valid_sum = 0\n\n"
                         "for val in readings:\n"
                         "    if val < 0:\n"
-                        "        continue  # skip sensor errors and jump to next val\n"
+                        "        continue\n"
                         "    valid_sum += val\n\n"
                         "print(f'Valid sum: {valid_sum}')  # 30\n"
                     ),
@@ -254,18 +253,15 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                     "`set(['ai', 'ml', 'ai'])` immediately gives `{'ai', 'ml'}`—handy whenever cleaning repeated tags or words."
                 ),
                 "code_example": {
-                    "title": "Safe List Copy & Dictionary Counting",
+                    "title": "Safe List Copy & Deduplicating Tags",
                     "code": (
-                        "# Block 1: Independent copy so original list stays safe\n"
                         "skills = ['python', 'sql']\n"
                         "resume_skills = skills.copy()\n"
                         "resume_skills.append('pytorch')\n"
-                        "print('Base:', skills)           # ['python', 'sql']\n"
-                        "print('Resume:', resume_skills)  # ['python', 'sql', 'pytorch']\n\n"
-                        "# Block 2: Deduplicate tags\n"
+                        "print('Base:', skills)\n"
+                        "print('Resume:', resume_skills)\n\n"
                         "tags = ['ai', 'py', 'ai', 'ml']\n"
-                        "unique_tags = sorted(set(tags))\n"
-                        "print('Unique:', unique_tags)    # ['ai', 'ml', 'py']\n"
+                        "print('Unique:', sorted(set(tags)))\n"
                     ),
                 },
                 "common_mistakes": [
@@ -277,30 +273,30 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
             {
                 "id": "ch01-s5",
                 "title": "1.5 One-Line `for` Loops Explained (List Comprehensions)",
-                "zero_assumption_note": "You may have seen weird one-line Python like `[x * 2 for x in nums if x > 0]`. It is NOT new magic—it is just a normal 4-line `for` loop folded onto one line!",
+                "zero_assumption_note": "One-line loops like `[x * 2 for x in nums if x > 0]` are NOT new magic—they are just a normal 4-line `for` loop folded onto one line!",
                 "definition": (
                     "A **list comprehension** builds a new list by transforming and optionally filtering items from an existing collection on one line."
                 ),
                 "syntax_box": {
-                    "title": "Comparing Normal `for` Loop vs One-Line Comprehension",
+                    "title": "Normal `for` Loop vs One-Line Comprehension",
                     "syntax": (
                         "# 4-line normal loop:\n"
                         "result = []\n"
                         "for x in items:\n"
                         "    if condition(x):\n"
                         "        result.append(transform(x))\n\n"
-                        "# Exact same thing as a 1-line list comprehension:\n"
+                        "# Exact same thing on 1 line:\n"
                         "result = [transform(x) for x in items if condition(x)]"
                     ),
                     "breakdown": [
                         "**Read it in 3 parts:** `[ WHAT_TO_KEEP   for ITEM in COLLECTION   if FILTER_CONDITION ]`.",
-                        "Part 1 (`transform(x)`): what goes into the new list (same as what was inside `result.append(...)`).",
+                        "Part 1 (`transform(x)`): what goes into the new list.",
                         "Part 2 (`for x in items`): the loop header.",
                         "Part 3 (`if condition(x)`): optional filter—only items passing this `if` enter the new list!",
                     ],
                 },
                 "tiny_example": {
-                    "title": "Step-by-Step: Doubling Only Even Numbers",
+                    "title": "Doubling Only Even Numbers",
                     "code": (
                         "nums = [1, 2, 3, 4, 5]\n"
                         "evens_doubled = [n * 2 for n in nums if n % 2 == 0]\n"
@@ -310,34 +306,28 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                         "`n = 1`: `1 % 2 == 0` is False -> skipped.",
                         "`n = 2`: True -> adds `2 * 2 = 4`.",
                         "`n = 3`: False -> skipped.",
-                        "`n = 4`: True -> adds `4 * 2 = 8`.",
-                        "`n = 5`: False -> skipped -> prints `[4, 8]`!",
+                        "`n = 4`: True -> adds `4 * 2 = 8` -> prints `[4, 8]`!",
                     ],
                 },
                 "body_markdown": (
-                    "### One Bonus Variation: `sum(...)` Without Brackets\n"
-                    "You can also drop the `[]` inside `sum(...)` to count matching items cleanly:\n"
-                    "- `passing = sum(1 for s in scores if s >= 60)` — adds `1` for every score `>= 60`!\n"
-                    "- **Rule of thumb:** Only use a one-line comprehension when it is short and easy to read. If you need 2+ conditions or complex steps, write a normal `for` loop!"
+                    "### Rule of Thumb\n"
+                    "Only use a one-line comprehension when it is short and easy to read. For complex steps, a normal `for` loop is always better."
                 ),
                 "code_example": {
                     "title": "Cleaning Messy Usernames & Counting Passing Scores",
                     "code": (
-                        "# Block 1: Strip spaces, lowercase, and skip empty strings\n"
                         "raw_names = ['  Sara ', '', '  ALEX', '   ']\n"
                         "clean_names = [name.strip().lower() for name in raw_names if name.strip()]\n"
-                        "print(clean_names)  # ['sara', 'alex']\n\n"
-                        "# Block 2: Count scores >= 60 using a generator inside sum()\n"
+                        "print(clean_names)\n\n"
                         "scores = [45, 80, 62, 50]\n"
                         "pass_count = sum(1 for s in scores if s >= 60)\n"
-                        "print('Passed:', pass_count)  # 2\n"
+                        "print('Passed:', pass_count)\n"
                     ),
                 },
                 "common_mistakes": [
-                    "Trying to cram complicated `if/elif/else` or nested loops into one unreadable line (use a normal `for` loop instead!).",
-                    "Forgetting where `if` goes when filtering (`[x for x in nums if x > 0]`: filter `if` goes at the END; an `if/else` value choice like `['yes' if x > 0 else 'no' for x in nums]` goes at the FRONT).",
+                    "Trying to cram complicated multi-branch logic into one unreadable comprehension.",
                 ],
-                "key_takeaway": "A list comprehension `[expr for x in items if cond]` is just shorthand for `out = []; for x in items: if cond: out.append(expr)`.",
+                "key_takeaway": "`[expr for x in items if cond]` is just shorthand for `out = []; for x in items: if cond: out.append(expr)`.",
             },
             {
                 "id": "ch01-s6",
@@ -366,9 +356,9 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                     "title": "Why `print()` Cannot Replace `return`",
                     "code": (
                         "def broken_double(x):\n"
-                        "    print(x * 2)      # only prints on screen; returns None!\n\n"
+                        "    print(x * 2)\n\n"
                         "def working_double(x):\n"
-                        "    return x * 2      # hands 10 back to the variable\n\n"
+                        "    return x * 2\n\n"
                         "a = broken_double(5)\n"
                         "b = working_double(5)\n"
                         "print('a is:', a, '| b is:', b)"
@@ -390,8 +380,8 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                         "def apply_discount(price: float, discount_percent: float = 10.0) -> float:\n"
                         "    saved = price * (discount_percent / 100)\n"
                         "    return round(price - saved, 2)\n\n"
-                        "print(apply_discount(100))      # uses default 10% -> 90.0\n"
-                        "print(apply_discount(100, 25))  # uses 25% -> 75.0\n\n"
+                        "print(apply_discount(100))      # 90.0\n"
+                        "print(apply_discount(100, 25))  # 75.0\n\n"
                         "# Block 2: Safe optional list using `None` and plain if/else\n"
                         "def add_tag(tag: str, existing=None):\n"
                         "    if existing is None:\n"
@@ -401,8 +391,8 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                         "    if tag not in result:\n"
                         "        result.append(tag)\n"
                         "    return result\n\n"
-                        "print(add_tag('python'))  # ['python']\n"
-                        "print(add_tag('ai'))      # ['ai'] (brand new list each time!)\n"
+                        "print(add_tag('python'))\n"
+                        "print(add_tag('ai'))\n"
                     ),
                 },
                 "common_mistakes": [
@@ -427,23 +417,11 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                 "correct_index": 2,
                 "explanation": "Without a `return` statement, a Python function always returns `None`.",
             },
-            {
-                "id": "ch01-q3",
-                "question": "Why should you write `def add_item(x, items=None):` instead of `def add_item(x, items=[]):`?",
-                "options": [
-                    "Python forbids `[]` in function signatures",
-                    "A default `[]` is created once and reused across every call, leaking items between calls",
-                    "`None` runs faster on GPU",
-                    "It converts the list into a tuple",
-                ],
-                "correct_index": 1,
-                "explanation": "Default `[]` is shared across every call; `items=None` lets you create a fresh list inside `if items is None:` each time.",
-            },
         ],
         "project": {
             "title": "Student Grade & Tag Analyzer Script",
             "workspace_dir": "projects/ch01_grade_analyzer",
-            "overview": "Use variables, loops, comprehensions, dictionaries, and clean functions (with `return`, no files yet!) to summarize student scores and tags.",
+            "overview": "Use variables, loops, comprehensions, dictionaries, and clean functions to summarize student scores and tags.",
             "architecture_steps": [
                 "Write `clean_tags(raw_tags)` using a list comprehension + `set`.",
                 "Write `summarize_scores(scores)` returning passed, failed, and average.",
@@ -458,22 +436,21 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
     },
 
     # =========================================================================
-    # CHAPTER 2: Working With Files & Small Standard Libraries
+    # CHAPTER 2: Working With Files (txt, pathlib, try/except, json, csv)
     # =========================================================================
     {
         "id": "ch02",
         "number": 2,
         "phase": 1,
-        "phase_title": "Phase 1: Python From Zero — Basics, Files, OOP & Logic",
-        "title": "Working With Files & Everyday Built-In Libraries",
-        "subtitle": "Reading & writing .txt files, pathlib.Path, try/except error handling, JSON/JSONL, CSV spreadsheets, and small stdlib helpers.",
+        "phase_title": "Phase 1: Python From Zero — Basics, Files, `os`, OOP & Logic",
+        "title": "Working With Files (`open`, `pathlib`, `json`, `csv`)",
+        "subtitle": "Reading & writing plain .txt files, pathlib.Path, try/except error handling, JSON/JSONL datasets, and CSV spreadsheets.",
         "status_type": "available",
         "estimated_hours": 5,
         "why_it_matters": (
-            "Real programs don't hardcode data inside `.py` files—they load text documents, JSON configs, and CSV spreadsheets from disk "
-            "without crashing when a file is missing or malformed."
+            "Real AI scripts don't hardcode text inside `.py` files—they read `.txt` notes, `.json` configs, `.jsonl` datasets, and `.csv` tables from disk safely."
         ),
-        "just_in_time_tags": ["open() & with", "pathlib.Path", "try / except", "json & jsonl", "csv.DictReader", "Counter & os"],
+        "just_in_time_tags": ["open() & with", "pathlib.Path", "try / except", "json & jsonl", "csv.DictReader"],
         "visualizer": None,
         "sections": [
             {
@@ -481,23 +458,21 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                 "title": "2.1 Reading & Writing Plain `.txt` Files (`open` & `with`)",
                 "zero_assumption_note": "Start with plain `.txt` files first. Once 3 lines of `.txt` feel effortless, JSON and CSV are easy.",
                 "definition": (
-                    "Opening a file connects your Python script to a file on your hard drive so you can read its contents or write new text into it."
+                    "Opening a file connects your Python script to a file on your hard drive so you can read its contents or save new text into it."
                 ),
                 "syntax_box": {
                     "title": "The Safe `with open(...)` Pattern",
                     "syntax": (
-                        "# Writing text to a file ('w' creates or overwrites):\n"
                         "with open('notes.txt', 'w', encoding='utf-8') as f:\n"
                         "    f.write('Hello Python\\n')\n\n"
-                        "# Reading text back ('r' reads):\n"
                         "with open('notes.txt', 'r', encoding='utf-8') as f:\n"
                         "    for line in f:\n"
                         "        print(line.strip())"
                     ),
                     "breakdown": [
-                        "`'w'` = **write** (creates file or erases old content!). `'a'` = **append** (adds to end). `'r'` = **read**.",
-                        "`with ... as f:` **automatically closes** the file when the indented block finishes—even if an error occurs.",
-                        "`encoding='utf-8'` tells Python how to read/write emojis, accents, and quotes properly on Windows.",
+                        "`'w'` = **write** (creates or overwrites). `'a'` = **append** (adds to end). `'r'` = **read**.",
+                        "`with ... as f:` **automatically closes** the file when the indented block ends.",
+                        "`encoding='utf-8'` prevents Windows crashes on special characters or emojis.",
                         "`line.strip()` removes the invisible `'\\n'` newline at the end of each line.",
                     ],
                 },
@@ -514,7 +489,7 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                         "print('Non-empty lines:', count)"
                     ),
                     "line_by_line": [
-                        "Lines 1–2: Creates `demo.txt` with 3 lines (middle line is blank `'\\n'`).",
+                        "Lines 1–2: Creates `demo.txt` with 3 lines (middle line is blank).",
                         "Line 6: Loops one line at a time.",
                         "Line 7: `'\\n'.strip()` becomes `''` (empty/False), so blank lines are skipped!",
                         "Line 9: Prints `Non-empty lines: 2`.",
@@ -522,48 +497,50 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                 },
                 "body_markdown": (
                     "### Reading All at Once vs Line by Line\n"
-                    "- `f.read()` loads the **entire file** as one big string (great for tiny config files).\n"
-                    "- `for line in f:` reads **one line at a time** (essential for huge 2 GB AI training files so your RAM doesn't explode!)."
+                    "- `f.read()` loads the **entire file** as one string (good for small files).\n"
+                    "- `for line in f:` reads **one line at a time** (essential for huge 2 GB files!)."
                 ),
                 "code_example": {
                     "title": "Appending a Log Entry Without Erasing Old Lines",
                     "code": (
                         "def append_log(filename: str, message: str) -> None:\n"
-                        "    # 'a' appends to the end instead of overwriting like 'w'\n"
                         "    with open(filename, 'a', encoding='utf-8') as f:\n"
-                        "        f.write(message + '\\n')\n"
+                        "        f.write(message + '\\n')\n\n"
+                        "append_log('run.log', '[INFO] Started')\n"
+                        "append_log('run.log', '[INFO] Finished')\n"
+                        "print(open('run.log', encoding='utf-8').read())\n"
                     ),
                 },
                 "common_mistakes": [
-                    "Opening a file with `'w'` when you meant `'a'` (accidentally wipes the existing file!).",
-                    "Forgetting `encoding='utf-8'` on Windows (crashes with `UnicodeDecodeError` on curly quotes or emojis).",
+                    "Opening with `'w'` when you meant `'a'` (accidentally erases old lines!).",
+                    "Forgetting `encoding='utf-8'` on Windows.",
                 ],
-                "key_takeaway": "Always use `with open(..., encoding='utf-8') as f:`, loop `for line in f:` for large files, and call `.strip()` on lines.",
+                "key_takeaway": "Always use `with open(..., encoding='utf-8') as f:`, loop `for line in f:` for large files, and call `.strip()`.",
             },
             {
                 "id": "ch02-s2",
-                "title": "2.2 Clean File Paths (`pathlib.Path`) & Handling Errors (`try / except`)",
-                "zero_assumption_note": "On Windows, `'C:\\new\\test.txt'` breaks because `\\n` means newline and `\\t` means tab! `pathlib.Path` eliminates path headaches forever.",
+                "title": "2.2 Clean Paths (`pathlib.Path`) & Handling Errors (`try / except`)",
+                "zero_assumption_note": "On Windows, `'C:\\new\\test.txt'` breaks because `\\n` means newline! `pathlib.Path` eliminates path headaches forever.",
                 "definition": (
-                    "- **`pathlib.Path`:** A clean Python object representing a file or folder path that works identically on Windows, Mac, and Linux.\n"
-                    "- **`try / except`:** Lets your code catch predictable errors (like a missing file) and respond cleanly instead of crashing."
+                    "- **`pathlib.Path`:** A clean object representing a file or folder path across Windows, Mac, and Linux.\n"
+                    "- **`try / except`:** Catches predictable errors (like a missing file) cleanly instead of crashing."
                 ),
                 "syntax_box": {
                     "title": "Path Operations & Specific Error Handling",
                     "syntax": (
                         "from pathlib import Path\n\n"
-                        "p = Path('data') / 'raw' / 'notes.txt'     # builds folder/raw/notes.txt\n"
-                        "p.parent.mkdir(parents=True, exist_ok=True) # creates data/raw/ if missing\n\n"
+                        "p = Path('data') / 'raw' / 'notes.txt'\n"
+                        "p.parent.mkdir(parents=True, exist_ok=True)\n\n"
                         "try:\n"
                         "    text = p.read_text(encoding='utf-8')\n"
                         "except FileNotFoundError:\n"
-                        "    text = ''                              # fallback if file doesn't exist"
+                        "    text = ''"
                     ),
                     "breakdown": [
-                        "Use `/` between `Path` objects—Python automatically converts it to `\\` on Windows or `/` on Linux/Mac.",
-                        "`p.exists()` returns `True` or `False`.",
-                        "`p.parent.mkdir(parents=True, exist_ok=True)` safely creates missing folders without failing if they already exist.",
-                        "Always catch a **specific** error (`except FileNotFoundError:` or `except ValueError:`), never bare `except:` (bare `except:` hides typos and real bugs!).",
+                        "`/` joins folders cleanly regardless of OS.",
+                        "`p.exists()` checks if a file or folder exists.",
+                        "`p.parent.mkdir(parents=True, exist_ok=True)` safely creates missing parent folders.",
+                        "Always catch a **specific** error (`FileNotFoundError`, `ValueError`), never bare `except:`.",
                     ],
                 },
                 "tiny_example": {
@@ -579,37 +556,37 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                     ),
                     "line_by_line": [
                         "Line 4: Tries to read `does_not_exist.txt`.",
-                        "Line 5: Python jumps straight to `except FileNotFoundError:` instead of crashing.",
-                        "Line 6–7: Prints a polite message and sets `content = ''` so the rest of the script keeps running.",
+                        "Line 5: Jumps straight to `except FileNotFoundError:` instead of crashing.",
+                        "Lines 6–7: Prints a polite message and sets `content = ''`.",
                     ],
                 },
                 "body_markdown": (
-                    "### Finding All `.txt` Files in a Folder\n"
-                    "`list(Path('docs').glob('*.txt'))` finds every text file inside `docs/` in one clean line!"
+                    "### Ensuring Output Folders Exist Before Writing\n"
+                    "Always call `out_path.parent.mkdir(parents=True, exist_ok=True)` before saving into a subfolder like `output/2026/report.txt`."
                 ),
                 "code_example": {
                     "title": "Writing Safely into Nested Output Folders",
                     "code": (
                         "from pathlib import Path\n\n"
-                        "def save_report(out_path: Path, body: str) -> None:\n"
-                        "    # Ensure parent folders exist before opening the file\n"
-                        "    out_path.parent.mkdir(parents=True, exist_ok=True)\n"
-                        "    out_path.write_text(body, encoding='utf-8')\n"
+                        "out = Path('reports') / 'daily' / 'summary.txt'\n"
+                        "out.parent.mkdir(parents=True, exist_ok=True)\n"
+                        "out.write_text('All checks passed!\\n', encoding='utf-8')\n"
+                        "print(out.read_text(encoding='utf-8').strip())\n"
                     ),
                 },
                 "common_mistakes": [
-                    "Trying to write `Path('new_folder/out.txt').write_text(...)` before creating `new_folder` -> `FileNotFoundError`.",
-                    "Writing bare `except:` which silently swallows syntax/variable bugs.",
+                    "Trying to write into a subfolder before creating it -> `FileNotFoundError`.",
+                    "Writing bare `except:` which silently hides real typos.",
                 ],
-                "key_takeaway": "Use `Path('a') / 'b.txt'`, call `.parent.mkdir(parents=True, exist_ok=True)` before writing, and catch specific exceptions with `try/except`.",
+                "key_takeaway": "Use `Path('a') / 'b.txt'`, create parent folders with `.mkdir(parents=True, exist_ok=True)`, and catch specific errors.",
             },
             {
                 "id": "ch02-s3",
                 "title": "2.3 Loading & Saving JSON, JSONL & CSV Files",
-                "zero_assumption_note": "Never split CSV lines with `line.split(',')` or parse JSON by hand—Python already has `json` and `csv` built in!",
+                "zero_assumption_note": "Never split CSV lines with `line.split(',')` or parse JSON by hand—Python has `json` and `csv` built in!",
                 "definition": (
-                    "- **JSON (`.json`):** A text format that looks almost identical to Python `dict`s and `list`s—used everywhere in configs and web APIs.\n"
-                    "- **JSONL (`.jsonl`):** 'JSON Lines'—one standalone JSON object per line (standard for LLM fine-tuning datasets!).\n"
+                    "- **JSON (`.json`):** Text format matching Python `dict`s and `list`s—used in configs and APIs.\n"
+                    "- **JSONL (`.jsonl`):** 'JSON Lines'—one JSON object per line (standard for LLM datasets).\n"
                     "- **CSV (`.csv`):** Comma-separated spreadsheet table."
                 ),
                 "syntax_box": {
@@ -617,17 +594,15 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                     "syntax": (
                         "import csv, json\n"
                         "from pathlib import Path\n\n"
-                        "# JSON: file <-> Python dict/list\n"
                         "data = json.loads('{\"name\": \"AI\"}')   # string -> dict\n"
                         "text = json.dumps({'name': 'AI'})       # dict -> string\n\n"
-                        "# CSV: read each row as a dictionary by column header\n"
                         "with Path('data.csv').open('r', encoding='utf-8', newline='') as f:\n"
                         "    rows = list(csv.DictReader(f))"
                     ),
                     "breakdown": [
-                        "`json.load(f)` / `json.dump(obj, f)` work directly on an open file `f`.",
-                        "`json.loads(s)` / `json.dumps(obj)` ('s' = string) convert between a single string and Python data—perfect for reading `.jsonl` line by line!",
-                        "`csv.DictReader(f)` uses row 1 as column keys, returning each data row as a `dict` like `{'id': '1', 'label': 'pos'}`.",
+                        "`json.load(f)` / `json.dump(obj, f)` work on open files.",
+                        "`json.loads(s)` / `json.dumps(obj)` ('s' = string) work on strings—ideal for `.jsonl` lines!",
+                        "`csv.DictReader(f)` reads each spreadsheet row as a `dict` keyed by header names.",
                     ],
                 },
                 "tiny_example": {
@@ -641,180 +616,309 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                         "print(type(back_to_dict), back_to_dict['score'])"
                     ),
                     "line_by_line": [
-                        "`json.dumps(record)` turns the Python dict into a plain text string `'{\"user\": \"Sam\", \"score\": 95}'`.",
-                        "`json.loads(as_text)` parses that string back into a real Python `dict` so `back_to_dict['score']` works!",
+                        "`json.dumps(record)` converts the dict into a text string.",
+                        "`json.loads(as_text)` converts that string back into a Python `dict` so `back_to_dict['score']` works!",
                     ],
                 },
                 "body_markdown": (
-                    "### Handling Broken Lines in `.jsonl` Datasets\n"
-                    "Real datasets sometimes have 1 corrupted line out of 10,000. Wrapping `json.loads(line)` inside `try / except json.JSONDecodeError:` skips only that broken line instead of crashing the whole job."
+                    "### Skipping Corrupt JSONL Lines Safely\n"
+                    "Wrapping `json.loads(line)` inside `try / except json.JSONDecodeError:` skips a single broken line without crashing the whole pipeline."
                 ),
                 "code_example": {
                     "title": "Resilient JSONL Loader",
                     "code": (
                         "import json\n"
                         "from pathlib import Path\n\n"
-                        "def read_jsonl(path: Path) -> list[dict]:\n"
-                        "    items: list[dict] = []\n"
-                        "    with path.open('r', encoding='utf-8') as f:\n"
-                        "        for raw in f:\n"
-                        "            line = raw.strip()\n"
-                        "            if not line:\n"
-                        "                continue\n"
-                        "            try:\n"
-                        "                items.append(json.loads(line))\n"
-                        "            except json.JSONDecodeError:\n"
-                        "                continue  # skip malformed line safely\n"
-                        "    return items\n"
+                        "p = Path('sample.jsonl')\n"
+                        "p.write_text('{\"text\": \"ok\"}\\n{broken\\n{\"text\": \"good\"}\\n', encoding='utf-8')\n\n"
+                        "records = []\n"
+                        "with p.open('r', encoding='utf-8') as f:\n"
+                        "    for line in f:\n"
+                        "        if not line.strip():\n"
+                        "            continue\n"
+                        "        try:\n"
+                        "            records.append(json.loads(line))\n"
+                        "        except json.JSONDecodeError:\n"
+                        "            continue\n"
+                        "print(records)\n"
                     ),
                 },
                 "common_mistakes": [
-                    "Mixing up `json.load(f)` (takes a file object) with `json.loads(s)` (takes a string).",
-                    "Forgetting `newline=''` when opening CSV files for `csv.DictReader` / `csv.writer`.",
+                    "Mixing up `json.load(f)` (file) and `json.loads(s)` (string).",
+                    "Forgetting `newline=''` when opening CSV files for `csv` readers/writers.",
                 ],
                 "key_takeaway": "Use `json.loads/dumps` for JSONL lines and `csv.DictReader` with `newline=''` for CSV tables.",
-            },
-            {
-                "id": "ch02-s4",
-                "title": "2.4 Small Built-In Tools (`Counter`, `defaultdict`, `os`, `__main__`)",
-                "zero_assumption_note": "These tiny built-in modules save dozens of lines of repetitive code once you already know loops and dicts.",
-                "definition": (
-                    "Python ships with pre-installed helper modules (`collections`, `os`) so you don't have to reinvent counting, grouping, or reading environment settings."
-                ),
-                "syntax_box": {
-                    "title": "Counter, defaultdict, os.getenv & `__main__`",
-                    "syntax": (
-                        "from collections import Counter, defaultdict\n"
-                        "import os\n\n"
-                        "counts = Counter(['ai', 'py', 'ai'])  # Counter({'ai': 2, 'py': 1})\n"
-                        "groups = defaultdict(list)            # new keys auto-start as []\n"
-                        "key = os.getenv('API_KEY', 'none')    # safe env var lookup\n\n"
-                        "if __name__ == '__main__':\n"
-                        "    # only runs when you run THIS file directly"
-                    ),
-                    "breakdown": [
-                        "`Counter(items).most_common(2)` returns the top 2 `(item, count)` pairs immediately.",
-                        "`defaultdict(list)` lets you write `groups[tag].append(val)` without `if tag not in groups: groups[tag] = []`.",
-                        "`if __name__ == '__main__':` keeps helper files quiet if another script imports functions from them.",
-                    ],
-                },
-                "tiny_example": {
-                    "title": "Counting Words in 2 Lines with `Counter`",
-                    "code": (
-                        "from collections import Counter\n"
-                        "words = 'learn python learn ai learn'.split()\n"
-                        "c = Counter(words)\n"
-                        "print(dict(c), '| Top 1:', c.most_common(1))"
-                    ),
-                    "line_by_line": [
-                        "`.split()` breaks the sentence into `['learn', 'python', 'learn', 'ai', 'learn']`.",
-                        "`Counter(words)` counts each word automatically.",
-                        "`c.most_common(1)` returns `[('learn', 3)]`.",
-                    ],
-                },
-                "body_markdown": (
-                    "### Putting It All Together\n"
-                    "Combining `Path` + `csv.DictReader` + `Counter` lets you inspect an entire dataset in under 15 readable lines!"
-                ),
-                "code_example": {
-                    "title": "3-Block Script Reading & Summarizing Data",
-                    "code": (
-                        "from collections import Counter\n\n"
-                        "def summarize_labels(rows: list[dict[str, str]]) -> dict[str, int]:\n"
-                        "    labels = [r['label'].strip() for r in rows if r.get('label', '').strip()]\n"
-                        "    return dict(Counter(labels))\n\n"
-                        "if __name__ == '__main__':\n"
-                        "    sample = [{'label': 'pos'}, {'label': 'neg'}, {'label': 'pos'}]\n"
-                        "    print(summarize_labels(sample))  # {'pos': 2, 'neg': 1}\n"
-                    ),
-                },
-                "common_mistakes": [
-                    "Forgetting `dict(counts)` when an API or test expects a plain `dict` instead of a `Counter`.",
-                ],
-                "key_takeaway": "Use `Counter` for counting, `defaultdict(list)` for grouping, and `if __name__ == '__main__':` at the bottom of runnable scripts.",
             },
         ],
         "quizzes": [
             {
                 "id": "ch02-q1",
-                "question": "Which mode opens a file to **add** new lines at the end without deleting what's already inside?",
+                "question": "Which mode opens a file to **add** new lines at the end without erasing existing lines?",
                 "options": ["'r'", "'w'", "'a'", "'x'"],
                 "correct_index": 2,
-                "explanation": "`'w'` overwrites the entire file; `'a'` appends to the end.",
+                "explanation": "`'w'` overwrites the file; `'a'` appends to the end.",
             },
             {
                 "id": "ch02-q2",
                 "question": "What is the difference between `json.load(f)` and `json.loads(line)`?",
                 "options": [
                     "No difference",
-                    "`json.load(f)` reads from an open file; `json.loads(line)` parses a string (`s` = string)",
+                    "`json.load(f)` reads from an open file; `json.loads(line)` parses a string",
                     "`json.loads` only works on CSV",
                     "`json.load` writes to disk",
                 ],
                 "correct_index": 1,
-                "explanation": "`load` takes a file handle `f`; `loads` takes a JSON string (very useful when reading `.jsonl` line by line).",
+                "explanation": "`load` takes a file object; `loads` takes a JSON string.",
             },
         ],
         "project": {
             "title": "Dataset Inspector & File Converter CLI",
             "workspace_dir": "projects/ch02_file_inspector",
-            "overview": "Read a CSV file safely using `Path` and `csv.DictReader`, count labels with `Counter`, and export clean JSONL lines.",
+            "overview": "Read a messy CSV file safely using `Path` and `csv.DictReader`, filter invalid rows, and export clean JSONL lines.",
             "architecture_steps": [
                 "Check file existence with `Path`.",
                 "Read CSV rows using `csv.DictReader` and `encoding='utf-8'`.",
-                "Count categories with `Counter` and write clean JSONL output.",
+                "Write clean JSONL lines and verify with `pytest`.",
             ],
             "milestones": [
                 {"id": "ch02-m1", "label": "Read CSV safely with Path & encoding='utf-8'"},
-                {"id": "ch02-m2", "label": "Count categories using Counter & skip empty rows"},
+                {"id": "ch02-m2", "label": "Filter invalid rows cleanly"},
                 {"id": "ch02-m3", "label": "Write JSONL output and pass pytest"},
             ],
         },
     },
 
     # =========================================================================
-    # CHAPTER 3: Object-Oriented Programming (OOP) From Ground Zero
+    # CHAPTER 3: Dedicated Single-Library Chapter — The `os` Library & Automations
     # =========================================================================
     {
         "id": "ch03",
         "number": 3,
         "phase": 1,
-        "phase_title": "Phase 1: Python From Zero — Basics, Files, OOP & Logic",
-        "title": "Object-Oriented Programming (OOP) From Ground Zero",
-        "subtitle": "Why classes exist, __init__ & self, protecting state with methods, __repr__ & @dataclass, objects working together (composition), and splitting files.",
+        "phase_title": "Phase 1: Python From Zero — Basics, Files, `os`, OOP & Logic",
+        "title": "The `os` Library & Simple File Automations",
+        "subtitle": "Inspecting folders (os.listdir, os.walk), joining paths (os.path), creating/renaming files & folders, and environment variables (os.getenv).",
         "status_type": "available",
-        "estimated_hours": 6,
+        "estimated_hours": 4,
         "why_it_matters": (
-            "If you skip OOP fundamentals, PyTorch (`nn.Module`), custom Datasets, and LangChain feel like magic. Once built slowly from "
-            "first principles, classes feel completely natural."
+            "Python's built-in `os` module lets your scripts talk directly to your operating system—scanning folders of 1,000 files, "
+            "organizing messy downloads automatically, checking file sizes, and reading API keys safely from environment variables."
         ),
-        "just_in_time_tags": ["Why Classes?", "__init__ & self", "Methods & Validation", "__repr__ & @dataclass", "Composition", "Modules & pytest"],
+        "just_in_time_tags": ["os.listdir", "os.path", "os.makedirs", "os.rename", "os.walk", "os.getenv"],
         "visualizer": None,
         "sections": [
             {
                 "id": "ch03-s1",
-                "title": "3.1 Why Do Classes Exist? (Solving the Loose-Variables Mess)",
-                "zero_assumption_note": "Forget fancy textbook words like 'polymorphism' for now. Let's start with the real problem a `class` solves.",
+                "title": "3.1 Exploring Folders & Safe Paths (`os.getcwd`, `os.listdir`, `os.path`)",
+                "zero_assumption_note": "Before automating folders, you must know how Python asks Windows/Linux: *'Where am I?'* and *'What files are inside this folder?'*",
                 "definition": (
-                    "A **class** is a custom blueprint (like a form template) that bundles an item's **data** and the **functions that use that data** together into one neat **object**."
+                    "The **`os` module** lets Python inspect folders, check whether a path is a file or directory, and split filenames from extensions."
+                ),
+                "syntax_box": {
+                    "title": "Essential `os` & `os.path` Functions",
+                    "syntax": (
+                        "import os\n\n"
+                        "here = os.getcwd()                          # current working folder\n"
+                        "items = os.listdir(here)                    # list of file/folder names\n"
+                        "full = os.path.join(here, 'notes.txt')      # safely join folder + file\n"
+                        "print(os.path.isfile(full))                 # True if it's a file\n"
+                        "name, ext = os.path.splitext('photo.jpg')   # ('photo', '.jpg')"
+                    ),
+                    "breakdown": [
+                        "`os.listdir(folder)` returns **just the names** (`['a.txt', 'img.png']`), NOT full paths—always combine with `os.path.join(folder, name)`!",
+                        "`os.path.isfile(full)` skips subfolders when you only want files.",
+                        "`os.path.splitext('report.pdf')` splits into `('report', '.pdf')` cleanly.",
+                    ],
+                },
+                "tiny_example": {
+                    "title": "Listing Only `.txt` Files in the Current Folder",
+                    "code": (
+                        "import os\n\n"
+                        "folder = os.getcwd()\n"
+                        "for name in os.listdir(folder):\n"
+                        "    full_path = os.path.join(folder, name)\n"
+                        "    if os.path.isfile(full_path) and name.endswith('.txt'):\n"
+                        "        print('Found text file:', name)"
+                    ),
+                    "line_by_line": [
+                        "Line 3: Gets the current working directory.",
+                        "Line 4: Loops through every entry name in that folder.",
+                        "Line 5: Builds the full path so `isfile` works anywhere.",
+                        "Line 6: Prints only real `.txt` files (ignoring directories).",
+                    ],
+                },
+                "body_markdown": (
+                    "### Walking Subfolders Automatically (`os.walk`)\n"
+                    "`os.listdir()` looks **one level deep**. When you want every file inside nested subfolders too, `for root, dirs, files in os.walk(folder):` visits every subfolder automatically!"
+                ),
+                "code_example": {
+                    "title": "Counting Files by Extension in a Folder",
+                    "code": (
+                        "import os\n\n"
+                        "def count_by_extension(folder: str) -> dict[str, int]:\n"
+                        "    counts: dict[str, int] = {}\n"
+                        "    for name in os.listdir(folder):\n"
+                        "        full = os.path.join(folder, name)\n"
+                        "        if not os.path.isfile(full):\n"
+                        "            continue\n"
+                        "        _, ext = os.path.splitext(name)\n"
+                        "        ext = ext.lower() or '(no ext)'\n"
+                        "        counts[ext] = counts.get(ext, 0) + 1\n"
+                        "    return counts\n\n"
+                        "print(count_by_extension(os.getcwd()))\n"
+                    ),
+                },
+                "common_mistakes": [
+                    "Calling `os.path.isfile(name)` without `os.path.join(folder, name)` when scanning another folder (fails because Python checks the current folder instead!).",
+                ],
+                "key_takeaway": "Always combine `os.listdir(folder)` names with `os.path.join(folder, name)` before checking `isfile` or opening them.",
+            },
+            {
+                "id": "ch03-s2",
+                "title": "3.2 Simple File Automations (`os.makedirs`, `os.rename`, `os.getenv`)",
+                "zero_assumption_note": "With just 3 `os` functions, you can build real desktop automations that sort messy folders in half a second.",
+                "definition": (
+                    "`os.makedirs` creates folders, `os.rename` moves or renames files, and `os.getenv` reads secret environment settings without hardcoding passwords."
+                ),
+                "syntax_box": {
+                    "title": "Creating Folders, Moving Files & Reading Env Vars",
+                    "syntax": (
+                        "import os\n\n"
+                        "os.makedirs('sorted/images', exist_ok=True)    # creates folder safely\n"
+                        "os.rename('messy/pic.png', 'sorted/images/pic.png')  # moves or renames\n"
+                        "api_key = os.getenv('OPENAI_API_KEY', 'missing')     # safe env lookup"
+                    ),
+                    "breakdown": [
+                        "`exist_ok=True` prevents crashing if `'sorted/images'` already exists.",
+                        "`os.rename(old_path, new_path)` moves a file to another folder on the same drive—or renames it!",
+                        "`os.getenv('NAME', default)` reads an environment variable safely without raising `KeyError`.",
+                    ],
+                },
+                "tiny_example": {
+                    "title": "Safely Moving a File Into a New Folder",
+                    "code": (
+                        "import os, tempfile\n\n"
+                        "with tempfile.TemporaryDirectory() as tmp:\n"
+                        "    src = os.path.join(tmp, 'report.txt')\n"
+                        "    open(src, 'w', encoding='utf-8').write('hello')\n\n"
+                        "    dest_dir = os.path.join(tmp, 'archive')\n"
+                        "    os.makedirs(dest_dir, exist_ok=True)\n"
+                        "    dest = os.path.join(dest_dir, 'report.txt')\n"
+                        "    os.rename(src, dest)\n"
+                        "    print('Moved exists?', os.path.exists(dest))"
+                    ),
+                    "line_by_line": [
+                        "Creates a safe temporary sandbox folder `tmp` (auto-deleted afterwards).",
+                        "Creates `report.txt`, makes `archive/` folder, and moves the file inside with `os.rename`.",
+                        "Prints `Moved exists? True`.",
+                    ],
+                },
+                "body_markdown": (
+                    "### Why `os.getenv()` Matters for AI Engineers\n"
+                    "Never write `api_key = 'sk-proj-1234...'` directly in your Python file—if you `git push` it to GitHub, bots steal it in seconds! Store secrets in environment variables and read them with `os.getenv()`."
+                ),
+                "code_example": {
+                    "title": "Mini Automation: Sort Files Into Extension Folders",
+                    "code": (
+                        "import os, tempfile\n\n"
+                        "def organize_folder(folder: str) -> dict[str, int]:\n"
+                        "    moved: dict[str, int] = {}\n"
+                        "    for name in os.listdir(folder):\n"
+                        "        src = os.path.join(folder, name)\n"
+                        "        if not os.path.isfile(src):\n"
+                        "            continue\n"
+                        "        _, ext = os.path.splitext(name)\n"
+                        "        bucket = ext.lstrip('.').lower() or 'other'\n"
+                        "        target_dir = os.path.join(folder, bucket)\n"
+                        "        os.makedirs(target_dir, exist_ok=True)\n"
+                        "        os.rename(src, os.path.join(target_dir, name))\n"
+                        "        moved[bucket] = moved.get(bucket, 0) + 1\n"
+                        "    return moved\n\n"
+                        "with tempfile.TemporaryDirectory() as d:\n"
+                        "    for fn in ['a.txt', 'b.txt', 'pic.png']:\n"
+                        "        open(os.path.join(d, fn), 'w').close()\n"
+                        "    print('Organized:', organize_folder(d))\n"
+                    ),
+                },
+                "common_mistakes": [
+                    "Forgetting `exist_ok=True` in `os.makedirs(...)` -> crashes the second time you run your automation!",
+                    "Calling `os.rename(src, dest)` when `dest`'s folder doesn't exist yet -> always call `os.makedirs` first.",
+                ],
+                "key_takeaway": "Combine `os.listdir`, `os.path.splitext`, `os.makedirs(..., exist_ok=True)`, and `os.rename` to automate file organization cleanly.",
+            },
+        ],
+        "quizzes": [
+            {
+                "id": "ch03-q1",
+                "question": "Why should you pass `exist_ok=True` to `os.makedirs('sorted/docs', exist_ok=True)`?",
+                "options": [
+                    "It deletes old files inside the folder",
+                    "So your script doesn't crash with `FileExistsError` if the folder already exists",
+                    "It converts paths to JSON",
+                    "It makes files read-only",
+                ],
+                "correct_index": 1,
+                "explanation": "Without `exist_ok=True`, running an automation script a second time crashes when the folder already exists.",
+            },
+        ],
+        "project": {
+            "title": "Automated Folder Organizer & Log Archiver (`os` Automation)",
+            "workspace_dir": "projects/ch03_os_file_automator",
+            "overview": "Use `os` (`listdir`, `path`, `makedirs`, `rename`, `walk`) to sort messy files into category folders and write a summary report.",
+            "architecture_steps": [
+                "Scan a target folder safely skipping subdirectories.",
+                "Map extensions (`.png`/`.jpg` -> `images`, `.txt`/`.md` -> `docs`, else `other`).",
+                "Create category folders with `os.makedirs(..., exist_ok=True)` and move files with `os.rename`.",
+            ],
+            "milestones": [
+                {"id": "ch03-m1", "label": "Scan folder & count files by extension using os.path"},
+                {"id": "ch03-m2", "label": "Create destination folders & move files cleanly"},
+                {"id": "ch03-m3", "label": "Write automation report & pass pytest"},
+            ],
+        },
+    },
+
+    # =========================================================================
+    # CHAPTER 4: Object-Oriented Programming (OOP) From Ground Zero
+    # =========================================================================
+    {
+        "id": "ch04",
+        "number": 4,
+        "phase": 1,
+        "phase_title": "Phase 1: Python From Zero — Basics, Files, `os`, OOP & Logic",
+        "title": "Object-Oriented Programming (OOP) From Ground Zero",
+        "subtitle": "Why classes exist, __init__ & self, protecting state with methods, __repr__ & @dataclass, composition, and splitting files.",
+        "status_type": "available",
+        "estimated_hours": 6,
+        "why_it_matters": (
+            "Pydantic models, PyTorch `nn.Module`, FastAPI dependencies, and LangChain Runnables are all built with OOP classes. "
+            "Learning classes slowly from first principles makes every library in Phase 2–4 feel natural."
+        ),
+        "just_in_time_tags": ["Why Classes?", "__init__ & self", "Methods", "__repr__ & @dataclass", "Composition", "Modules & pytest"],
+        "visualizer": None,
+        "sections": [
+            {
+                "id": "ch04-s1",
+                "title": "4.1 Why Do Classes Exist? (Solving the Loose-Variables Mess)",
+                "zero_assumption_note": "Forget textbook jargon like 'polymorphism' for now. Start with the exact everyday problem a `class` solves.",
+                "definition": (
+                    "A **class** is a blueprint that bundles an item's **data (attributes)** and its **actions (methods)** together into one neat **object**."
                 ),
                 "syntax_box": {
                     "title": "Before OOP (Messy) vs With a Class (Clean)",
                     "syntax": (
                         "# WITHOUT OOP (messy as soon as you have 5 accounts!):\n"
                         "acc1_owner = 'Sara'\n"
-                        "acc1_balance = 100\n"
-                        "acc2_owner = 'Alex'\n"
-                        "acc2_balance = 50\n\n"
-                        "# WITH OOP (1 blueprint, create as many accounts as you want):\n"
+                        "acc1_balance = 100\n\n"
+                        "# WITH OOP (1 blueprint -> create as many objects as you want):\n"
                         "class BankAccount:\n"
                         "    def __init__(self, owner: str, balance: int = 0) -> None:\n"
                         "        self.owner = owner\n"
                         "        self.balance = balance"
                     ),
                     "breakdown": [
-                        "Think of `class BankAccount:` as a cookie cutter, and `acc1 = BankAccount('Sara', 100)` as an actual cookie made from it.",
-                        "Even dictionaries (`{'owner': 'Sara', 'balacne': 100}`) let typos slip through silently—a class locks in exact attribute names and attaches safe actions!",
+                        "Think of `class` as a cookie cutter, and `BankAccount('Sara', 100)` as an actual cookie made from it.",
+                        "Unlike plain dictionaries, a class locks in exact field names and attaches safe actions.",
                     ],
                 },
                 "tiny_example": {
@@ -830,17 +934,16 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                         "print(p1.name, p1.hp, '|', p2.name, p2.hp)"
                     ),
                     "line_by_line": [
-                        "`class Player:` defines the blueprint (`name` and starting `hp = 100`).",
-                        "`p1 = Player('Knight')` creates the first object (`p1.name='Knight'`, `p1.hp=100`).",
-                        "`p2 = Player('Mage')` creates a completely separate second object (`p2.hp` is still `100`!).",
-                        "Changing `p1.hp = 80` leaves `p2.hp` untouched!",
+                        "`p1 = Player('Knight')` creates the first object (`p1.hp = 100`).",
+                        "`p2 = Player('Mage')` creates a separate second object (`p2.hp` stays `100`!).",
+                        "Changing `p1.hp = 80` leaves `p2.hp` untouched.",
                     ],
                 },
                 "body_markdown": (
-                    "### Key Vocabulary (In Plain English)\n"
+                    "### Key Vocabulary\n"
                     "- **Class:** The blueprint (`Player`).\n"
-                    "- **Instance / Object:** One real item built from that blueprint (`p1`, `p2`).\n"
-                    "- **Attribute:** A variable living inside an object (`p1.hp`)."
+                    "- **Object / Instance:** One item built from that blueprint (`p1`, `p2`).\n"
+                    "- **Attribute:** A variable stored on an object (`p1.hp`)."
                 ),
                 "code_example": {
                     "title": "Modeling a Book Object",
@@ -850,42 +953,40 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                         "        self.title = title\n"
                         "        self.pages = pages\n\n"
                         "b1 = Book('Python Basics', 180)\n"
-                        "b2 = Book('AI Systems', 320)\n"
                         "print(f'{b1.title} has {b1.pages} pages')\n"
                     ),
                 },
                 "common_mistakes": [
-                    "Thinking `class` runs immediately—just like `def`, `class` only defines the blueprint until you create an object like `Book(...)`.",
+                    "Thinking `class` runs immediately—just like `def`, `class` defines the blueprint until you call `Book(...)`.",
                 ],
                 "key_takeaway": "A class is a blueprint for creating independent objects that each hold their own attributes.",
             },
             {
-                "id": "ch03-s2",
-                "title": "3.2 Inside `__init__` & What `self` Actually Means",
+                "id": "ch04-s2",
+                "title": "4.2 Inside `__init__` & What `self` Actually Means",
                 "zero_assumption_note": "`self` looks strange only because other languages hide it. In Python, it is completely transparent once you see how Python passes it.",
                 "definition": (
-                    "- **`__init__`:** The setup function that runs automatically the instant you create an object (`Player('Knight')`).\n"
-                    "- **`self`:** Simply means **'this specific object calling the method right now'**."
+                    "- **`__init__`:** The setup function that runs automatically when you create an object.\n"
+                    "- **`self`:** Literally means **'this specific object calling the method right now'**."
                 ),
                 "syntax_box": {
                     "title": "How `self` Connects Attributes and Methods",
                     "syntax": (
                         "class Counter:\n"
                         "    def __init__(self) -> None:\n"
-                        "        self.value = 0          # attach `value` to THIS object\n\n"
+                        "        self.value = 0          # saved on THIS object\n\n"
                         "    def increment(self) -> None:\n"
-                        "        self.value += 1         # update THIS object's `value`\n\n"
+                        "        self.value += 1         # updates THIS object's value\n\n"
                         "c = Counter()\n"
-                        "c.increment()                   # Python runs Counter.increment(c)!"
+                        "c.increment()                   # Python runs Counter.increment(c)"
                     ),
                     "breakdown": [
-                        "When you call `c.increment()`, Python secretly translates it to `Counter.increment(c)`—passing `c` as `self`!",
-                        "That's why **every normal method inside a class takes `self` as its first parameter**.",
-                        "Inside `__init__`, writing `self.value = 0` saves `0` on the object forever. Writing `value = 0` (without `self.`) creates a temporary variable that disappears as soon as `__init__` finishes!",
+                        "When you call `c.increment()`, Python automatically passes `c` as `self`!",
+                        "Writing `self.value = 0` saves `value` on the object; writing `value = 0` (no `self.`) disappears when `__init__` ends.",
                     ],
                 },
                 "tiny_example": {
-                    "title": "Watching `self` Keep Two Counters Separate",
+                    "title": "Watching `self` Keep Two Trackers Separate",
                     "code": (
                         "class StepTracker:\n"
                         "    def __init__(self, owner: str) -> None:\n"
@@ -900,17 +1001,16 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                         "print(a.owner, a.steps, '|', b.owner, b.steps)"
                     ),
                     "line_by_line": [
-                        "`a.walk(500)` runs `walk` with `self = a` -> `a.steps` becomes `500`.",
-                        "`b.walk(1200)` runs `walk` with `self = b` -> `b.steps` becomes `1200`.",
-                        "Prints `Sara 500 | Alex 1200`.",
+                        "`a.walk(500)` runs with `self = a` -> `a.steps` becomes `500`.",
+                        "`b.walk(1200)` runs with `self = b` -> `b.steps` becomes `1200`.",
                     ],
                 },
                 "body_markdown": (
                     "### Protecting Object State With Validation\n"
-                    "Because updates go through a method (like `deposit(amount)` or `walk(n)`), you can guard against bad data in **one place** (`if amount <= 0: raise ValueError(...)`) instead of scattering checks across 10 files."
+                    "Putting updates inside methods like `deposit(amount)` lets you reject bad inputs (`if amount <= 0: raise ValueError(...)`) in one place."
                 ),
                 "code_example": {
-                    "title": "Safe BankAccount Methods With Guard Checks",
+                    "title": "BankAccount With Validation Methods",
                     "code": (
                         "class BankAccount:\n"
                         "    def __init__(self, owner: str, balance: float = 0.0) -> None:\n"
@@ -927,108 +1027,43 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                         "        return True\n\n"
                         "acc = BankAccount('Sara', 100.0)\n"
                         "acc.deposit(50.0)\n"
-                        "print('Withdraw 200 ok?', acc.withdraw(200.0), '| Balance:', acc.balance)\n"
+                        "print('Balance:', acc.balance)\n"
                     ),
                 },
                 "common_mistakes": [
-                    "Forgetting `self` in `def walk(n):` -> crashes with `TypeError: walk() takes 1 positional argument but 2 were given`.",
-                    "Forgetting `self.` when setting attributes inside `__init__` (`steps = 0` instead of `self.steps = 0`).",
+                    "Forgetting `self` in `def walk(n):` -> `TypeError`.",
+                    "Forgetting `self.` when saving attributes in `__init__`.",
                 ],
-                "key_takeaway": "`self` is just the object calling the method, and methods let you validate and update an object's state safely.",
+                "key_takeaway": "`self` is just the object calling the method, and methods let you validate and update state cleanly.",
             },
             {
-                "id": "ch03-s3",
-                "title": "3.3 Making Classes Clean: `__repr__`, `@dataclass`, `__len__` & `__call__`",
-                "zero_assumption_note": "If you ever tried `print(my_object)` and saw `<Book object at 0x000001A2F>`, this fixes that!",
+                "id": "ch04-s3",
+                "title": "4.3 `@dataclass`, `__len__`, `__call__`, Composition & Modules",
+                "zero_assumption_note": "Double-underscore ('dunder') methods simply teach your custom class how to work with `print()`, `len()`, and `()`.",
                 "definition": (
-                    "**Dunder ('double-underscore') methods** teach your custom class how to work with standard Python built-ins like `print()`, `len()`, `in`, and `()`."
+                    "- **`@dataclass`:** Auto-writes `__init__`, readable `print()` (`__repr__`), and `==` for data classes.\n"
+                    "- **Composition:** Putting one object inside another (`Playlist` holding `Song` objects)."
                 ),
                 "syntax_box": {
-                    "title": "The 4 Most Useful Shortcuts & Dunders",
+                    "title": "@dataclass, __len__ & __call__",
                     "syntax": (
                         "from dataclasses import dataclass\n\n"
                         "@dataclass\n"
                         "class Song:\n"
                         "    title: str\n"
                         "    seconds: int\n\n"
-                        "# @dataclass auto-creates __init__, readable print() (__repr__), and == !"
-                    ),
-                    "breakdown": [
-                        "`__repr__(self) -> str`: controls what `print(obj)` displays.",
-                        "`@dataclass`: decorator that writes `__init__`, `__repr__`, and `==` automatically for data-holding classes!",
-                        "`__len__(self) -> int`: lets callers write `len(my_playlist)`.",
-                        "`__call__(self, x)`: lets an object holding settings in `self` be called like a function: `cleaner('  hi  ')`.",
-                    ],
-                },
-                "tiny_example": {
-                    "title": "Using `@dataclass` vs Plain Class",
-                    "code": (
-                        "from dataclasses import dataclass\n\n"
-                        "@dataclass\n"
-                        "class Song:\n"
-                        "    title: str\n"
-                        "    seconds: int\n\n"
-                        "s1 = Song('Focus Beat', 180)\n"
-                        "s2 = Song('Focus Beat', 180)\n"
-                        "print(s1)          # Song(title='Focus Beat', seconds=180)\n"
-                        "print(s1 == s2)    # True!"
-                    ),
-                    "line_by_line": [
-                        "Without `@dataclass`, `print(s1)` prints an ugly memory address and `s1 == s2` is `False`!",
-                        "With `@dataclass`, Python prints all fields cleanly and compares values with `==`.",
-                    ],
-                },
-                "body_markdown": (
-                    "### Why `__call__` Matters Later in AI\n"
-                    "When you build neural layers in PyTorch (`layer(x)`) or text steps in LangChain (`chain(prompt)`), they store configuration/weights in `self` and run via `__call__`."
-                ),
-                "code_example": {
-                    "title": "A Small Callable Normalizer (`__call__`)",
-                    "code": (
                         "class TextCleaner:\n"
-                        "    def __init__(self, lowercase: bool = True) -> None:\n"
-                        "        self.lowercase = lowercase\n\n"
                         "    def __call__(self, text: str) -> str:\n"
-                        "        cleaned = ' '.join(text.split())\n"
-                        "        if self.lowercase:\n"
-                        "            return cleaned.lower()\n"
-                        "        return cleaned\n\n"
-                        "clean = TextCleaner(lowercase=True)\n"
-                        "print(clean('  Hello   AI  '))  # 'hello ai'\n"
-                    ),
-                },
-                "common_mistakes": [
-                    "Expecting `==` to compare fields on a normal class without `@dataclass` or `__eq__` (Python compares memory addresses by default!).",
-                ],
-                "key_takeaway": "Use `@dataclass` for clean data objects, `__len__` for collections, and `__call__` when an object acts like a configured function.",
-            },
-            {
-                "id": "ch03-s4",
-                "title": "3.4 Objects Working Together (Composition) & Splitting Files",
-                "zero_assumption_note": "Real apps aren't 1 class—they are 2 or 3 small classes cooperating, organized across clean `.py` files.",
-                "definition": (
-                    "- **Composition ('has-a'):** Putting one object inside another object (for example, a `Playlist` *has* a list of `Song` objects).\n"
-                    "- **Modular Files:** Putting data models in `models.py`, logic classes in `player.py`, and tests in `test_player.py`."
-                ),
-                "syntax_box": {
-                    "title": "Composition + Importing Across Files",
-                    "syntax": (
-                        "class Playlist:\n"
-                        "    def __init__(self, name: str) -> None:\n"
-                        "        self.name = name\n"
-                        "        self.songs: list[Song] = []  # Playlist HAS Song objects\n\n"
-                        "    def add(self, song: Song) -> None:\n"
-                        "        self.songs.append(song)\n\n"
-                        "    def __len__(self) -> int:\n"
-                        "        return len(self.songs)"
+                        "        return ' '.join(text.split()).lower()"
                     ),
                     "breakdown": [
-                        "`Song` knows about one song (`title`, `seconds`). `Playlist` knows how to hold and summarize many `Song`s.",
-                        "When splitting files, `from models import Song` lets `playlist.py` reuse `Song` without cramming everything into 1 huge script!",
+                        "`@dataclass` eliminates `__init__` boilerplate for data objects.",
+                        "`__len__(self)` enables `len(playlist)`.",
+                        "`__call__(self, x)` lets a configured object be invoked like `cleaner('  Hi  ')`.",
                     ],
                 },
                 "tiny_example": {
-                    "title": "Playlist Holding Song Objects",
+                    "title": "Playlist Composing Song Objects",
                     "code": (
                         "from dataclasses import dataclass\n\n"
                         "@dataclass\n"
@@ -1045,72 +1080,59 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                         "pl = Playlist()\n"
                         "pl.add(Song('Intro', 90))\n"
                         "pl.add(Song('Main', 210))\n"
-                        "print('Total seconds:', pl.total_seconds())"
+                        "print('Total:', pl.total_seconds())"
                     ),
                     "line_by_line": [
-                        "Creates two `Song` objects and adds them to `pl`.",
-                        "`sum(s.seconds for s in self.songs)` loops through every `Song` object inside `pl` and sums `.seconds` -> `300`.",
+                        "`Song` holds data for one track cleanly.",
+                        "`Playlist` holds a list of `Song` objects and sums `s.seconds` -> `300`.",
                     ],
                 },
                 "body_markdown": (
-                    "### Verifying Classes Automatically With `pytest`\n"
-                    "Put `def test_playlist_total():` in `test_playlist.py` using `assert pl.total_seconds() == 300`, then run `python -m pytest` to verify every method in milliseconds."
+                    "### Splitting Files & Writing `pytest` Tests\n"
+                    "Put `@dataclass` models in `models.py`, OOP logic in `analyzer.py` (no file I/O inside!), file reading in `cli.py`, and `def test_...(): assert ...` in `test_analyzer.py`."
                 ),
                 "code_example": {
-                    "title": "Testing Your Class With `assert` / `pytest`",
+                    "title": "Unit Testing an OOP Class",
                     "code": (
-                        "def test_playlist_counts() -> None:\n"
+                        "def test_playlist_total() -> None:\n"
                         "    pl = Playlist()\n"
                         "    pl.add(Song('A', 60))\n"
-                        "    pl.add(Song('B', 120))\n"
-                        "    assert pl.total_seconds() == 180\n"
+                        "    assert pl.total_seconds() == 60\n"
                     ),
                 },
                 "common_mistakes": [
-                    "Giving one giant class 15 unrelated jobs (reading files, parsing text, and printing reports) instead of splitting small cooperating classes.",
+                    "Putting file reading inside OOP logic classes, making unit tests hard.",
                 ],
-                "key_takeaway": "Build small single-job classes that hold each other (composition), split them into clean `.py` modules, and test with `pytest`.",
+                "key_takeaway": "Use `@dataclass` for data, composition for cooperating objects, and keep I/O out of core classes so `pytest` is effortless.",
             },
         ],
         "quizzes": [
             {
-                "id": "ch03-q1",
+                "id": "ch04-q1",
                 "question": "Inside `__init__`, why must you write `self.hp = 100` instead of `hp = 100`?",
                 "options": [
-                    "`hp = 100` creates a temporary local variable that disappears when `__init__` finishes; `self.hp` saves it on the object",
-                    "Python forbids variable names without `self.`",
-                    "`self.hp` makes it a global variable shared by all objects",
+                    "`hp = 100` vanishes when `__init__` ends; `self.hp = 100` stores it on that object",
+                    "Python forbids variables without `self.`",
+                    "`self.hp` makes it global",
                     "`hp = 100` makes it read-only",
                 ],
                 "correct_index": 0,
-                "explanation": "Attaching attributes to `self` stores them on that specific object instance.",
-            },
-            {
-                "id": "ch03-q2",
-                "question": "What does `@dataclass` give you automatically?",
-                "options": [
-                    "File saving to CSV",
-                    "`__init__`, clean `print()` output (`__repr__`), and field-by-field `==` equality",
-                    "Multithreading",
-                    "Automatic database tables",
-                ],
-                "correct_index": 1,
-                "explanation": "`@dataclass` removes boilerplate for classes whose main job is holding structured fields.",
+                "explanation": "Attaching attributes to `self` saves them on the object instance.",
             },
         ],
         "project": {
             "title": "Modular OOP Log Analyzer Package",
-            "workspace_dir": "projects/ch03_log_analyzer",
-            "overview": "Refactor `legacy_monolith.py` into clean `models.py` (`@dataclass`), `analyzer.py` (`class LogAnalyzer`), `cli.py`, and `pytest` tests.",
+            "workspace_dir": "projects/ch04_log_analyzer",
+            "overview": "Refactor `legacy_monolith.py` into clean `models.py`, `analyzer.py`, `cli.py`, and `pytest` tests.",
             "architecture_steps": [
-                "Inspect `legacy_monolith.py` and separate file reading from counting.",
+                "Inspect `legacy_monolith.py` to separate file reading from counting.",
                 "Create `LogEntry` and `LogReport` dataclasses in `models.py`.",
-                "Build `LogAnalyzer` in `analyzer.py` and test with `pytest`.",
+                "Build `LogAnalyzer` in `analyzer.py` and pass `pytest`.",
             ],
             "milestones": [
-                {"id": "ch03-m1", "label": "Separate models.py dataclasses from file I/O"},
-                {"id": "ch03-m2", "label": "Build LogAnalyzer class with clean state & methods"},
-                {"id": "ch03-m3", "label": "Wire cli.py with Path & pass pytest"},
+                {"id": "ch04-m1", "label": "Separate models.py dataclasses from file I/O"},
+                {"id": "ch04-m2", "label": "Build LogAnalyzer class with clean state & methods"},
+                {"id": "ch04-m3", "label": "Wire cli.py & pass pytest"},
             ],
         },
     },

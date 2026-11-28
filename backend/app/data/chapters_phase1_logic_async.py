@@ -6,13 +6,13 @@ from typing import Any
 
 PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
     # =========================================================================
-    # CHAPTER 4: Logic Building Step-by-Step (Before Any DSA!)
+    # CHAPTER 5: Logic Building Step-by-Step (Before Any DSA!)
     # =========================================================================
     {
-        "id": "ch04",
-        "number": 4,
+        "id": "ch05",
+        "number": 5,
         "phase": 1,
-        "phase_title": "Phase 1: Python From Zero — Basics, Files, OOP & Logic",
+        "phase_title": "Phase 1: Python From Zero — Basics, Files, `os`, OOP & Logic",
         "title": "Logic Building Step-by-Step (Think Before You Code)",
         "subtitle": "Paper dry-runs, accumulators (manual max/min/sum), filtering, grouping, nested loops, and gentle transition to faster patterns.",
         "status_type": "available",
@@ -25,8 +25,8 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
         "visualizer": "recursion_stack",
         "sections": [
             {
-                "id": "ch04-s1",
-                "title": "4.1 How a Human Solves a Problem (Paper Dry-Run -> Variables)",
+                "id": "ch05-s1",
+                "title": "5.1 How a Human Solves a Problem (Paper Dry-Run -> Variables)",
                 "zero_assumption_note": "If you stare at a blank editor not knowing which line to type first, STOP typing and walk 4 items on paper first.",
                 "definition": (
                     "**Logic building** is simply noticing what small pieces of information your brain keeps track of while solving a 4-item example by hand—and turning each piece into a Python variable."
@@ -94,8 +94,8 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
                 "key_takeaway": "Solve 4 items with your finger first; the things your brain remembers become your initial variables.",
             },
             {
-                "id": "ch04-s2",
-                "title": "4.2 Everyday Loop Logic: Filtering, Building, Reversing & Checking",
+                "id": "ch05-s2",
+                "title": "5.2 Everyday Loop Logic: Filtering, Building, Reversing & Checking",
                 "zero_assumption_note": "Before touching algorithms, get super comfortable building new lists, checking flags (`all` / `any`), and tracking streaks.",
                 "definition": (
                     "Most everyday programming tasks fall into 4 simple patterns: **Filter** (keep some items), **Transform** (change every item), "
@@ -166,8 +166,8 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
                 "key_takeaway": "Keep flag checks one-way (`True -> False` on failure + `break`), and always check what happens after the last loop item.",
             },
             {
-                "id": "ch04-s3",
-                "title": "4.3 Grouping, Nested Loops (2D) & Breaking Problems Into Helpers",
+                "id": "ch05-s3",
+                "title": "5.3 Grouping, Nested Loops (2D) & Breaking Problems Into Helpers",
                 "zero_assumption_note": "If a problem feels big, don't write one 40-line tangled loop—split it into two tiny, obvious steps.",
                 "definition": (
                     "- **Nested loop:** A loop inside another loop—the inner loop runs completely for *each* round of the outer loop.\n"
@@ -242,8 +242,8 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
                 "key_takeaway": "Two simple loops in sequence are way easier to write and debug than one tangled loop. Split big logic into small steps.",
             },
             {
-                "id": "ch04-s4",
-                "title": "4.4 Leveling Up: Hash Map Lookups, Two Pointers, Sliding Window & Gentle Recursion",
+                "id": "ch05-s4",
+                "title": "5.4 Leveling Up: Hash Map Lookups, Two Pointers, Sliding Window & Gentle Recursion",
                 "zero_assumption_note": "Now that basic loops and dicts feel solid, let's see why certain patterns make slow nested loops 1,000x faster.",
                 "definition": (
                     "- **Hash Map Lookup (`seen`):** Remembering past items in a `dict`/`set` so you don't re-scan the whole list.\n"
@@ -320,7 +320,7 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
         ],
         "quizzes": [
             {
-                "id": "ch04-q1",
+                "id": "ch05-q1",
                 "question": "Why does initializing `best = 0` fail when finding the largest number in `[-5, -2, -9]`?",
                 "options": [
                     "Python can't compare negative numbers",
@@ -332,7 +332,7 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
                 "explanation": "Starting `best = nums[0]` ensures your baseline is actually an element from the list.",
             },
             {
-                "id": "ch04-q2",
+                "id": "ch05-q2",
                 "question": "Why does `if need in seen:` with a `dict`/`set` beat an inner `for` loop?",
                 "options": [
                     "Dictionary/set lookup checks membership in ~1 step instead of scanning every item again",
@@ -346,7 +346,7 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
         ],
         "project": {
             "title": "Pure-Python Text Tokenizer & Inverted Index Search Engine",
-            "workspace_dir": "projects/ch04_mini_search_engine",
+            "workspace_dir": "projects/ch05_mini_search_engine",
             "overview": "Use your logic-building skills (splitting text, counting words, dict grouping) to build a pure-Python keyword search engine.",
             "architecture_steps": [
                 "Write `tokenize(text)` normalizing lowercase words.",
@@ -354,21 +354,21 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
                 "Implement ranked `AND` / `OR` queries + `pytest`.",
             ],
             "milestones": [
-                {"id": "ch04-m1", "label": "Implement text normalization & tokenizer"},
-                {"id": "ch04-m2", "label": "Build InvertedIndex mapping words to doc IDs"},
-                {"id": "ch04-m3", "label": "Implement ranked search queries + pytest"},
+                {"id": "ch05-m1", "label": "Implement text normalization & tokenizer"},
+                {"id": "ch05-m2", "label": "Build InvertedIndex mapping words to doc IDs"},
+                {"id": "ch05-m3", "label": "Implement ranked search queries + pytest"},
             ],
         },
     },
 
     # =========================================================================
-    # CHAPTER 5: Essential DSA & Dynamic Programming Demystified
+    # CHAPTER 6: Essential DSA & Dynamic Programming Demystified
     # =========================================================================
     {
-        "id": "ch05",
-        "number": 5,
+        "id": "ch06",
+        "number": 6,
         "phase": 1,
-        "phase_title": "Phase 1: Python From Zero — Basics, Files, OOP & Logic",
+        "phase_title": "Phase 1: Python From Zero — Basics, Files, `os`, OOP & Logic",
         "title": "Essential DSA & Dynamic Programming Demystified",
         "subtitle": "Big-O intuition, Queues (deque), Heaps (heapq), Graphs (BFS & DAGs), and Dynamic Programming from recursion to tables.",
         "status_type": "available",
@@ -381,8 +381,8 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
         "visualizer": "dp_table",
         "sections": [
             {
-                "id": "ch05-s1",
-                "title": "5.1 Queues (`deque`), Heaps (`heapq`) & Graphs (BFS & DAGs)",
+                "id": "ch06-s1",
+                "title": "6.1 Queues (`deque`), Heaps (`heapq`) & Graphs (BFS & DAGs)",
                 "zero_assumption_note": "Pick the data structure that matches the job you repeat most—never memorize unused structures.",
                 "definition": (
                     "- **`deque`:** A fast two-ended queue (add to back, remove from front in 1 step).\n"
@@ -455,8 +455,8 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
                 "key_takeaway": "Use `deque` for queues/BFS, `heapq` for Top-K, and Kahn's algorithm for dependent tasks.",
             },
             {
-                "id": "ch05-s2",
-                "title": "5.2 Dynamic Programming Demystified (Recursion -> Memo -> Table)",
+                "id": "ch06-s2",
+                "title": "6.2 Dynamic Programming Demystified (Recursion -> Memo -> Table)",
                 "zero_assumption_note": "Dynamic Programming is NOT a scary trick. It literally means: **save sub-answers so you never calculate the exact same thing twice**.",
                 "definition": (
                     "**Dynamic Programming (DP)** takes a recursive problem where the same smaller calls repeat over and over, and caches each answer once in a `memo` dict or `dp` list."
@@ -525,7 +525,7 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
         ],
         "quizzes": [
             {
-                "id": "ch05-q1",
+                "id": "ch06-q1",
                 "question": "What does adding `memo` or a `dp` table actually change?",
                 "options": [
                     "It stores each subproblem answer once so repeated calls look it up in 1 step instead of recalculating",
@@ -539,7 +539,7 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
         ],
         "project": {
             "title": "Autocomplete, DP Spell-Checker & DAG Pipeline Scheduler",
-            "workspace_dir": "projects/ch05_autocomplete_dp_scheduler",
+            "workspace_dir": "projects/ch06_autocomplete_dp_scheduler",
             "overview": "Combine Trie autocomplete, 2D DP Levenshtein spell-checking, and Kahn's DAG topological sort.",
             "architecture_steps": [
                 "Implement `Trie` prefix lookup.",
@@ -547,21 +547,21 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
                 "Implement Kahn's topological sort (`schedule_tasks`).",
             ],
             "milestones": [
-                {"id": "ch05-m1", "label": "Implement Trie prefix autocomplete"},
-                {"id": "ch05-m2", "label": "Implement 2D DP edit distance"},
-                {"id": "ch05-m3", "label": "Implement DAG topological sort & pytest"},
+                {"id": "ch06-m1", "label": "Implement Trie prefix autocomplete"},
+                {"id": "ch06-m2", "label": "Implement 2D DP edit distance"},
+                {"id": "ch06-m3", "label": "Implement DAG topological sort & pytest"},
             ],
         },
     },
 
     # =========================================================================
-    # CHAPTER 6: Async Programming & Concurrency
+    # CHAPTER 7: Async Programming & Concurrency
     # =========================================================================
     {
-        "id": "ch06",
-        "number": 6,
+        "id": "ch07",
+        "number": 7,
         "phase": 1,
-        "phase_title": "Phase 1: Python From Zero — Basics, Files, OOP & Logic",
+        "phase_title": "Phase 1: Python From Zero — Basics, Files, `os`, OOP & Logic",
         "title": "Concurrency, Async Programming & Event Loops",
         "subtitle": "Waiting vs computing, async def, await, asyncio.gather, Semaphores, and exponential backoff retries.",
         "status_type": "available",
@@ -574,8 +574,8 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
         "visualizer": "asyncio_loop",
         "sections": [
             {
-                "id": "ch06-s1",
-                "title": "6.1 `async def`, `await`, `gather` & `Semaphore` From Scratch",
+                "id": "ch07-s1",
+                "title": "7.1 `async def`, `await`, `gather` & `Semaphore` From Scratch",
                 "zero_assumption_note": "When boiling water (3 min wait) and chopping onions, you don't stand frozen staring at the kettle—you start the kettle, then chop while waiting!",
                 "definition": (
                     "- **Asynchronous (`asyncio`):** Lets one Python thread juggle many *waiting* I/O tasks by switching tasks whenever one hits `await`.\n"
@@ -644,7 +644,7 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
         ],
         "quizzes": [
             {
-                "id": "ch06-q1",
+                "id": "ch07-q1",
                 "question": "Why does calling `time.sleep(5)` inside an `async def` function hurt performance?",
                 "options": [
                     "It blocks the single event loop thread so NO other async tasks can run for 5 seconds",
@@ -658,7 +658,7 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
         ],
         "project": {
             "title": "Async Rate-Limited API Batch Harvester",
-            "workspace_dir": "projects/ch06_async_harvester",
+            "workspace_dir": "projects/ch07_async_harvester",
             "overview": "Fetch batches concurrently using `asyncio.Semaphore` and exponential backoff retries.",
             "architecture_steps": [
                 "Write `retry_async` with exponential sleep backoff.",
@@ -666,9 +666,9 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
                 "Verify speedup & failure handling with `pytest`.",
             ],
             "milestones": [
-                {"id": "ch06-m1", "label": "Implement exponential backoff retry coroutine"},
-                {"id": "ch06-m2", "label": "Add Semaphore concurrency cap"},
-                {"id": "ch06-m3", "label": "Pass pytest async speedup checks"},
+                {"id": "ch07-m1", "label": "Implement exponential backoff retry coroutine"},
+                {"id": "ch07-m2", "label": "Add Semaphore concurrency cap"},
+                {"id": "ch07-m3", "label": "Pass pytest async speedup checks"},
             ],
         },
     },

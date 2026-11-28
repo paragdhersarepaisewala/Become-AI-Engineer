@@ -1,4 +1,4 @@
-"""Phase 3 & 4 Roadmap Chapters (Chapters 11-16): ML, PyTorch, Transformers, Small LLMs, Fine-Tuning & LangChain."""
+"""Phase 3 & 4 Roadmap Chapters (Chapters 15-20): ML, PyTorch, Transformers, Small LLMs, Fine-Tuning & LangChain."""
 
 from __future__ import annotations
 
@@ -6,8 +6,8 @@ from typing import Any
 
 PHASE_3_4_ROADMAP_CHAPTERS: list[dict[str, Any]] = [
     {
-        "id": "ch11",
-        "number": 11,
+        "id": "ch15",
+        "number": 15,
         "phase": 3,
         "phase_title": "Phase 3: Machine Learning & Deep Learning Under the Hood",
         "title": "Classical ML & Rigorous Evaluation",
@@ -21,19 +21,19 @@ PHASE_3_4_ROADMAP_CHAPTERS: list[dict[str, Any]] = [
         "quizzes": [],
         "project": {
             "title": "Leak-Free Tabular Classifier & Scoring Endpoint",
-            "workspace_dir": "projects/ch11_ml_eval",
+            "workspace_dir": "projects/ch15_ml_eval",
             "overview": "Planned for Phase 3–4 expansion.",
             "architecture_steps": [],
             "milestones": [],
         },
     },
     {
-        "id": "ch12",
-        "number": 12,
+        "id": "ch16",
+        "number": 16,
         "phase": 3,
         "phase_title": "Phase 3: Machine Learning & Deep Learning Under the Hood",
         "title": "Neural Networks, Autograd & PyTorch Internals",
-        "subtitle": "Computation graphs, building a tiny autograd engine from scratch, nn.Module (OOP in action!), DataLoaders, and CUDA mixed precision.",
+        "subtitle": "Computation graphs, building a tiny autograd engine from scratch, nn.Module, DataLoaders, and CUDA mixed precision.",
         "status_type": "roadmap",
         "estimated_hours": 7,
         "why_it_matters": "Building autograd in 80 lines of Python removes every black box around backpropagation and PyTorch training loops.",
@@ -43,15 +43,15 @@ PHASE_3_4_ROADMAP_CHAPTERS: list[dict[str, Any]] = [
         "quizzes": [],
         "project": {
             "title": "Tiny Autograd Engine & GPU-Accelerated Classifier",
-            "workspace_dir": "projects/ch12_autograd_pytorch",
+            "workspace_dir": "projects/ch16_autograd_pytorch",
             "overview": "Planned for Phase 3–4 expansion.",
             "architecture_steps": [],
             "milestones": [],
         },
     },
     {
-        "id": "ch13",
-        "number": 13,
+        "id": "ch17",
+        "number": 17,
         "phase": 4,
         "phase_title": "Phase 4: Transformers, Small LLMs, Fine-Tuning & LangChain",
         "title": "Tokenization, Attention & Transformer Architecture",
@@ -65,15 +65,15 @@ PHASE_3_4_ROADMAP_CHAPTERS: list[dict[str, Any]] = [
         "quizzes": [],
         "project": {
             "title": "GPT-Style Decoder-Only Transformer from Scratch",
-            "workspace_dir": "projects/ch13_transformer_scratch",
+            "workspace_dir": "projects/ch17_transformer_scratch",
             "overview": "Planned for Phase 3–4 expansion.",
             "architecture_steps": [],
             "milestones": [],
         },
     },
     {
-        "id": "ch14",
-        "number": 14,
+        "id": "ch18",
+        "number": 18,
         "phase": 4,
         "phase_title": "Phase 4: Transformers, Small LLMs, Fine-Tuning & LangChain",
         "title": "Pre-Training a Small Language Model (SLM)",
@@ -87,15 +87,15 @@ PHASE_3_4_ROADMAP_CHAPTERS: list[dict[str, Any]] = [
         "quizzes": [],
         "project": {
             "title": "Pre-Train a 25M–50M Parameter Small LLM Locally",
-            "workspace_dir": "projects/ch14_pretrain_slm",
+            "workspace_dir": "projects/ch18_pretrain_slm",
             "overview": "Planned for Phase 3–4 expansion.",
             "architecture_steps": [],
             "milestones": [],
         },
     },
     {
-        "id": "ch15",
-        "number": 15,
+        "id": "ch19",
+        "number": 19,
         "phase": 4,
         "phase_title": "Phase 4: Transformers, Small LLMs, Fine-Tuning & LangChain",
         "title": "Fine-Tuning LLMs (SFT, LoRA, QLoRA & DPO)",
@@ -109,15 +109,15 @@ PHASE_3_4_ROADMAP_CHAPTERS: list[dict[str, Any]] = [
         "quizzes": [],
         "project": {
             "title": "Fine-Tune a Small Open-Weights LLM with QLoRA on RTX 5070 Ti",
-            "workspace_dir": "projects/ch15_finetune_qlora",
+            "workspace_dir": "projects/ch19_finetune_qlora",
             "overview": "Planned for Phase 3–4 expansion.",
             "architecture_steps": [],
             "milestones": [],
         },
     },
     {
-        "id": "ch16",
-        "number": 16,
+        "id": "ch20",
+        "number": 20,
         "phase": 4,
         "phase_title": "Phase 4: Transformers, Small LLMs, Fine-Tuning & LangChain",
         "title": "LangChain (LCEL), RAG, Agents, Evals & LLM Serving",
@@ -125,7 +125,7 @@ PHASE_3_4_ROADMAP_CHAPTERS: list[dict[str, Any]] = [
         "status_type": "roadmap",
         "estimated_hours": 9,
         "why_it_matters": (
-            "Now that you understand OOP (`__call__`), async, FastAPI, vector search, and fine-tuning from scratch, LangChain becomes "
+            "Now that you understand OOP, async, Pydantic, Requests, FastAPI, FastMCP, and fine-tuning from scratch, LangChain becomes "
             "a transparent orchestration toolkit rather than a confusing black box."
         ),
         "just_in_time_tags": ["LangChain LCEL", "RAG", "Tool Calling", "Evals", "vLLM Serving"],
@@ -133,8 +133,8 @@ PHASE_3_4_ROADMAP_CHAPTERS: list[dict[str, Any]] = [
         "sections": [],
         "quizzes": [],
         "project": {
-            "title": "Capstone: Containerized LangChain + Fine-Tuned RAG Assistant with Evals",
-            "workspace_dir": "projects/ch16_capstone_langchain",
+            "title": "Capstone: Containerized LangChain + FastMCP + Fine-Tuned RAG Assistant",
+            "workspace_dir": "projects/ch20_capstone_langchain",
             "overview": "Planned for Phase 3–4 expansion.",
             "architecture_steps": [],
             "milestones": [],

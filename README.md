@@ -5,10 +5,10 @@ A project-based, zero-assumptions learning platform designed to take an intermed
 ## What Is Included
 
 1. **Structured Course (`curriculum/` & Web Course Reader)**
-   - **Phase 1–2 (Chapters 1–10, Complete):** Built from ground zero with zero assumed knowledge. Every section follows a consistent **Definition → Exact Syntax → Tiny Line-by-Line Example → Practical Example → Common Mistakes** format, with interactive visualizers (Call Stack Stepper, 2D DP Table Stepper, Asyncio Event Loop Timeline, NumPy Broadcasting Explorer), quizzes, personal notes, and live **Run Code** buttons.
-   - **Phase 3–4 (Chapters 11–16, Roadmap):** Classical ML & evaluation, Tiny Autograd & PyTorch internals, Transformers from scratch, pre-training Small LLMs, fine-tuning (SFT/LoRA/QLoRA/DPO), and LangChain (LCEL), RAG & serving.
+   - **Phase 1–2 (Chapters 1–14, Complete — One Library Per Chapter):** Built from ground zero covering Python core, files (`open`, `pathlib`, `json`, `csv`), **`os`**, OOP, logic building, DSA & DP, `asyncio`, **`NumPy`**, **`Pandas`**, **`Pydantic`**, **`Requests`**, **`FastAPI`**, **`FastMCP`**, and **`Docker`**. Every section follows **Definition → Exact Syntax → Tiny Line-by-Line Example → Practical Example → Common Mistakes**, with interactive visualizers, quizzes, notes, and live **Run Code** buttons.
+   - **Phase 3–4 (Chapters 15–20, Roadmap):** Classical ML & evaluation, Tiny Autograd & PyTorch internals, Transformers from scratch, pre-training Small LLMs, fine-tuning (SFT/LoRA/QLoRA/DPO), and LangChain (LCEL), RAG & serving.
 2. **Separate Practice Workbook (`workbook/` & Web Workbook Tab)**
-   - 28 hands-on coding & logic drills across Chapters 1–10 (`exercises.md`, `problems.py`, `solutions.py`, `test_problems.py`), each with a **Logic Thinking Blueprint**, progressive hints, **Dry-Run Trace Table**, reference answer & explanation, and automated Python test verification.
+   - 35 hands-on coding & logic drills across Chapters 1–14 (`exercises.md`, `problems.py`, `solutions.py`, `test_problems.py`), each with a **Logic Thinking Blueprint**, progressive hints, **Dry-Run Trace Table**, reference answer & explanation, and automated Python test verification.
 3. **Project-Based Learning Hub (`projects/` & Web Projects Tab)**
    - Practical per-chapter projects with architecture steps, starter code, and milestone tracking stored in SQLite.
 
@@ -19,7 +19,7 @@ A project-based, zero-assumptions learning platform designed to take an intermed
 - **Python** `3.11+` (tested on Python `3.13.11`)
 - **Node.js** `18+` and **npm** (tested on Node `v25.6.1`)
 - **Git**
-- *(Optional for Chapter 10)* **Docker Desktop**
+- *(Optional for Chapter 14)* **Docker Desktop**
 
 ---
 
@@ -87,7 +87,7 @@ Open **http://localhost:5175** in your browser. Your learning progress, quiz ans
 
 ## Running Tests & Syncing Workspace Files
 
-- **Verify backend API + all 28 workbook reference solutions:**
+- **Verify backend API + all 35 workbook reference solutions:**
   ```bash
   cd backend
   python -m pytest -v
@@ -110,7 +110,7 @@ Open **http://localhost:5175** in your browser. Your learning progress, quiz ans
 ```text
 ├── backend/
 │   ├── app/
-│   │   ├── data/              # Structured chapters (Ch 1–16) & workbook drills
+│   │   ├── data/              # Structured chapters (Ch 1–20) & workbook drills
 │   │   ├── database.py        # SQLite progress, workbook attempts & streak tracking
 │   │   ├── main.py            # FastAPI REST endpoints
 │   │   ├── runner.py          # Isolated subprocess Python & test runner

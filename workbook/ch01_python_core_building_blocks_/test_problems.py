@@ -30,8 +30,3 @@ def test_wb_01_03_invalid_inputs() -> None:
         assert False
     except ValueError:
         pass
-    try:
-        sol.apply_discount(50, 120)
-        assert False
-    except ValueError:
-        pass

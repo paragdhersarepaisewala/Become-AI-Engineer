@@ -21,11 +21,11 @@ def test_api_end_to_end(tmp_path: Path, monkeypatch) -> None:
 
     dash = client.get("/api/dashboard")
     assert dash.status_code == 200
-    assert dash.json()["chapters"]["available_total"] == 10
-    assert dash.json()["chapters"]["roadmap_total"] == 16
+    assert dash.json()["chapters"]["available_total"] == 14
+    assert dash.json()["chapters"]["roadmap_total"] == 20
 
     chapters = client.get("/api/chapters").json()
-    assert len(chapters) == 16
+    assert len(chapters) == 20
 
     ch1 = client.get("/api/chapters/ch01").json()
     assert len(ch1["sections"]) == 6
@@ -64,4 +64,4 @@ def test_api_end_to_end(tmp_path: Path, monkeypatch) -> None:
     assert body["progress"]["status"] == "mastered"
 
     projects = client.get("/api/projects").json()
-    assert len(projects) == 16
+    assert len(projects) == 20

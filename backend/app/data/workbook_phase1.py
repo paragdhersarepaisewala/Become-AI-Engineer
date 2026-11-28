@@ -1,4 +1,4 @@
-"""Phase 1 Practice Workbook (Chapters 1-6): Python Core, Files, Beginner OOP, Step-by-Step Logic, DSA/DP, Async."""
+"""Phase 1 Practice Workbook (Chapters 1-7): Python Core, Files, `os` Automations, OOP, Logic, DSA/DP, Async."""
 
 from __future__ import annotations
 
@@ -29,14 +29,7 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
             "Initialize both keys to `0` before the loop.",
             "Inside `for s in scores:`, use `if s >= 60:` and `else:`.",
         ],
-        "dry_run_trace": (
-            "| Round | `s` | `s >= 60?` | `counts` |\n"
-            "|---|---|---|---|\n"
-            "| 1 | 40 | No | `{'passed': 0, 'failed': 1}` |\n"
-            "| 2 | 60 | Yes | `{'passed': 1, 'failed': 1}` |\n"
-            "| 3 | 85 | Yes | `{'passed': 2, 'failed': 1}` |\n"
-            "| 4 | 59 | No | `{'passed': 2, 'failed': 2}` |"
-        ),
+        "dry_run_trace": "| Round | `s` | `s >= 60?` | `counts` |\n|---|---|---|---|\n| 1 | 40 | No | `{'passed': 0, 'failed': 1}` |\n| 2 | 60 | Yes | `{'passed': 1, 'failed': 1}` |",
         "starter_code": (
             "def grade_summary(scores: list[int]) -> dict[str, int]:\n"
             "    # TODO: count how many scores are >= 60 vs < 60\n"
@@ -70,23 +63,18 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
         "topic": "Python",
         "question_type": "Logic & Coding",
         "difficulty": "Foundation",
-        "summary": "Practice writing a clean one-line list comprehension `[expr for x in items if cond]`.",
+        "summary": "Write a one-line list comprehension `[expr for x in items if cond]`.",
         "prompt_markdown": (
             "Write `clean_names(names: list[str]) -> list[str]` that strips spaces, lowercases each name, "
-            "and skips blank/whitespace-only entries using a list comprehension.\n\n"
-            "**Example:** `['  Sara ', '', ' ALEX ', '   ']` -> `['sara', 'alex']`."
+            "and skips blank/whitespace-only entries using a list comprehension."
         ),
         "thinking_blueprint": [
-            "Start with a 4-line loop mentally: `if name.strip(): out.append(name.strip().lower())`.",
-            "Fold onto 1 line: `[name.strip().lower() for name in names if name.strip()]`.",
+            "Fold `[name.strip().lower() for name in names if name.strip()]`.",
         ],
         "hints": [
             "Filter condition at the end: `if name.strip()` skips `''` and `'   '`.",
-            "Output expression at the front: `name.strip().lower()`.",
         ],
-        "dry_run_trace": (
-            "`'  Sara '` -> `'Sara'` (truthy -> keep `'sara'`); `''` -> `''` (falsy -> skip)."
-        ),
+        "dry_run_trace": "`'  Sara '` -> `'sara'`; `''` -> skipped.",
         "starter_code": (
             "def clean_names(names: list[str]) -> list[str]:\n"
             "    # TODO: strip & lowercase non-empty names\n"
@@ -114,31 +102,25 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
         "topic": "Python",
         "question_type": "Logic & Coding",
         "difficulty": "Foundation",
-        "summary": "Practice parameters, default values, input validation, and `return` (not `print`).",
+        "summary": "Practice parameters, default values, input validation, and `return`.",
         "prompt_markdown": (
-            "Write `apply_discount(price: float, discount_percent: float = 10.0) -> float` that:\n"
-            "- Subtracts `discount_percent`% from `price` and returns the final price rounded to 2 decimal places (`round(..., 2)`).\n"
-            "- If `price < 0` or `discount_percent < 0` or `discount_percent > 100`, raise `ValueError('Invalid input')`."
+            "Write `apply_discount(price: float, discount_percent: float = 10.0) -> float` subtracting `discount_percent`% from `price` rounded to 2 decimals. "
+            "Raise `ValueError('Invalid input')` if `price < 0` or `discount_percent < 0` or `discount_percent > 100`."
         ),
         "thinking_blueprint": [
-            "Block 1 (Guard): Check if `price < 0` or `discount_percent < 0` or `discount_percent > 100` -> `raise ValueError('Invalid input')`.",
-            "Block 2 (Calculate & Return): `saved = price * (discount_percent / 100)`, then `return round(price - saved, 2)`.",
+            "Validate bad inputs first -> `raise ValueError('Invalid input')`.",
+            "Compute `saved = price * (discount_percent / 100)` and `return round(price - saved, 2)`.",
         ],
         "hints": [
-            "Default parameter syntax: `def apply_discount(price: float, discount_percent: float = 10.0) -> float:`",
-            "Use `return`, NOT `print()`, so tests receive the calculated float!",
+            "Use `return`, NOT `print()`.",
         ],
-        "dry_run_trace": (
-            "`apply_discount(100)` -> `saved = 100 * 0.10 = 10.0` -> returns `90.0`.\n"
-            "`apply_discount(80, 25)` -> `saved = 80 * 0.25 = 20.0` -> returns `60.0`."
-        ),
+        "dry_run_trace": "`apply_discount(100)` -> `90.0`; `apply_discount(80, 25)` -> `60.0`.",
         "starter_code": (
             "def apply_discount(price: float, discount_percent: float = 10.0) -> float:\n"
             "    # TODO: validate inputs, subtract discount%, and return rounded price\n"
             "    pass\n\n"
             "if __name__ == '__main__':\n"
             "    print(apply_discount(100))\n"
-            "    print(apply_discount(80, 25))\n"
         ),
         "solution_code": (
             "def apply_discount(price: float, discount_percent: float = 10.0) -> float:\n"
@@ -148,38 +130,28 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
             "    return round(price - saved, 2)\n\n"
             "if __name__ == '__main__':\n"
             "    print(apply_discount(100))\n"
-            "    print(apply_discount(80, 25))\n"
         ),
         "explanation_markdown": "**High-Level Blocks:** Validate bad inputs first, compute discount amount, and `return` the rounded float.",
         "test_cases": [
             {"name": "default_and_custom", "code": "assert sol.apply_discount(100) == 90.0\nassert sol.apply_discount(80, 25) == 60.0"},
-            {"name": "invalid_inputs", "code": "try:\n    sol.apply_discount(-10)\n    assert False\nexcept ValueError:\n    pass\ntry:\n    sol.apply_discount(50, 120)\n    assert False\nexcept ValueError:\n    pass"},
+            {"name": "invalid_inputs", "code": "try:\n    sol.apply_discount(-10)\n    assert False\nexcept ValueError:\n    pass"},
         ],
     },
 
-    # ---------------- CHAPTER 2: Working With Files & Stdlib ----------------
+    # ---------------- CHAPTER 2: Working With Files ----------------
     {
         "id": "wb-02-01",
         "chapter_id": "ch02",
         "number": "2.1",
         "title": "Text File Basics: Count Non-Empty Lines",
-        "topic": "Files & Stdlib",
+        "topic": "Files",
         "question_type": "Logic & Coding",
         "difficulty": "Foundation",
         "summary": "Open a `.txt` file safely with `Path` + `encoding='utf-8'` and handle missing files.",
-        "prompt_markdown": (
-            "Write `count_non_empty_lines(path: Path) -> int`: return `0` if missing, otherwise count lines with text after `.strip()`."
-        ),
-        "thinking_blueprint": [
-            "Guard `if not path.exists(): return 0`.",
-            "Open with `with path.open('r', encoding='utf-8') as f:` and count `if line.strip():`.",
-        ],
-        "hints": [
-            "`'   \\n'.strip()` is `''` (False), so blank lines are skipped cleanly.",
-        ],
-        "dry_run_trace": (
-            "`'alpha\\n\\n   \\nbeta\\n'` -> `'alpha'` (+1), `''` (skip), `'   '` (skip), `'beta'` (+1) -> `2`."
-        ),
+        "prompt_markdown": "Write `count_non_empty_lines(path: Path) -> int`: return `0` if missing, otherwise count lines with text after `.strip()`.",
+        "thinking_blueprint": ["Guard `if not path.exists(): return 0`.", "Stream lines via `with path.open('r', encoding='utf-8') as f:`."],
+        "hints": ["`if line.strip():` skips blank and whitespace-only lines."],
+        "dry_run_trace": "`'alpha\\n\\n   \\nbeta\\n'` -> `2`.",
         "starter_code": (
             "from pathlib import Path\n\n"
             "def count_non_empty_lines(path: Path) -> int:\n"
@@ -198,7 +170,7 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
             "                count += 1\n"
             "    return count\n"
         ),
-        "explanation_markdown": "**High-Level Blocks:** Path check prevents crashes; `with path.open(...)` streams lines and closes the file safely.",
+        "explanation_markdown": "**High-Level Blocks:** Path check prevents crashes; `with path.open(...)` streams lines and closes safely.",
         "test_cases": [
             {
                 "name": "counts_and_missing",
@@ -218,24 +190,17 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
         "chapter_id": "ch02",
         "number": "2.2",
         "title": "JSONL Filter & Nested Directory Writer",
-        "topic": "Files & Stdlib",
+        "topic": "Files",
         "question_type": "Logic & Coding",
         "difficulty": "Intermediate",
-        "summary": "Read JSONL skipping malformed JSON via `try/except`, filter short text, and write clean JSONL.",
+        "summary": "Read JSONL skipping corrupt JSON via `try/except`, filter short text, and write clean JSONL.",
         "prompt_markdown": (
-            "Write `filter_jsonl_file(src: Path, dst: Path, min_chars: int = 5) -> int` reading `src` line-by-line (skipping corrupt JSON), "
-            "keeping records with `len(rec['text'].strip()) >= min_chars`, creating `dst.parent` if missing, writing JSONL to `dst`, and returning the count written."
+            "Write `filter_jsonl_file(src: Path, dst: Path, min_chars: int = 5) -> int` skipping broken JSON lines, "
+            "keeping dicts with `len(rec['text'].strip()) >= min_chars`, creating `dst.parent`, writing JSONL, and returning the count."
         ),
-        "thinking_blueprint": [
-            "Read `src` with `try: rec = json.loads(line)` / `except json.JSONDecodeError: continue`.",
-            "Ensure `dst.parent.mkdir(parents=True, exist_ok=True)` before writing.",
-        ],
-        "hints": [
-            "Check `isinstance(rec, dict)` and `isinstance(rec.get('text'), str)`.",
-        ],
-        "dry_run_trace": (
-            "Line `'{\"text\": \"hello world\"}'` -> kept; `'{broken'` -> skipped; `'{\"text\": \"hi\"}'` -> skipped."
-        ),
+        "thinking_blueprint": ["Isolate `json.JSONDecodeError` per line.", "Create `dst.parent.mkdir(parents=True, exist_ok=True)` before writing."],
+        "hints": ["Check `isinstance(rec, dict)` and `isinstance(rec.get('text'), str)`."],
+        "dry_run_trace": "`'{\"text\": \"hello world\"}'` -> kept; `'{broken'` -> skipped.",
         "starter_code": (
             "import json\nfrom pathlib import Path\n\n"
             "def filter_jsonl_file(src: Path, dst: Path, min_chars: int = 5) -> int:\n"
@@ -266,7 +231,7 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
             "            out.write(json.dumps(rec) + '\\n')\n"
             "    return len(kept)\n"
         ),
-        "explanation_markdown": "**High-Level Blocks:** Resilient line parser isolates JSONDecodeError; directory-safe writer creates nested folders cleanly.",
+        "explanation_markdown": "**High-Level Blocks:** Resilient line parser + directory-safe writer.",
         "test_cases": [
             {
                 "name": "filters_corrupt_and_short",
@@ -286,42 +251,33 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
         "id": "wb-02-03",
         "chapter_id": "ch02",
         "number": "2.3",
-        "title": "CSV Summary With `csv.DictReader` & `Counter`",
-        "topic": "Files & Stdlib",
+        "title": "CSV Summary With `csv.DictReader`",
+        "topic": "Files",
         "question_type": "Logic & Coding",
         "difficulty": "Foundation",
-        "summary": "Read CSV rows by column header and count non-empty labels with `Counter`.",
-        "prompt_markdown": (
-            "Write `count_csv_labels(csv_path: Path, column: str = 'label') -> dict[str, int]` returning counts of stripped non-empty values in `column`."
-        ),
-        "thinking_blueprint": [
-            "Open with `encoding='utf-8', newline=''` and wrap with `csv.DictReader(f)`.",
-            "Count non-empty stripped strings with `Counter` and return `dict(counts)`.",
-        ],
-        "hints": [
-            "`val = (row.get(column) or '').strip()`",
-        ],
-        "dry_run_trace": (
-            "Rows `' pos '`, `''`, `'neg'`, `'pos'` -> `{'pos': 2, 'neg': 1}`."
-        ),
+        "summary": "Read CSV rows by column header and count non-empty labels.",
+        "prompt_markdown": "Write `count_csv_labels(csv_path: Path, column: str = 'label') -> dict[str, int]`.",
+        "thinking_blueprint": ["Open with `encoding='utf-8', newline=''` and wrap with `csv.DictReader(f)`."],
+        "hints": ["`val = (row.get(column) or '').strip()`"],
+        "dry_run_trace": "Rows `' pos '`, `''`, `'neg'`, `'pos'` -> `{'pos': 2, 'neg': 1}`.",
         "starter_code": (
-            "import csv\nfrom collections import Counter\nfrom pathlib import Path\n\n"
+            "import csv\nfrom pathlib import Path\n\n"
             "def count_csv_labels(csv_path: Path, column: str = 'label') -> dict[str, int]:\n"
             "    # TODO: read CSV and count labels\n"
             "    pass\n"
         ),
         "solution_code": (
-            "import csv\nfrom collections import Counter\nfrom pathlib import Path\n\n"
+            "import csv\nfrom pathlib import Path\n\n"
             "def count_csv_labels(csv_path: Path, column: str = 'label') -> dict[str, int]:\n"
-            "    counts: Counter[str] = Counter()\n"
+            "    counts: dict[str, int] = {}\n"
             "    with csv_path.open('r', encoding='utf-8', newline='') as f:\n"
             "        for row in csv.DictReader(f):\n"
             "            val = (row.get(column) or '').strip()\n"
             "            if val:\n"
-            "                counts[val] += 1\n"
-            "    return dict(counts)\n"
+            "                counts[val] = counts.get(val, 0) + 1\n"
+            "    return counts\n"
         ),
-        "explanation_markdown": "**High-Level Blocks:** `DictReader` reads rows by header name; `Counter` aggregates counts in 1 line.",
+        "explanation_markdown": "**High-Level Blocks:** `DictReader` reads rows by header name and counts non-blank labels.",
         "test_cases": [
             {
                 "name": "counts_csv",
@@ -336,36 +292,151 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
         ],
     },
 
-    # ---------------- CHAPTER 3: Beginner-Friendly OOP ----------------
+    # ---------------- CHAPTER 3: Dedicated `os` Library & Automations ----------------
     {
         "id": "wb-03-01",
         "chapter_id": "ch03",
         "number": "3.1",
+        "title": "`os` Scanner: Count Files by Extension",
+        "topic": "os Library",
+        "question_type": "Logic & Coding",
+        "difficulty": "Foundation",
+        "summary": "Use `os.listdir`, `os.path.join`, `os.path.isfile`, and `os.path.splitext` safely.",
+        "prompt_markdown": (
+            "Write `count_extensions(folder: str) -> dict[str, int]` that inspects **files only** inside `folder` "
+            "(ignoring subfolders!) and returns counts keyed by lowercase extension (e.g. `'.txt'`, `'.png'`, or `'none'` if no extension)."
+        ),
+        "thinking_blueprint": [
+            "Loop `for name in os.listdir(folder):` and build `full = os.path.join(folder, name)`.",
+            "Skip if `not os.path.isfile(full)`.",
+            "Split `_, ext = os.path.splitext(name)` -> lowercase or `'none'`.",
+        ],
+        "hints": [
+            "Remember `os.listdir` returns filenames only—always `os.path.join(folder, name)` before checking `isfile`!",
+        ],
+        "dry_run_trace": "`['a.TXT', 'b.txt', 'subdir/']` -> `subdir` skipped -> `{'.txt': 2}`.",
+        "starter_code": (
+            "import os\n\n"
+            "def count_extensions(folder: str) -> dict[str, int]:\n"
+            "    # TODO: count files (not folders!) by lowercase extension\n"
+            "    pass\n"
+        ),
+        "solution_code": (
+            "import os\n\n"
+            "def count_extensions(folder: str) -> dict[str, int]:\n"
+            "    counts: dict[str, int] = {}\n"
+            "    for name in os.listdir(folder):\n"
+            "        full = os.path.join(folder, name)\n"
+            "        if not os.path.isfile(full):\n"
+            "            continue\n"
+            "        _, ext = os.path.splitext(name)\n"
+            "        key = ext.lower() if ext else 'none'\n"
+            "        counts[key] = counts.get(key, 0) + 1\n"
+            "    return counts\n"
+        ),
+        "explanation_markdown": "**High-Level Blocks:** Join folder + filename first, guard with `os.path.isfile`, then split extension cleanly.",
+        "test_cases": [
+            {
+                "name": "counts_files_only",
+                "code": (
+                    "import os, tempfile\n"
+                    "with tempfile.TemporaryDirectory() as d:\n"
+                    "    os.makedirs(os.path.join(d, 'subfolder'))\n"
+                    "    open(os.path.join(d, 'A.TXT'), 'w').close()\n"
+                    "    open(os.path.join(d, 'b.txt'), 'w').close()\n"
+                    "    open(os.path.join(d, 'README'), 'w').close()\n"
+                    "    assert sol.count_extensions(d) == {'.txt': 2, 'none': 1}"
+                ),
+            },
+        ],
+    },
+    {
+        "id": "wb-03-02",
+        "chapter_id": "ch03",
+        "number": "3.2",
+        "title": "`os` Automation: Organize Messy Folder Into Buckets",
+        "topic": "os Library",
+        "question_type": "Systems",
+        "difficulty": "Intermediate",
+        "summary": "Build a real folder-cleaning automation with `os.makedirs` and `os.rename`.",
+        "prompt_markdown": (
+            "Write `organize_files(folder: str) -> dict[str, int]` that moves every file in `folder` into a subfolder:\n"
+            "- `.png` / `.jpg` -> `'images'`\n"
+            "- `.txt` / `.md` -> `'docs'`\n"
+            "- anything else -> `'other'`\n"
+            "Ignore existing subfolders and return counts of files moved per bucket."
+        ),
+        "thinking_blueprint": [
+            "Map extension -> bucket folder name.",
+            "Call `os.makedirs(dest_dir, exist_ok=True)` then `os.rename(src, dest)`.",
+        ],
+        "hints": [
+            "Skip directories with `if not os.path.isfile(src): continue`.",
+        ],
+        "dry_run_trace": "`['photo.png', 'notes.md', 'data.csv']` -> moves into `images/`, `docs/`, `other/` and returns `{'images': 1, 'docs': 1, 'other': 1}`.",
+        "starter_code": (
+            "import os\n\n"
+            "def organize_files(folder: str) -> dict[str, int]:\n"
+            "    # TODO: move files into images/, docs/, or other/ using os\n"
+            "    pass\n"
+        ),
+        "solution_code": (
+            "import os\n\n"
+            "def organize_files(folder: str) -> dict[str, int]:\n"
+            "    moved: dict[str, int] = {}\n"
+            "    for name in os.listdir(folder):\n"
+            "        src = os.path.join(folder, name)\n"
+            "        if not os.path.isfile(src):\n"
+            "            continue\n"
+            "        _, ext = os.path.splitext(name)\n"
+            "        ext = ext.lower()\n"
+            "        if ext in ('.png', '.jpg'):\n"
+            "            bucket = 'images'\n"
+            "        elif ext in ('.txt', '.md'):\n"
+            "            bucket = 'docs'\n"
+            "        else:\n"
+            "            bucket = 'other'\n"
+            "        dest_dir = os.path.join(folder, bucket)\n"
+            "        os.makedirs(dest_dir, exist_ok=True)\n"
+            "        os.rename(src, os.path.join(dest_dir, name))\n"
+            "        moved[bucket] = moved.get(bucket, 0) + 1\n"
+            "    return moved\n"
+        ),
+        "explanation_markdown": "**High-Level Blocks:** Classify by extension, create destination folder safely with `exist_ok=True`, and move via `os.rename`.",
+        "test_cases": [
+            {
+                "name": "organizes_cleanly",
+                "code": (
+                    "import os, tempfile\n"
+                    "with tempfile.TemporaryDirectory() as d:\n"
+                    "    for fn in ['pic.jpg', 'todo.md', 'raw.csv']:\n"
+                    "        open(os.path.join(d, fn), 'w').close()\n"
+                    "    res = sol.organize_files(d)\n"
+                    "    assert res == {'images': 1, 'docs': 1, 'other': 1}\n"
+                    "    assert os.path.isfile(os.path.join(d, 'images', 'pic.jpg'))\n"
+                    "    assert os.path.isfile(os.path.join(d, 'docs', 'todo.md'))"
+                ),
+            },
+        ],
+    },
+
+    # ---------------- CHAPTER 4: Beginner-Friendly OOP ----------------
+    {
+        "id": "wb-04-01",
+        "chapter_id": "ch04",
+        "number": "4.1",
         "title": "First Class & Methods: Build a `BankAccount`",
         "topic": "OOP",
         "question_type": "Logic & Coding",
         "difficulty": "Foundation",
         "summary": "Practice `__init__`, `self`, and methods that validate and update object state.",
-        "prompt_markdown": (
-            "Build `class BankAccount` with:\n"
-            "- `__init__(self, owner: str, balance: float = 0.0)`: stores `self.owner` and `self.balance`.\n"
-            "- `deposit(self, amount: float) -> None`: raises `ValueError` if `amount <= 0`, else adds to `self.balance`.\n"
-            "- `withdraw(self, amount: float) -> bool`: returns `False` if `amount <= 0` or `amount > self.balance`, else subtracts and returns `True`."
-        ),
-        "thinking_blueprint": [
-            "Save `self.owner` and `self.balance` in `__init__`.",
-            "Guard negative/zero amounts in both `deposit` and `withdraw`.",
-        ],
-        "hints": [
-            "Always put `self` as the first parameter of every method.",
-        ],
-        "dry_run_trace": (
-            "`acc = BankAccount('Sara', 100)` -> `acc.deposit(50)` (`balance=150`) -> `acc.withdraw(200)` (`False`, still `150`)."
-        ),
+        "prompt_markdown": "Build `BankAccount(owner, balance=0.0)` with `deposit(amount)` (`ValueError` if `<=0`) and `withdraw(amount) -> bool`.",
+        "thinking_blueprint": ["Save `self.owner` and `self.balance` in `__init__`.", "Guard `<= 0` amounts."],
+        "hints": ["Always put `self` as the first parameter of every method."],
+        "dry_run_trace": "`a = BankAccount('Sara', 100); a.deposit(50)` -> `150`.",
         "starter_code": (
             "class BankAccount:\n"
             "    def __init__(self, owner: str, balance: float = 0.0) -> None:\n"
-            "        # TODO: save owner and balance on self\n"
             "        pass\n\n"
             "    def deposit(self, amount: float) -> None:\n"
             "        pass\n\n"
@@ -395,46 +466,31 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
             "    acc.deposit(50.0)\n"
             "    print(acc.owner, acc.balance)\n"
         ),
-        "explanation_markdown": "**High-Level Blocks:** `self` isolates each account's balance, and methods keep validation rules in one place.",
+        "explanation_markdown": "**High-Level Blocks:** `self` isolates each account's balance, and methods validate state changes.",
         "test_cases": [
             {
                 "name": "account_ops",
                 "code": (
-                    "a = sol.BankAccount('Sara', 100)\n"
-                    "b = sol.BankAccount('Alex', 20)\n"
-                    "a.deposit(50)\n"
+                    "a = sol.BankAccount('Sara', 100)\nb = sol.BankAccount('Alex', 20)\na.deposit(50)\n"
                     "assert a.balance == 150 and b.balance == 20\n"
-                    "assert a.withdraw(200) is False and a.withdraw(40) is True and a.balance == 110\n"
-                    "try:\n    a.deposit(-5)\n    assert False\nexcept ValueError:\n    pass"
+                    "assert a.withdraw(200) is False and a.withdraw(40) is True and a.balance == 110"
                 ),
             },
         ],
     },
     {
-        "id": "wb-03-02",
-        "chapter_id": "ch03",
-        "number": "3.2",
+        "id": "wb-04-02",
+        "chapter_id": "ch04",
+        "number": "4.2",
         "title": "Composition & `@dataclass`: `Song` + `Playlist`",
         "topic": "OOP",
         "question_type": "Logic & Coding",
         "difficulty": "Foundation",
-        "summary": "Build two small cooperating classes using `@dataclass` and `__len__`.",
-        "prompt_markdown": (
-            "Implement `@dataclass class Song(title: str, seconds: int)` and `class Playlist` with:\n"
-            "- `add(self, song: Song) -> None`\n"
-            "- `total_seconds(self) -> int`\n"
-            "- `__len__(self) -> int` returning number of songs."
-        ),
-        "thinking_blueprint": [
-            "`Playlist.__init__` sets `self.songs: list[Song] = []`.",
-            "`total_seconds` sums `s.seconds` across `self.songs`.",
-        ],
-        "hints": [
-            "`return sum(s.seconds for s in self.songs)`",
-        ],
-        "dry_run_trace": (
-            "`pl.add(Song('Intro', 90)); pl.add(Song('Main', 210))` -> `len(pl) == 2`, `pl.total_seconds() == 300`."
-        ),
+        "summary": "Build two cooperating classes using `@dataclass` and `__len__`.",
+        "prompt_markdown": "Implement `@dataclass class Song(title: str, seconds: int)` and `class Playlist` with `add(song)`, `total_seconds() -> int`, and `__len__() -> int`.",
+        "thinking_blueprint": ["`Playlist.__init__` sets `self.songs = []`."],
+        "hints": ["`return sum(s.seconds for s in self.songs)`"],
+        "dry_run_trace": "`Intro (90s) + Main (210s)` -> `len == 2`, `total_seconds == 300`.",
         "starter_code": (
             "from dataclasses import dataclass\n\n"
             "@dataclass\n"
@@ -443,7 +499,6 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
             "    seconds: int\n\n"
             "class Playlist:\n"
             "    def __init__(self) -> None:\n"
-            "        # TODO\n"
             "        pass\n\n"
             "    def add(self, song: Song) -> None:\n"
             "        pass\n\n"
@@ -468,114 +523,35 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
             "    def __len__(self) -> int:\n"
             "        return len(self.songs)\n"
         ),
-        "explanation_markdown": "**High-Level Blocks:** Composition (`Playlist` holding `Song` objects) keeps each class small and focused.",
+        "explanation_markdown": "**High-Level Blocks:** Composition (`Playlist` holding `Song` objects) keeps each class small.",
         "test_cases": [
-            {
-                "name": "playlist_methods",
-                "code": (
-                    "pl = sol.Playlist()\n"
-                    "pl.add(sol.Song('Intro', 90))\n"
-                    "pl.add(sol.Song('Main', 210))\n"
-                    "assert len(pl) == 2 and pl.total_seconds() == 300"
-                ),
-            },
-        ],
-    },
-    {
-        "id": "wb-03-03",
-        "chapter_id": "ch03",
-        "number": "3.3",
-        "title": "Callable Objects (`__call__`): Composable Text Pipeline",
-        "topic": "OOP",
-        "question_type": "Logic & Coding",
-        "difficulty": "Intermediate",
-        "summary": "Implement small `__call__` step classes and chain them in `Pipeline`.",
-        "prompt_markdown": (
-            "Implement `StripWhitespace`, `ReplaceWord(old, new)`, and `Pipeline(steps)` where each has `__call__(self, text: str) -> str`."
-        ),
-        "thinking_blueprint": [
-            "Each transform configures itself in `__init__` and transforms text in `__call__`.",
-            "`Pipeline` loops `for step in self.steps: out = step(out)`.",
-        ],
-        "hints": [
-            "`' '.join(text.split())` collapses extra whitespace cleanly.",
-        ],
-        "dry_run_trace": (
-            "`Pipeline([StripWhitespace(), ReplaceWord('ml', 'AI')])('  learn   ml ')` -> `'learn AI'`."
-        ),
-        "starter_code": (
-            "class StripWhitespace:\n"
-            "    def __call__(self, text: str) -> str:\n"
-            "        pass\n\n"
-            "class ReplaceWord:\n"
-            "    def __init__(self, old: str, new: str) -> None:\n"
-            "        pass\n\n"
-            "    def __call__(self, text: str) -> str:\n"
-            "        pass\n\n"
-            "class Pipeline:\n"
-            "    def __init__(self, steps: list) -> None:\n"
-            "        pass\n\n"
-            "    def __call__(self, text: str) -> str:\n"
-            "        pass\n"
-        ),
-        "solution_code": (
-            "class StripWhitespace:\n"
-            "    def __call__(self, text: str) -> str:\n"
-            "        return ' '.join(text.split())\n\n"
-            "class ReplaceWord:\n"
-            "    def __init__(self, old: str, new: str) -> None:\n"
-            "        self.old = old\n"
-            "        self.new = new\n\n"
-            "    def __call__(self, text: str) -> str:\n"
-            "        return ' '.join(self.new if w == self.old else w for w in text.split())\n\n"
-            "class Pipeline:\n"
-            "    def __init__(self, steps: list) -> None:\n"
-            "        self.steps = list(steps)\n\n"
-            "    def __call__(self, text: str) -> str:\n"
-            "        out = text\n"
-            "        for step in self.steps:\n"
-            "            out = step(out)\n"
-            "        return out\n"
-        ),
-        "explanation_markdown": "**High-Level Blocks:** Uniform `__call__` interfaces let components plug together just like PyTorch `nn.Sequential` and LangChain LCEL.",
-        "test_cases": [
-            {"name": "pipeline", "code": "p = sol.Pipeline([sol.StripWhitespace(), sol.ReplaceWord('ml', 'AI')])\nassert p('  learn   ml   fast ') == 'learn AI fast'"},
+            {"name": "playlist", "code": "pl = sol.Playlist()\npl.add(sol.Song('Intro', 90))\npl.add(sol.Song('Main', 210))\nassert len(pl) == 2 and pl.total_seconds() == 300"},
         ],
     },
 
-    # ---------------- CHAPTER 4: Step-by-Step Logic Building ----------------
+    # ---------------- CHAPTER 5: Step-by-Step Logic Building ----------------
     {
-        "id": "wb-04-01",
-        "chapter_id": "ch04",
-        "number": "4.1",
+        "id": "wb-05-01",
+        "chapter_id": "ch05",
+        "number": "5.1",
         "title": "Basic Logic: Find Largest Number Manually (No `max()`)",
         "topic": "Logic",
         "question_type": "Logic & Coding",
         "difficulty": "Foundation",
-        "summary": "Practice human dry-run logic by tracking `best` across positive and negative numbers.",
-        "prompt_markdown": (
-            "Write `find_max(nums: list[int]) -> int | None` **without calling `max()` or `sorted()`**.\n"
-            "Return `None` if `nums` is empty. Must work for negative numbers like `[-10, -3, -20]` -> `-3`."
-        ),
-        "thinking_blueprint": [
-            "Guard `if not nums: return None`.",
-            "Start `best = nums[0]` (NOT `0`!), loop `for n in nums[1:]:`, update if `n > best`.",
-        ],
-        "hints": [
-            "Starting at `0` fails on `[-10, -3, -20]` because `0` is bigger than every item!",
-        ],
-        "dry_run_trace": (
-            "`[-10, -3, -20]`: `best=-10` -> `-3 > -10` (`best=-3`) -> `-20 > -3` False -> `-3`."
-        ),
+        "summary": "Track `best` across positive and negative numbers without calling `max()`.",
+        "prompt_markdown": "Write `find_max(nums: list[int])` returning `None` if empty, else the largest int (must handle `[-10, -3, -20] -> -3`).",
+        "thinking_blueprint": ["Start `best = nums[0]` (not `0`!) after guarding `if not nums:`."],
+        "hints": ["Loop `for n in nums[1:]:` and update `if n > best: best = n`."],
+        "dry_run_trace": "`[-10, -3, -20]` -> `-3`.",
         "starter_code": (
-            "def find_max(nums: list[int]) -> int | None:\n"
-            "    # TODO: find largest without using max() or sorted()\n"
+            "def find_max(nums: list[int]):\n"
+            "    # TODO: find largest without max() or sorted()\n"
             "    pass\n\n"
             "if __name__ == '__main__':\n"
             "    print(find_max([-10, -3, -20]))\n"
         ),
         "solution_code": (
-            "def find_max(nums: list[int]) -> int | None:\n"
+            "def find_max(nums: list[int]):\n"
             "    if not nums:\n"
             "        return None\n"
             "    best = nums[0]\n"
@@ -586,36 +562,27 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
             "if __name__ == '__main__':\n"
             "    print(find_max([-10, -3, -20]))\n"
         ),
-        "explanation_markdown": "**High-Level Blocks:** Guard empty list, anchor `best` at `nums[0]`, and scan left-to-right once.",
+        "explanation_markdown": "**High-Level Blocks:** Guard empty list, anchor `best` at `nums[0]`, scan once.",
         "test_cases": [
-            {"name": "negatives_and_empty", "code": "assert sol.find_max([-10, -3, -20]) == -3\nassert sol.find_max([]) is None\nassert sol.find_max([4, 9, 2]) == 9"},
+            {"name": "max_cases", "code": "assert sol.find_max([-10, -3, -20]) == -3\nassert sol.find_max([]) is None\nassert sol.find_max([4, 9, 2]) == 9"},
         ],
     },
     {
-        "id": "wb-04-02",
-        "chapter_id": "ch04",
-        "number": "4.2",
+        "id": "wb-05-02",
+        "chapter_id": "ch05",
+        "number": "5.2",
         "title": "Grouping Logic: Group Words by First Letter",
         "topic": "Logic",
         "question_type": "Logic & Coding",
         "difficulty": "Foundation",
-        "summary": "Build a dictionary of lists step-by-step from raw words.",
-        "prompt_markdown": (
-            "Write `group_by_first_letter(words: list[str]) -> dict[str, list[str]]` that skips empty strings and groups each stripped word under its lowercase first character."
-        ),
-        "thinking_blueprint": [
-            "Start `groups: dict[str, list[str]] = {}`.",
-            "For each word: strip it; if empty `continue`; `key = w[0].lower()`; if `key not in groups`: `groups[key] = []`; `groups[key].append(w)`.",
-        ],
-        "hints": [
-            "Initialize `groups[key] = []` the first time you see `key`.",
-        ],
-        "dry_run_trace": (
-            "`['Apple', 'ant', 'Ball']` -> `{'a': ['Apple', 'ant'], 'b': ['Ball']}`."
-        ),
+        "summary": "Group stripped words into a dict of lists keyed by lowercase first letter.",
+        "prompt_markdown": "Write `group_by_first_letter(words: list[str]) -> dict[str, list[str]]` skipping blanks.",
+        "thinking_blueprint": ["Strip word; if empty `continue`; initialize `groups[key] = []` if missing; append."],
+        "hints": ["`key = w[0].lower()`"],
+        "dry_run_trace": "`['Apple', '  ', 'ant', 'Ball']` -> `{'a': ['Apple', 'ant'], 'b': ['Ball']}`.",
         "starter_code": (
             "def group_by_first_letter(words: list[str]) -> dict[str, list[str]]:\n"
-            "    # TODO: group non-empty stripped words by lowercase first letter\n"
+            "    # TODO: group non-empty stripped words\n"
             "    pass\n"
         ),
         "solution_code": (
@@ -631,33 +598,25 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
             "        groups[key].append(w)\n"
             "    return groups\n"
         ),
-        "explanation_markdown": "**High-Level Blocks:** Clean & skip blanks first, then create bucket if missing before appending.",
+        "explanation_markdown": "**High-Level Blocks:** Clean & skip blanks first, create missing buckets, then append.",
         "test_cases": [
-            {"name": "grouping", "code": "assert sol.group_by_first_letter(['Apple', '  ', 'ant', 'Ball']) == {'a': ['Apple', 'ant'], 'b': ['Ball']}"},
+            {"name": "group", "code": "assert sol.group_by_first_letter(['Apple', '  ', 'ant', 'Ball']) == {'a': ['Apple', 'ant'], 'b': ['Ball']}"},
         ],
     },
     {
-        "id": "wb-04-03",
-        "chapter_id": "ch04",
-        "number": "4.3",
+        "id": "wb-05-03",
+        "chapter_id": "ch05",
+        "number": "5.3",
         "title": "State Machine Logic: Run-Length Encoder",
         "topic": "Logic",
         "question_type": "Logic & Coding",
         "difficulty": "Foundation",
-        "summary": "Track `current` character and `count` across a string.",
-        "prompt_markdown": "Write `compress_runs(text: str) -> str` turning `'aaabbc'` -> `'a3b2c1'`, `'x'` -> `'x1'`, `''` -> `''`.",
-        "thinking_blueprint": [
-            "Track `current` and `count`; flush when char changes and once more after the loop.",
-        ],
-        "hints": [
-            "Guard `if not text: return ''` first.",
-        ],
+        "summary": "Track `current` character and streak `count`.",
+        "prompt_markdown": "Write `compress_runs(text: str) -> str` turning `'aaabbc'` -> `'a3b2c1'`.",
+        "thinking_blueprint": ["Track `current` and `count`, flush on change, and flush once after the loop."],
+        "hints": ["Guard `if not text: return ''`."],
         "dry_run_trace": "`'aab'` -> `'a2b1'`.",
-        "starter_code": (
-            "def compress_runs(text: str) -> str:\n"
-            "    # TODO: track current char and streak count\n"
-            "    pass\n"
-        ),
+        "starter_code": "def compress_runs(text: str) -> str:\n    pass\n",
         "solution_code": (
             "def compress_runs(text: str) -> str:\n"
             "    if not text:\n"
@@ -675,33 +634,25 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
             "    parts.append(f'{current}{count}')\n"
             "    return ''.join(parts)\n"
         ),
-        "explanation_markdown": "**High-Level Blocks:** Track streak state and remember the final flush after the loop.",
+        "explanation_markdown": "**High-Level Blocks:** Track streak state and flush the final group after the loop.",
         "test_cases": [
             {"name": "basic", "code": "assert sol.compress_runs('aaabbc') == 'a3b2c1'\nassert sol.compress_runs('') == ''"},
         ],
     },
     {
-        "id": "wb-04-04",
-        "chapter_id": "ch04",
-        "number": "4.4",
+        "id": "wb-05-04",
+        "chapter_id": "ch05",
+        "number": "5.4",
         "title": "Sliding Window: Longest Unique Substring",
         "topic": "Logic",
         "question_type": "Logic & Coding",
         "difficulty": "Intermediate",
-        "summary": "Level up from basic loops to a dynamic `left`/`right` sliding window.",
-        "prompt_markdown": "Write `longest_unique_len(s: str) -> int` returning the longest substring length with all distinct characters.",
-        "thinking_blueprint": [
-            "Jump `left = last_seen[ch] + 1` whenever `ch` repeats inside `[left..right]`.",
-        ],
-        "hints": [
-            "Check `if ch in last_seen and last_seen[ch] >= left:` so `left` never moves backwards.",
-        ],
-        "dry_run_trace": "`'pwwkew'` -> `'wke'` length `3`.",
-        "starter_code": (
-            "def longest_unique_len(s: str) -> int:\n"
-            "    # TODO: sliding window with last_seen dict\n"
-            "    pass\n"
-        ),
+        "summary": "Maintain a duplicate-free window with `left` and `last_seen`.",
+        "prompt_markdown": "Write `longest_unique_len(s: str) -> int` returning longest substring length with all distinct chars.",
+        "thinking_blueprint": ["Jump `left = last_seen[ch] + 1` when `last_seen[ch] >= left`."],
+        "hints": ["Never move `left` backwards."],
+        "dry_run_trace": "`'pwwkew'` -> `3` (`'wke'`).",
+        "starter_code": "def longest_unique_len(s: str) -> int:\n    pass\n",
         "solution_code": (
             "def longest_unique_len(s: str) -> int:\n"
             "    last_seen: dict[str, int] = {}\n"
@@ -714,31 +665,27 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
             "        best = max(best, right - left + 1)\n"
             "    return best\n"
         ),
-        "explanation_markdown": "**High-Level Blocks:** Maintain duplicate-free invariant in one O(N) pass.",
+        "explanation_markdown": "**High-Level Blocks:** Duplicate-free invariant in O(N).",
         "test_cases": [
-            {"name": "examples", "code": "assert sol.longest_unique_len('abcabcbb') == 3\nassert sol.longest_unique_len('pwwkew') == 3\nassert sol.longest_unique_len('') == 0"},
+            {"name": "examples", "code": "assert sol.longest_unique_len('abcabcbb') == 3\nassert sol.longest_unique_len('pwwkew') == 3"},
         ],
     },
 
-    # ---------------- CHAPTER 5: DSA & Dynamic Programming ----------------
+    # ---------------- CHAPTER 6: DSA & Dynamic Programming ----------------
     {
-        "id": "wb-05-01",
-        "chapter_id": "ch05",
-        "number": "5.1",
+        "id": "wb-06-01",
+        "chapter_id": "ch06",
+        "number": "6.1",
         "title": "DP Foundation: Climbing Stairs (`n = 60`)",
         "topic": "Dynamic Programming",
         "question_type": "DSA & DP",
         "difficulty": "Foundation",
-        "summary": "Turn exponential recursion into an O(N) bottom-up loop.",
+        "summary": "Eliminate exponential recursion using bottom-up DP.",
         "prompt_markdown": "Climb `1` or `2` steps at a time. Write `climb_ways(n: int) -> int` (`climb_ways(0) == 1`).",
-        "thinking_blueprint": ["`dp[i] = dp[i-1] + dp[i-2]` starting from `1, 1`."],
-        "hints": ["Use two variables `prev2, prev1 = 1, 1`."],
+        "thinking_blueprint": ["`dp[i] = dp[i-1] + dp[i-2]`."],
+        "hints": ["Use `prev2, prev1 = 1, 1`."],
         "dry_run_trace": "`0->1, 1->1, 2->2, 3->3, 4->5`.",
-        "starter_code": (
-            "def climb_ways(n: int) -> int:\n"
-            "    # TODO: O(N) bottom-up DP\n"
-            "    pass\n"
-        ),
+        "starter_code": "def climb_ways(n: int) -> int:\n    pass\n",
         "solution_code": (
             "def climb_ways(n: int) -> int:\n"
             "    if n <= 1:\n"
@@ -750,27 +697,23 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
         ),
         "explanation_markdown": "**High-Level Blocks:** Bottom-up rolling variables compute each step once.",
         "test_cases": [
-            {"name": "small_and_60", "code": "assert [sol.climb_ways(i) for i in range(6)] == [1, 1, 2, 3, 5, 8]\nassert sol.climb_ways(60) == 2504730781961"},
+            {"name": "small_60", "code": "assert [sol.climb_ways(i) for i in range(6)] == [1, 1, 2, 3, 5, 8]\nassert sol.climb_ways(60) == 2504730781961"},
         ],
     },
     {
-        "id": "wb-05-02",
-        "chapter_id": "ch05",
-        "number": "5.2",
+        "id": "wb-06-02",
+        "chapter_id": "ch06",
+        "number": "6.2",
         "title": "1D DP Choice Pattern: Minimum Coin Change",
         "topic": "Dynamic Programming",
         "question_type": "DSA & DP",
         "difficulty": "Intermediate",
-        "summary": "Build `dp[0..amount]` where greedy fails (`[1,3,4], 6 -> 2`).",
+        "summary": "Solve coin change where greedy fails (`[1,3,4], 6 -> 2`).",
         "prompt_markdown": "Return fewest coins summing to `amount`, or `-1` if impossible.",
-        "thinking_blueprint": ["`dp[a] = min(dp[a], 1 + dp[a - c])` for each coin `c <= a`."],
-        "hints": ["Start `dp = [amount + 1] * (amount + 1)` with `dp[0] = 0`."],
-        "dry_run_trace": "`dp[3]=1`, so `dp[6]` finds `1+dp[3]=2`.",
-        "starter_code": (
-            "def min_coins(coins: list[int], amount: int) -> int:\n"
-            "    # TODO: 1D DP table\n"
-            "    pass\n"
-        ),
+        "thinking_blueprint": ["`dp[a] = min(dp[a], 1 + dp[a - c])`."],
+        "hints": ["`dp = [amount + 1] * (amount + 1)` with `dp[0] = 0`."],
+        "dry_run_trace": "`dp[6]` finds `1 + dp[3] = 2`.",
+        "starter_code": "def min_coins(coins: list[int], amount: int) -> int:\n    pass\n",
         "solution_code": (
             "def min_coins(coins: list[int], amount: int) -> int:\n"
             "    inf = amount + 1\n"
@@ -780,17 +723,19 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
             "        for c in coins:\n"
             "            if c <= a:\n"
             "                dp[a] = min(dp[a], 1 + dp[a - c])\n"
-            "    return -1 if dp[amount] > amount else dp[amount]\n"
+            "    if dp[amount] > amount:\n"
+            "        return -1\n"
+            "    return dp[amount]\n"
         ),
-        "explanation_markdown": "**High-Level Blocks:** Tests every valid coin choice at each sub-amount and keeps the global minimum.",
+        "explanation_markdown": "**High-Level Blocks:** Evaluates every coin choice for each sub-amount.",
         "test_cases": [
             {"name": "coins", "code": "assert sol.min_coins([1, 3, 4], 6) == 2\nassert sol.min_coins([2], 3) == -1"},
         ],
     },
     {
-        "id": "wb-05-03",
-        "chapter_id": "ch05",
-        "number": "5.3",
+        "id": "wb-06-03",
+        "chapter_id": "ch06",
+        "number": "6.3",
         "title": "2D DP Table: Levenshtein Edit Distance",
         "topic": "Dynamic Programming",
         "question_type": "DSA & DP",
@@ -798,13 +743,9 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
         "summary": "Compute minimum insert/delete/replace edits between two strings.",
         "prompt_markdown": "Write `edit_distance(a: str, b: str) -> int` (`'kitten'` -> `'sitting'` == `3`).",
         "thinking_blueprint": ["Equal -> `dp[i-1][j-1]`; else `1 + min(top, left, diag)`."],
-        "hints": ["Initialize base row `0..n` and base col `0..m`."],
+        "hints": ["Initialize base row `0..n` and col `0..m`."],
         "dry_run_trace": "`'cat' -> 'cut'` == `1`.",
-        "starter_code": (
-            "def edit_distance(a: str, b: str) -> int:\n"
-            "    # TODO: 2D DP grid\n"
-            "    pass\n"
-        ),
+        "starter_code": "def edit_distance(a: str, b: str) -> int:\n    pass\n",
         "solution_code": (
             "def edit_distance(a: str, b: str) -> int:\n"
             "    m, n = len(a), len(b)\n"
@@ -827,9 +768,9 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
         ],
     },
     {
-        "id": "wb-05-04",
-        "chapter_id": "ch05",
-        "number": "5.4",
+        "id": "wb-06-04",
+        "chapter_id": "ch06",
+        "number": "6.4",
         "title": "DAG Topological Sort (Pipeline Task Scheduler)",
         "topic": "DSA",
         "question_type": "DSA & DP",
@@ -837,14 +778,9 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
         "summary": "Order dependent tasks with Kahn's algorithm + cycle detection.",
         "prompt_markdown": "Given `tasks` and `deps` `(a, b)`, return alphabetical topological order or raise `ValueError('Cycle detected')`.",
         "thinking_blueprint": ["Track `indeg` and `adj`, pop 0-indegree from `heapq`."],
-        "hints": ["If `len(order) != len(tasks)`, raise `ValueError`."],
+        "hints": ["Check `len(order) != len(tasks)` for cycles."],
         "dry_run_trace": "`clean -> train -> eval`.",
-        "starter_code": (
-            "import heapq\n\n"
-            "def schedule_tasks(tasks: list[str], deps: list[tuple[str, str]]) -> list[str]:\n"
-            "    # TODO: Kahn's topological sort\n"
-            "    pass\n"
-        ),
+        "starter_code": "import heapq\n\ndef schedule_tasks(tasks: list[str], deps: list[tuple[str, str]]) -> list[str]:\n    pass\n",
         "solution_code": (
             "import heapq\n\n"
             "def schedule_tasks(tasks: list[str], deps: list[tuple[str, str]]) -> list[str]:\n"
@@ -867,17 +803,17 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
             "        raise ValueError('Cycle detected')\n"
             "    return order\n"
         ),
-        "explanation_markdown": "**High-Level Blocks:** Graph + in-degree setup, min-heap execution, and length check for cycles.",
+        "explanation_markdown": "**High-Level Blocks:** Graph + in-degree setup, min-heap execution, and cycle check.",
         "test_cases": [
             {"name": "dag", "code": "assert sol.schedule_tasks(['eval', 'clean', 'train'], [('clean', 'train'), ('train', 'eval')]) == ['clean', 'train', 'eval']"},
         ],
     },
 
-    # ---------------- CHAPTER 6: Async Programming ----------------
+    # ---------------- CHAPTER 7: Async Programming ----------------
     {
-        "id": "wb-06-01",
-        "chapter_id": "ch06",
-        "number": "6.1",
+        "id": "wb-07-01",
+        "chapter_id": "ch07",
+        "number": "7.1",
         "title": "Async Concurrency: Bounded Batch Runner with Semaphore",
         "topic": "Async",
         "question_type": "Systems",
@@ -885,14 +821,9 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
         "summary": "Run async tasks concurrently while enforcing max in-flight concurrency.",
         "prompt_markdown": "Write `async def run_bounded(items: list[str], worker, max_concurrent: int) -> list[str]`.",
         "thinking_blueprint": ["Wrap `worker(item)` in `async with sem:` and `asyncio.gather`."],
-        "hints": ["`asyncio.gather` preserves original input order."],
-        "dry_run_trace": "With `max_concurrent=2`, at most 2 workers run at the same instant.",
-        "starter_code": (
-            "import asyncio\n\n"
-            "async def run_bounded(items: list[str], worker, max_concurrent: int) -> list[str]:\n"
-            "    # TODO: bound concurrent worker calls\n"
-            "    pass\n"
-        ),
+        "hints": ["`asyncio.gather` preserves original order."],
+        "dry_run_trace": "At most `max_concurrent` workers run at the same instant.",
+        "starter_code": "import asyncio\n\nasync def run_bounded(items: list[str], worker, max_concurrent: int) -> list[str]:\n    pass\n",
         "solution_code": (
             "import asyncio\n\n"
             "async def run_bounded(items: list[str], worker, max_concurrent: int) -> list[str]:\n"
@@ -904,7 +835,7 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
             "            return await worker(item)\n"
             "    return list(await asyncio.gather(*(guarded(x) for x in items)))\n"
         ),
-        "explanation_markdown": "**High-Level Blocks:** `Semaphore` acts as a concurrency bouncer while `gather` overlaps waits.",
+        "explanation_markdown": "**High-Level Blocks:** `Semaphore` caps concurrency while `gather` overlaps waits.",
         "test_cases": [
             {
                 "name": "bounded",
@@ -919,24 +850,19 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
         ],
     },
     {
-        "id": "wb-06-02",
-        "chapter_id": "ch06",
-        "number": "6.2",
+        "id": "wb-07-02",
+        "chapter_id": "ch07",
+        "number": "7.2",
         "title": "Async Retries with Exponential Backoff",
         "topic": "Async",
         "question_type": "Systems",
         "difficulty": "Intermediate",
-        "summary": "Retry transient failures using non-blocking `asyncio.sleep(base_delay * 2**attempt)`.",
+        "summary": "Retry transient failures using non-blocking `asyncio.sleep`.",
         "prompt_markdown": "Write `async def retry_async(fn, max_retries: int = 3, base_delay: float = 0.01)`.",
         "thinking_blueprint": ["Loop `0..max_retries`, `await fn()`, on last failure re-raise else sleep exponentially."],
         "hints": ["Never use `time.sleep` inside `async def`!"],
         "dry_run_trace": "0.01s -> 0.02s -> succeeds.",
-        "starter_code": (
-            "import asyncio\n\n"
-            "async def retry_async(fn, max_retries: int = 3, base_delay: float = 0.01):\n"
-            "    # TODO: retry with exponential backoff\n"
-            "    pass\n"
-        ),
+        "starter_code": "import asyncio\n\nasync def retry_async(fn, max_retries: int = 3, base_delay: float = 0.01):\n    pass\n",
         "solution_code": (
             "import asyncio\n\n"
             "async def retry_async(fn, max_retries: int = 3, base_delay: float = 0.01):\n"

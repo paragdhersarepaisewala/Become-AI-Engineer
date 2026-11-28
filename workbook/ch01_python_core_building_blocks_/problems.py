@@ -26,4 +26,3 @@ def apply_discount(price: float, discount_percent: float = 10.0) -> float:
 
 if __name__ == '__main__':
     print(apply_discount(100))
-    print(apply_discount(80, 25))

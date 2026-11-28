@@ -1,6 +1,6 @@
 # Project (Chapter 1): Student Grade & Tag Analyzer Script
 
-Use variables, loops, comprehensions, dictionaries, and clean functions (with `return`, no files yet!) to summarize student scores and tags.
+Use variables, loops, comprehensions, dictionaries, and clean functions to summarize student scores and tags.
 
 ## Architecture Steps
 

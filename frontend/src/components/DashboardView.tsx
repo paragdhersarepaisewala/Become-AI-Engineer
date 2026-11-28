@@ -41,8 +41,7 @@ export const DashboardView: React.FC<Props> = ({
             <span className="tag tag-accent">AI Engineering Path · RTX 5070 Ti Ready</span>
             <h1 style={{ fontSize: '1.6rem', marginTop: '0.45rem' }}>From Basic Scripts to Training Small LLMs</h1>
             <p className="muted" style={{ maxWidth: 720, marginTop: '0.35rem' }}>
-              Zero assumed knowledge. Master Python files, OOP, logic building, DP, Asyncio, NumPy, Pandas, FastAPI microservices,
-              and Docker in Phase 1–2 before diving into PyTorch, Transformers, QLoRA, and LangChain.
+              Zero assumed knowledge, one library per chapter. Master Python basics, files, <code className="inline-code">os</code> automations, OOP, logic building, DP, Asyncio, NumPy, Pandas, Pydantic, Requests, FastAPI, FastMCP, and Docker before diving into PyTorch, Transformers, QLoRA, and LangChain.
             </p>
           </div>
           <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
@@ -165,9 +164,9 @@ export const DashboardView: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Full 16-Chapter Roadmap */}
+      {/* Full 20-Chapter Roadmap */}
       <div className="card">
-        <h3 style={{ marginBottom: '1rem' }}>16-Chapter Master Curriculum</h3>
+        <h3 style={{ marginBottom: '1rem' }}>20-Chapter Master Curriculum</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           {phases.map(({ phase, items }) => (
             <div key={phase}>

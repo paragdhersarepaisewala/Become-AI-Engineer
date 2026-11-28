@@ -160,6 +160,12 @@ def _write_workbook(chapters: list[dict[str, Any]], problems: list[dict[str, Any
 
 
 def _write_projects(chapters: list[dict[str, Any]]) -> None:
+    import shutil
+    proj_root = ROOT / "projects"
+    if proj_root.exists():
+        for old_proj in proj_root.glob("ch*"):
+            if old_proj.is_dir():
+                shutil.rmtree(old_proj, ignore_errors=True)
     for ch in chapters:
         if ch["status_type"] != "available" or not ch.get("project"):
             continue
@@ -178,10 +184,10 @@ def _write_projects(chapters: list[dict[str, Any]]) -> None:
             readme.append(f"- [ ] {m['label']}")
         (proj_dir / "README.md").write_text("\n".join(readme) + "\n", encoding="utf-8")
 
-    # Add legacy_monolith.py starter for Ch 3 OOP refactoring project
-    ch3_dir = ROOT / "projects" / "ch03_log_analyzer"
-    if ch3_dir.exists():
-        (ch3_dir / "legacy_monolith.py").write_text(
+    # Add legacy_monolith.py starter for Ch 4 OOP refactoring project
+    ch4_dir = ROOT / "projects" / "ch04_log_analyzer"
+    if ch4_dir.exists():
+        (ch4_dir / "legacy_monolith.py").write_text(
             '"""Messy monolithic log analyzer — refactor this into models.py, analyzer.py, and cli.py!"""\n\n'
             "SAMPLE_LOGS = [\n"
             '    "[INFO] 2026-11-01 Server started on port 8000",\n'
