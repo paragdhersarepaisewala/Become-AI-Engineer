@@ -71,7 +71,7 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
                 "code_example": {
                     "title": "Guarded Manual Min & Max Together",
                     "code": (
-                        "def min_and_max(nums: list[int]) -> tuple[int, int] | None:\n"
+                        "def min_and_max(nums: list[int]):\n"
                         "    # Block 1 (Guard): empty list has no min or max\n"
                         "    if not nums:\n"
                         "        return None\n"
@@ -510,7 +510,9 @@ PHASE_1B_CHAPTERS: list[dict[str, Any]] = [
                         "        for c in coins:\n"
                         "            if c <= a:\n"
                         "                dp[a] = min(dp[a], 1 + dp[a - c])\n"
-                        "    return -1 if dp[amount] > amount else dp[amount]\n\n"
+                        "    if dp[amount] > amount:\n"
+                        "        return -1\n"
+                        "    return dp[amount]\n\n"
                         "print('Min coins for 6 with [1,3,4]:', min_coins([1, 3, 4], 6))  # 2 (3+3)\n"
                     ),
                 },

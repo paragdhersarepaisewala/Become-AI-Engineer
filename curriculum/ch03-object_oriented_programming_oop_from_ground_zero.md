@@ -219,7 +219,9 @@ class TextCleaner:
 
     def __call__(self, text: str) -> str:
         cleaned = ' '.join(text.split())
-        return cleaned.lower() if self.lowercase else cleaned
+        if self.lowercase:
+            return cleaned.lower()
+        return cleaned
 
 clean = TextCleaner(lowercase=True)
 print(clean('  Hello   AI  '))  # 'hello ai'

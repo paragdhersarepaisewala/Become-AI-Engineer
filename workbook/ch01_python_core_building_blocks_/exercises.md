@@ -81,32 +81,37 @@ if __name__ == '__main__':
 
 ---
 
-## 1.3 Safe Functions: Fix the Shared Default List Bug (`Foundation` · Python)
+## 1.3 Function Basics: Discount Price Calculator (`Foundation` · Python)
 
-Write `add_tag(tag: str, tags: list[str] | None = None) -> list[str]` returning a new list with `tag` added if not already present, without mutating `tags`.
+Write `apply_discount(price: float, discount_percent: float = 10.0) -> float` that:
+- Subtracts `discount_percent`% from `price` and returns the final price rounded to 2 decimal places (`round(..., 2)`).
+- If `price < 0` or `discount_percent < 0` or `discount_percent > 100`, raise `ValueError('Invalid input')`.
 
 ### Thinking Blueprint
 
-- If `tags is None`, start with `[]`, else `tags.copy()`.
-- Append `tag` only if `tag not in result`.
+- Block 1 (Guard): Check if `price < 0` or `discount_percent < 0` or `discount_percent > 100` -> `raise ValueError('Invalid input')`.
+- Block 2 (Calculate & Return): `saved = price * (discount_percent / 100)`, then `return round(price - saved, 2)`.
 
 ### Progressive Hints
 
-1. `result = [] if tags is None else list(tags)`
+1. Default parameter syntax: `def apply_discount(price: float, discount_percent: float = 10.0) -> float:`
+2. Use `return`, NOT `print()`, so tests receive the calculated float!
 
 ### Dry-Run Trace
-`add_tag('a')` -> `['a']`; `add_tag('b')` -> `['b']`; `add_tag('ml', base)` leaves `base` untouched.
+`apply_discount(100)` -> `saved = 100 * 0.10 = 10.0` -> returns `90.0`.
+`apply_discount(80, 25)` -> `saved = 80 * 0.25 = 20.0` -> returns `60.0`.
 
 ### Answer & Explanation
 ```python
-def add_tag(tag: str, tags: list[str] | None = None) -> list[str]:
-    result = [] if tags is None else list(tags)
-    if tag not in result:
-        result.append(tag)
-    return result
+def apply_discount(price: float, discount_percent: float = 10.0) -> float:
+    if price < 0 or discount_percent < 0 or discount_percent > 100:
+        raise ValueError('Invalid input')
+    saved = price * (discount_percent / 100)
+    return round(price - saved, 2)
 
 if __name__ == '__main__':
-    print(add_tag('python'))
+    print(apply_discount(100))
+    print(apply_discount(80, 25))
 ```
 
-**High-Level Blocks:** `None` sentinel ensures fresh lists on omitted args; `list(tags)` protects caller lists.
+**High-Level Blocks:** Validate bad inputs first, compute discount amount, and `return` the rounded float.

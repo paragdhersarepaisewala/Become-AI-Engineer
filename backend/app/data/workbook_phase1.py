@@ -110,44 +110,50 @@ PHASE_1_WORKBOOK: list[dict[str, Any]] = [
         "id": "wb-01-03",
         "chapter_id": "ch01",
         "number": "1.3",
-        "title": "Safe Functions: Fix the Shared Default List Bug",
+        "title": "Function Basics: Discount Price Calculator",
         "topic": "Python",
-        "question_type": "Trace & Bug Hunt",
+        "question_type": "Logic & Coding",
         "difficulty": "Foundation",
-        "summary": "Use `None` default sentinel + `.copy()` so calls never leak items or mutate caller lists.",
+        "summary": "Practice parameters, default values, input validation, and `return` (not `print`).",
         "prompt_markdown": (
-            "Write `add_tag(tag: str, tags: list[str] | None = None) -> list[str]` returning a new list with `tag` added if not already present, without mutating `tags`."
+            "Write `apply_discount(price: float, discount_percent: float = 10.0) -> float` that:\n"
+            "- Subtracts `discount_percent`% from `price` and returns the final price rounded to 2 decimal places (`round(..., 2)`).\n"
+            "- If `price < 0` or `discount_percent < 0` or `discount_percent > 100`, raise `ValueError('Invalid input')`."
         ),
         "thinking_blueprint": [
-            "If `tags is None`, start with `[]`, else `tags.copy()`.",
-            "Append `tag` only if `tag not in result`.",
+            "Block 1 (Guard): Check if `price < 0` or `discount_percent < 0` or `discount_percent > 100` -> `raise ValueError('Invalid input')`.",
+            "Block 2 (Calculate & Return): `saved = price * (discount_percent / 100)`, then `return round(price - saved, 2)`.",
         ],
         "hints": [
-            "`result = [] if tags is None else list(tags)`",
+            "Default parameter syntax: `def apply_discount(price: float, discount_percent: float = 10.0) -> float:`",
+            "Use `return`, NOT `print()`, so tests receive the calculated float!",
         ],
         "dry_run_trace": (
-            "`add_tag('a')` -> `['a']`; `add_tag('b')` -> `['b']`; `add_tag('ml', base)` leaves `base` untouched."
+            "`apply_discount(100)` -> `saved = 100 * 0.10 = 10.0` -> returns `90.0`.\n"
+            "`apply_discount(80, 25)` -> `saved = 80 * 0.25 = 20.0` -> returns `60.0`."
         ),
         "starter_code": (
-            "def add_tag(tag: str, tags: list[str] | None = None) -> list[str]:\n"
-            "    # TODO: avoid mutable default trap and caller mutation\n"
+            "def apply_discount(price: float, discount_percent: float = 10.0) -> float:\n"
+            "    # TODO: validate inputs, subtract discount%, and return rounded price\n"
             "    pass\n\n"
             "if __name__ == '__main__':\n"
-            "    print(add_tag('python'))\n"
+            "    print(apply_discount(100))\n"
+            "    print(apply_discount(80, 25))\n"
         ),
         "solution_code": (
-            "def add_tag(tag: str, tags: list[str] | None = None) -> list[str]:\n"
-            "    result = [] if tags is None else list(tags)\n"
-            "    if tag not in result:\n"
-            "        result.append(tag)\n"
-            "    return result\n\n"
+            "def apply_discount(price: float, discount_percent: float = 10.0) -> float:\n"
+            "    if price < 0 or discount_percent < 0 or discount_percent > 100:\n"
+            "        raise ValueError('Invalid input')\n"
+            "    saved = price * (discount_percent / 100)\n"
+            "    return round(price - saved, 2)\n\n"
             "if __name__ == '__main__':\n"
-            "    print(add_tag('python'))\n"
+            "    print(apply_discount(100))\n"
+            "    print(apply_discount(80, 25))\n"
         ),
-        "explanation_markdown": "**High-Level Blocks:** `None` sentinel ensures fresh lists on omitted args; `list(tags)` protects caller lists.",
+        "explanation_markdown": "**High-Level Blocks:** Validate bad inputs first, compute discount amount, and `return` the rounded float.",
         "test_cases": [
-            {"name": "fresh_defaults", "code": "assert sol.add_tag('a') == ['a']\nassert sol.add_tag('b') == ['b']"},
-            {"name": "no_mutation", "code": "base = ['ai']\nassert sol.add_tag('ml', base) == ['ai', 'ml'] and base == ['ai']"},
+            {"name": "default_and_custom", "code": "assert sol.apply_discount(100) == 90.0\nassert sol.apply_discount(80, 25) == 60.0"},
+            {"name": "invalid_inputs", "code": "try:\n    sol.apply_discount(-10)\n    assert False\nexcept ValueError:\n    pass\ntry:\n    sol.apply_discount(50, 120)\n    assert False\nexcept ValueError:\n    pass"},
         ],
     },
 

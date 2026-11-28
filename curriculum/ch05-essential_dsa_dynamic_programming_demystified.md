@@ -139,7 +139,9 @@ def min_coins(coins: list[int], amount: int) -> int:
         for c in coins:
             if c <= a:
                 dp[a] = min(dp[a], 1 + dp[a - c])
-    return -1 if dp[amount] > amount else dp[amount]
+    if dp[amount] > amount:
+        return -1
+    return dp[amount]
 
 print('Min coins for 6 with [1,3,4]:', min_coins([1, 3, 4], 6))  # 2 (3+3)
 ```

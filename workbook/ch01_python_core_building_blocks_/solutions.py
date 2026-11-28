@@ -23,12 +23,13 @@ if __name__ == '__main__':
     print(clean_names(['  Sara ', '', ' ALEX ', '   ']))
 
 
-# --- 1.3: Safe Functions: Fix the Shared Default List Bug ---
-def add_tag(tag: str, tags: list[str] | None = None) -> list[str]:
-    result = [] if tags is None else list(tags)
-    if tag not in result:
-        result.append(tag)
-    return result
+# --- 1.3: Function Basics: Discount Price Calculator ---
+def apply_discount(price: float, discount_percent: float = 10.0) -> float:
+    if price < 0 or discount_percent < 0 or discount_percent > 100:
+        raise ValueError('Invalid input')
+    saved = price * (discount_percent / 100)
+    return round(price - saved, 2)
 
 if __name__ == '__main__':
-    print(add_tag('python'))
+    print(apply_discount(100))
+    print(apply_discount(80, 25))

@@ -379,29 +379,37 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                     ],
                 },
                 "body_markdown": (
-                    "### One Hidden Trap: Default `= []`\n"
-                    "Never put `items=[]` in a `def` line—Python creates that default list once and shares it across every future call! "
-                    "Always default to `items=None` and write `if items is None: items = []` inside."
+                    "### One Common Beginner Trap: Never Put `= []` as a Default\n"
+                    "Suppose you write `def add_item(x, items=[]):`. Python creates that `[]` **only once** and reuses it across every call—so items from yesterday's call leak into today's call!\n"
+                    "- **Fix:** Write `items=None` instead (`None` is Python's built-in word for *'nothing was passed'*), then check `if items is None:` inside the function with a normal `if / else`."
                 ),
                 "code_example": {
-                    "title": "Safe Optional List Parameter (`None` Sentinel)",
+                    "title": "Simple Function With Default Value + Safe Optional List",
                     "code": (
-                        "def add_tag(tag: str, existing: list[str] | None = None) -> list[str]:\n"
-                        "    # Block 1: Always make a fresh list or copy caller's list\n"
-                        "    result = [] if existing is None else existing.copy()\n"
-                        "    # Block 2: Add tag only if not already present\n"
+                        "# Block 1: Simple function with a default parameter\n"
+                        "def apply_discount(price: float, discount_percent: float = 10.0) -> float:\n"
+                        "    saved = price * (discount_percent / 100)\n"
+                        "    return round(price - saved, 2)\n\n"
+                        "print(apply_discount(100))      # uses default 10% -> 90.0\n"
+                        "print(apply_discount(100, 25))  # uses 25% -> 75.0\n\n"
+                        "# Block 2: Safe optional list using `None` and plain if/else\n"
+                        "def add_tag(tag: str, existing=None):\n"
+                        "    if existing is None:\n"
+                        "        result = []\n"
+                        "    else:\n"
+                        "        result = existing.copy()\n"
                         "    if tag not in result:\n"
                         "        result.append(tag)\n"
                         "    return result\n\n"
                         "print(add_tag('python'))  # ['python']\n"
-                        "print(add_tag('ai'))      # ['ai'] (independent list!)\n"
+                        "print(add_tag('ai'))      # ['ai'] (brand new list each time!)\n"
                     ),
                 },
                 "common_mistakes": [
                     "Forgetting `return` inside a function and wondering why the caller gets `None`.",
                     "Using `items=[]` as a default argument instead of `items=None`.",
                 ],
-                "key_takeaway": "Functions should `return` values (not just `print`), and optional lists/dicts should always default to `None`.",
+                "key_takeaway": "Functions should `return` values (not just `print`), and optional lists should default to `None` followed by `if existing is None:`.",
             },
         ],
         "quizzes": [
@@ -421,7 +429,7 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
             },
             {
                 "id": "ch01-q3",
-                "question": "Why should you write `tags: list[str] | None = None` instead of `tags: list[str] = []`?",
+                "question": "Why should you write `def add_item(x, items=None):` instead of `def add_item(x, items=[]):`?",
                 "options": [
                     "Python forbids `[]` in function signatures",
                     "A default `[]` is created once and reused across every call, leaking items between calls",
@@ -429,7 +437,7 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                     "It converts the list into a tuple",
                 ],
                 "correct_index": 1,
-                "explanation": "Mutable defaults (`[]`, `{}`) persist across calls; `None` lets you create a brand-new list inside the function each time.",
+                "explanation": "Default `[]` is shared across every call; `items=None` lets you create a fresh list inside `if items is None:` each time.",
             },
         ],
         "project": {
@@ -982,7 +990,9 @@ PHASE_1A_CHAPTERS: list[dict[str, Any]] = [
                         "        self.lowercase = lowercase\n\n"
                         "    def __call__(self, text: str) -> str:\n"
                         "        cleaned = ' '.join(text.split())\n"
-                        "        return cleaned.lower() if self.lowercase else cleaned\n\n"
+                        "        if self.lowercase:\n"
+                        "            return cleaned.lower()\n"
+                        "        return cleaned\n\n"
                         "clean = TextCleaner(lowercase=True)\n"
                         "print(clean('  Hello   AI  '))  # 'hello ai'\n"
                     ),

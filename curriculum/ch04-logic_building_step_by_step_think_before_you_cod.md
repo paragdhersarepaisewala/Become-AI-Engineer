@@ -51,7 +51,7 @@ Always test negative numbers! If `nums = [-10, -3, -20]` and you started with `b
 ### 4. Practical Example — Guarded Manual Min & Max Together
 
 ```python
-def min_and_max(nums: list[int]) -> tuple[int, int] | None:
+def min_and_max(nums: list[int]):
     # Block 1 (Guard): empty list has no min or max
     if not nums:
         return None

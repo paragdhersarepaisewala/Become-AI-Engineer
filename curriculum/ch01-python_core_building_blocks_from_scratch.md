@@ -372,23 +372,34 @@ print('a is:', a, '| b is:', b)
 1. `broken_double(5)` prints `10`, then ends with no `return`, so `a` becomes `None`.
 2. `working_double(5)` returns `10`, so `b` becomes `10` (and you can do `b + 1`!).
 
-### One Hidden Trap: Default `= []`
-Never put `items=[]` in a `def` line—Python creates that default list once and shares it across every future call! Always default to `items=None` and write `if items is None: items = []` inside.
+### One Common Beginner Trap: Never Put `= []` as a Default
+Suppose you write `def add_item(x, items=[]):`. Python creates that `[]` **only once** and reuses it across every call—so items from yesterday's call leak into today's call!
+- **Fix:** Write `items=None` instead (`None` is Python's built-in word for *'nothing was passed'*), then check `if items is None:` inside the function with a normal `if / else`.
 
 
-### 4. Practical Example — Safe Optional List Parameter (`None` Sentinel)
+### 4. Practical Example — Simple Function With Default Value + Safe Optional List
 
 ```python
-def add_tag(tag: str, existing: list[str] | None = None) -> list[str]:
-    # Block 1: Always make a fresh list or copy caller's list
-    result = [] if existing is None else existing.copy()
-    # Block 2: Add tag only if not already present
+# Block 1: Simple function with a default parameter
+def apply_discount(price: float, discount_percent: float = 10.0) -> float:
+    saved = price * (discount_percent / 100)
+    return round(price - saved, 2)
+
+print(apply_discount(100))      # uses default 10% -> 90.0
+print(apply_discount(100, 25))  # uses 25% -> 75.0
+
+# Block 2: Safe optional list using `None` and plain if/else
+def add_tag(tag: str, existing=None):
+    if existing is None:
+        result = []
+    else:
+        result = existing.copy()
     if tag not in result:
         result.append(tag)
     return result
 
 print(add_tag('python'))  # ['python']
-print(add_tag('ai'))      # ['ai'] (independent list!)
+print(add_tag('ai'))      # ['ai'] (brand new list each time!)
 ```
 
 ### Common Mistakes to Avoid
@@ -396,7 +407,7 @@ print(add_tag('ai'))      # ['ai'] (independent list!)
 - Forgetting `return` inside a function and wondering why the caller gets `None`.
 - Using `items=[]` as a default argument instead of `items=None`.
 
-**Key Takeaway:** Functions should `return` values (not just `print`), and optional lists/dicts should always default to `None`.
+**Key Takeaway:** Functions should `return` values (not just `print`), and optional lists should default to `None` followed by `if existing is None:`.
 
 
 ---

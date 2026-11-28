@@ -19,11 +19,19 @@ def test_wb_01_02_all_blank() -> None:
     assert sol.clean_names(['', '  ']) == []
 
 
-def test_wb_01_03_fresh_defaults() -> None:
-    assert sol.add_tag('a') == ['a']
-    assert sol.add_tag('b') == ['b']
+def test_wb_01_03_default_and_custom() -> None:
+    assert sol.apply_discount(100) == 90.0
+    assert sol.apply_discount(80, 25) == 60.0
 
 
-def test_wb_01_03_no_mutation() -> None:
-    base = ['ai']
-    assert sol.add_tag('ml', base) == ['ai', 'ml'] and base == ['ai']
+def test_wb_01_03_invalid_inputs() -> None:
+    try:
+        sol.apply_discount(-10)
+        assert False
+    except ValueError:
+        pass
+    try:
+        sol.apply_discount(50, 120)
+        assert False
+    except ValueError:
+        pass
